@@ -1,0 +1,743 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<title>Solstice — Location de mobilier & décoration d'événements · Amiens</title>
+<style>
+  /* ============ TOKENS ============ */
+  :root{
+    color-scheme: light;
+    --paper:#FCFAF6;
+    --paper-2:#F6EFE3;
+    --sable:#EDE4D5;
+    --sable-deep:#E4D8C4;
+    --beige:#D9C8AD;
+    --ink:#1C1913;
+    --ink-soft:#4C4437;
+    --stone:#8B8173;
+    --line:#DCD1BF;
+    --line-soft:#E7DDCC;
+    --gold:#A9814E;
+    --gold-deep:#876536;
+    --ete-1:#F2DCA9; --ete-2:#DBA25E; --ete-3:#B87A44;
+    --hiver-1:#3B4A3F; --hiver-2:#273229; --hiver-3:#161C18;
+
+    --serif:'Didot','Bodoni MT','Playfair Display','Hoefler Text',Georgia,'Times New Roman',serif;
+    --sans:'Helvetica Neue',Helvetica,'Segoe UI',Arial,system-ui,sans-serif;
+
+    --wrap:1220px;
+    --gutter:clamp(20px,5vw,64px);
+    --sect:clamp(72px,10vw,140px);
+    --radius:2px;
+  }
+
+  /* ============ RESET-ISH ============ */
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto;}}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:var(--sans);font-size:16px;line-height:1.6;
+    font-weight:400;letter-spacing:.005em;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  }
+  img{max-width:100%;display:block;}
+  a{color:inherit;text-decoration:none;}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+  h1,h2,h3,h4{margin:0;font-family:var(--serif);font-weight:400;text-wrap:balance;line-height:1.05;}
+  p{margin:0;}
+  ::selection{background:var(--gold);color:#fff;}
+
+  .wrap{max-width:var(--wrap);margin:0 auto;padding-inline:var(--gutter);}
+
+  /* paper grain overlay */
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:2;opacity:.5;
+    mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.045'/></svg>");
+  }
+
+  /* ============ SHARED TYPE HELPERS ============ */
+  .eyebrow{
+    font-family:var(--sans);font-size:.72rem;font-weight:600;
+    letter-spacing:.32em;text-transform:uppercase;color:var(--gold-deep);
+    display:inline-flex;align-items:center;gap:.7em;
+  }
+  .eyebrow::before{content:"";width:26px;height:1px;background:var(--gold);opacity:.7;}
+  .eyebrow.center{justify-content:center;}
+  .eyebrow.center::after{content:"";width:26px;height:1px;background:var(--gold);opacity:.7;}
+  .lede{color:var(--ink-soft);font-size:1.06rem;max-width:52ch;}
+
+  .btn{
+    display:inline-flex;align-items:center;gap:.6em;
+    font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;
+    padding:1.05em 1.9em;border-radius:var(--radius);
+    transition:transform .35s ease,background .35s ease,color .35s ease,border-color .35s ease;
+  }
+  .btn svg{width:15px;height:15px;transition:transform .35s ease;}
+  .btn-ink{background:var(--ink);color:var(--paper);}
+  .btn-ink:hover{background:#000;transform:translateY(-2px);}
+  .btn-ink:hover svg{transform:translateX(4px);}
+  .btn-ghost{border:1px solid var(--ink);color:var(--ink);}
+  .btn-ghost:hover{background:var(--ink);color:var(--paper);transform:translateY(-2px);}
+  .btn-gold{border:1px solid var(--gold);color:var(--gold-deep);}
+  .btn-gold:hover{background:var(--gold);color:#fff;transform:translateY(-2px);}
+
+  .icon{width:22px;height:22px;stroke:currentColor;stroke-width:1.4;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+
+  /* reveal */
+  .reveal{opacity:1;}
+  .js .reveal{opacity:0;transform:translateY(20px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1);}
+  .js .reveal.in{opacity:1;transform:none;}
+  .js .reveal.d1{transition-delay:.08s;} .js .reveal.d2{transition-delay:.16s;}
+  .js .reveal.d3{transition-delay:.24s;} .js .reveal.d4{transition-delay:.32s;}
+  @media (prefers-reduced-motion:reduce){.js .reveal{opacity:1 !important;transform:none !important;transition:none !important;}}
+
+  /* ============ ANNOUNCE BAR ============ */
+  .announce{
+    background:var(--ink);color:var(--paper-2);
+    font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;
+    text-align:center;padding:.7em 1em;font-weight:500;
+  }
+  .announce b{color:var(--gold);font-weight:600;}
+
+  /* ============ HEADER ============ */
+  .site-head{
+    position:sticky;top:0;z-index:20;
+    background:rgba(252,250,246,.82);backdrop-filter:blur(10px);
+    border-bottom:1px solid transparent;transition:border-color .4s ease,box-shadow .4s ease;
+  }
+  .site-head.stuck{border-color:var(--line-soft);box-shadow:0 8px 30px -22px rgba(28,25,19,.5);}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:82px;gap:1.5rem;}
+  .brand{display:flex;align-items:center;gap:.6rem;font-family:var(--serif);}
+  .brand .mark{width:26px;height:26px;stroke:var(--gold);stroke-width:1.3;fill:none;}
+  .brand .word{font-size:1.35rem;letter-spacing:.42em;text-transform:uppercase;padding-left:.42em;}
+  .nav-links{display:flex;gap:2.1rem;list-style:none;margin:0;padding:0;}
+  .nav-links a{
+    font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);
+    position:relative;padding:.4em 0;transition:color .3s ease;
+  }
+  .nav-links a::after{content:"";position:absolute;left:0;bottom:0;height:1px;width:0;background:var(--gold);transition:width .35s ease;}
+  .nav-links a:hover{color:var(--ink);} .nav-links a:hover::after{width:100%;}
+  .nav-tools{display:flex;align-items:center;gap:1.15rem;}
+  .nav-tools button{position:relative;color:var(--ink);display:grid;place-items:center;transition:color .3s;}
+  .nav-tools button:hover{color:var(--gold-deep);}
+  .nav-tools .count{
+    position:absolute;top:-6px;right:-8px;background:var(--gold);color:#fff;
+    font-family:var(--sans);font-size:.58rem;font-weight:700;letter-spacing:0;
+    min-width:15px;height:15px;border-radius:99px;display:grid;place-items:center;padding:0 3px;
+  }
+  .burger{display:none;}
+
+  /* ============ HERO ============ */
+  .hero{position:relative;overflow:hidden;background:linear-gradient(175deg,var(--paper) 0%,var(--sable) 74%,var(--sable-deep) 100%);}
+  .hero-sun{
+    position:absolute;left:50%;bottom:-38%;transform:translateX(-50%);
+    width:min(1180px,150vw);height:auto;stroke:var(--gold);stroke-width:.6;fill:none;opacity:.5;z-index:0;
+  }
+  .hero-inner{position:relative;z-index:1;padding:clamp(70px,12vw,150px) 0 clamp(90px,13vw,168px);max-width:var(--wrap);margin:0 auto;padding-inline:var(--gutter);}
+  .hero h1{
+    font-size:clamp(3rem,9vw,7.4rem);line-height:.96;margin:.32em 0 .38em;letter-spacing:-.01em;max-width:14ch;
+  }
+  .hero h1 em{font-style:italic;color:var(--gold-deep);}
+  .hero .lede{font-size:clamp(1.02rem,1.6vw,1.22rem);max-width:44ch;color:var(--ink-soft);}
+  .hero-cta{display:flex;flex-wrap:wrap;gap:1rem;margin-top:2.4rem;}
+  .scrollcue{
+    position:absolute;left:50%;bottom:26px;transform:translateX(-50%);z-index:1;
+    font-size:.64rem;letter-spacing:.3em;text-transform:uppercase;color:var(--stone);
+    display:flex;flex-direction:column;align-items:center;gap:.7rem;
+  }
+  .scrollcue .bar{width:1px;height:42px;background:linear-gradient(var(--gold),transparent);animation:cue 2.4s ease-in-out infinite;}
+  @keyframes cue{0%,100%{transform:scaleY(.4);transform-origin:top;opacity:.4;}50%{transform:scaleY(1);opacity:1;}}
+  @media (prefers-reduced-motion:reduce){.scrollcue .bar{animation:none;}}
+
+  /* ============ SECTION SCAFFOLD ============ */
+  .section{padding-block:var(--sect);}
+  .sec-head{display:flex;flex-direction:column;gap:1.1rem;margin-bottom:clamp(34px,5vw,60px);}
+  .sec-head.center{align-items:center;text-align:center;}
+  .sec-head h2{font-size:clamp(2rem,4.6vw,3.4rem);letter-spacing:-.01em;}
+  .sec-head .lede{margin-top:.2rem;}
+  .sec-flex{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1.4rem;margin-bottom:clamp(30px,4.5vw,54px);}
+  .sec-flex h2{font-size:clamp(1.9rem,4.2vw,3.1rem);}
+  .link-more{font-size:.76rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-deep);display:inline-flex;align-items:center;gap:.55em;border-bottom:1px solid var(--gold);padding-bottom:.35em;transition:gap .3s ease;}
+  .link-more:hover{gap:.95em;}
+  .link-more svg{width:14px;height:14px;stroke:currentColor;stroke-width:1.5;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+
+  /* ============ UNIVERS DIPTYCH ============ */
+  .univers{display:grid;grid-template-columns:1fr 1fr;gap:0;}
+  .uni{position:relative;min-height:clamp(420px,52vw,620px);overflow:hidden;display:flex;align-items:flex-end;padding:clamp(30px,4vw,56px);}
+  .uni-ete{background:linear-gradient(155deg,var(--ete-1),var(--ete-2) 58%,var(--ete-3));}
+  .uni-hiver{background:linear-gradient(155deg,var(--hiver-1),var(--hiver-2) 58%,var(--hiver-3));color:var(--paper);}
+  .uni .glyph{position:absolute;top:8%;right:6%;width:clamp(120px,20vw,240px);height:auto;stroke:#fff;stroke-width:.7;fill:none;opacity:.34;transition:transform 1.1s cubic-bezier(.2,.7,.2,1);}
+  .uni-ete .glyph{stroke:#5c3a1c;opacity:.28;}
+  .uni:hover .glyph{transform:rotate(8deg) scale(1.05);}
+  .uni-body{position:relative;z-index:1;max-width:30ch;}
+  .uni .tag{font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;opacity:.85;}
+  .uni h3{font-size:clamp(2.1rem,4vw,3.2rem);margin:.35em 0 .5em;}
+  .uni-ete h3,.uni-ete .tag{color:#3d2612;}
+  .uni p{font-size:1rem;max-width:32ch;margin-bottom:1.5em;opacity:.92;}
+  .uni-ete p{color:#4a2f15;}
+  .uni-link{display:inline-flex;align-items:center;gap:.6em;font-size:.76rem;letter-spacing:.18em;text-transform:uppercase;font-weight:600;border-bottom:1px solid currentColor;padding-bottom:.35em;transition:gap .3s;}
+  .uni-link:hover{gap:1em;}
+  .uni-link svg{width:14px;height:14px;stroke:currentColor;stroke-width:1.6;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+
+  /* ============ CATEGORIES ============ */
+  .cats{background:var(--sable);}
+  .cat-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:clamp(10px,1.5vw,20px);}
+  .cat{
+    background:var(--paper);border:1px solid var(--line-soft);border-radius:var(--radius);
+    padding:clamp(20px,2.4vw,30px) 1rem;text-align:center;
+    display:flex;flex-direction:column;align-items:center;gap:1rem;
+    transition:transform .4s ease,box-shadow .4s ease,border-color .4s ease;
+  }
+  .cat:hover{transform:translateY(-6px);box-shadow:0 24px 40px -30px rgba(28,25,19,.55);border-color:var(--gold);}
+  .cat svg{width:34px;height:34px;stroke:var(--gold-deep);stroke-width:1.15;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+  .cat span{font-size:.82rem;letter-spacing:.06em;color:var(--ink-soft);}
+
+  /* ============ PRODUCT GRID ============ */
+  .prod-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(16px,2vw,30px);}
+  .card{position:relative;}
+  .card-media{
+    position:relative;aspect-ratio:4/5;overflow:hidden;border-radius:var(--radius);
+    background:linear-gradient(150deg,var(--paper-2),var(--sable-deep));
+    display:grid;place-items:center;
+  }
+  .card-media .art{width:46%;height:46%;stroke:var(--gold);stroke-width:.9;fill:none;opacity:.6;stroke-linecap:round;stroke-linejoin:round;transition:transform .8s cubic-bezier(.2,.7,.2,1);}
+  .card:hover .card-media .art{transform:scale(1.08);}
+  .card-tag{position:absolute;top:12px;left:12px;background:var(--ink);color:var(--paper);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;padding:.5em .8em;border-radius:var(--radius);}
+  .card-tag.gold{background:var(--gold);}
+  .fav{position:absolute;top:10px;right:10px;width:34px;height:34px;border-radius:99px;background:rgba(252,250,246,.9);display:grid;place-items:center;transition:transform .3s,background .3s;}
+  .fav svg{width:17px;height:17px;stroke:var(--ink);stroke-width:1.5;fill:none;transition:fill .3s,stroke .3s;}
+  .fav:hover{transform:scale(1.12);}
+  .fav.on svg{fill:var(--gold);stroke:var(--gold);}
+  .card-add{
+    position:absolute;left:12px;right:12px;bottom:12px;
+    background:var(--paper);color:var(--ink);border:1px solid var(--ink);
+    font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;
+    padding:.95em;border-radius:var(--radius);text-align:center;
+    opacity:0;transform:translateY(10px);transition:opacity .4s ease,transform .4s ease,background .3s,color .3s;
+  }
+  .card:hover .card-add{opacity:1;transform:none;}
+  .card-add:hover{background:var(--ink);color:var(--paper);}
+  .card-info{padding:1.1rem .1rem 0;}
+  .card-info h4{font-size:1.18rem;margin-bottom:.28rem;}
+  .card-meta{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;}
+  .card-price{font-family:var(--serif);font-size:1.05rem;color:var(--ink);}
+  .card-price span{font-family:var(--sans);font-size:.72rem;color:var(--stone);letter-spacing:.02em;}
+  .card-caution{font-size:.7rem;color:var(--stone);letter-spacing:.04em;}
+  @media (hover:none){.card-add{position:static;opacity:1;transform:none;margin-top:.9rem;}}
+
+  /* ============ COLLECTIONS ============ */
+  .collections{background:var(--ink);color:var(--paper);}
+  .collections .eyebrow{color:var(--gold);}
+  .collections .sec-flex h2{color:var(--paper);}
+  .coll-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,1.8vw,26px);}
+  .coll{position:relative;aspect-ratio:3/4;overflow:hidden;border-radius:var(--radius);display:flex;align-items:flex-end;padding:clamp(20px,2.4vw,32px);}
+  .coll-1{background:linear-gradient(160deg,#E7C9A0,#C98E56);}
+  .coll-2{background:linear-gradient(160deg,#C7D2C0,#6E8267);}
+  .coll-3{background:linear-gradient(160deg,#5A5148,#211D18);}
+  .coll::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(20,17,12,.55),transparent 55%);}
+  .coll .glyph{position:absolute;top:9%;right:8%;width:clamp(80px,12vw,130px);stroke:#fff;stroke-width:.7;fill:none;opacity:.4;}
+  .coll-body{position:relative;z-index:1;color:#fff;}
+  .coll-body .n{font-size:.66rem;letter-spacing:.28em;text-transform:uppercase;opacity:.85;}
+  .coll-body h3{font-size:clamp(1.7rem,2.5vw,2.3rem);margin:.3em 0 .35em;color:#fff;}
+  .coll-body p{font-size:.86rem;opacity:.9;max-width:26ch;}
+
+  /* ============ PROCESS ============ */
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(20px,3vw,44px);counter-reset:step;}
+  .step{position:relative;padding-top:2.4rem;}
+  .step .no{font-family:var(--serif);font-size:1rem;color:var(--gold-deep);position:absolute;top:0;left:0;letter-spacing:.1em;}
+  .step .no::before{counter-increment:step;content:"0" counter(step);}
+  .step .rule{height:1px;background:var(--line);margin:.2rem 0 1.3rem;}
+  .step svg{width:30px;height:30px;stroke:var(--ink);stroke-width:1.25;fill:none;stroke-linecap:round;stroke-linejoin:round;margin-bottom:1rem;}
+  .step h4{font-size:1.22rem;margin-bottom:.5rem;}
+  .step p{font-size:.9rem;color:var(--ink-soft);max-width:26ch;}
+
+  /* ============ PACK BANNER ============ */
+  .pack{background:linear-gradient(150deg,var(--ete-1),var(--ete-2) 70%,var(--ete-3));border-radius:var(--radius);overflow:hidden;position:relative;}
+  .pack-inner{display:grid;grid-template-columns:1.15fr .85fr;gap:0;align-items:center;}
+  .pack-copy{padding:clamp(38px,5vw,72px);color:#3d2612;position:relative;z-index:1;}
+  .pack-copy .eyebrow{color:#7a4a1f;}
+  .pack-copy .eyebrow::before{background:#7a4a1f;}
+  .pack-copy h3{font-size:clamp(2rem,3.6vw,3rem);color:#2c1c0e;margin:.4em 0 .5em;}
+  .pack-copy p{color:#4a2f15;max-width:40ch;margin-bottom:1.8rem;}
+  .pack-copy .btn-ink{background:#2c1c0e;}
+  .pack-visual{position:relative;min-height:clamp(260px,32vw,420px);align-self:stretch;display:grid;place-items:center;overflow:hidden;}
+  .pack-visual::before{content:"";position:absolute;inset:0;background:rgba(255,255,255,.16);}
+  .pack-visual svg{position:relative;width:56%;stroke:#3d2612;stroke-width:.8;fill:none;opacity:.5;stroke-linecap:round;stroke-linejoin:round;}
+  .pack-price{position:absolute;bottom:22px;right:26px;z-index:1;font-family:var(--serif);color:#2c1c0e;text-align:right;}
+  .pack-price b{display:block;font-size:2rem;letter-spacing:-.01em;}
+  .pack-price span{font-family:var(--sans);font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:#5c3a1c;}
+
+  /* ============ INSPIRATIONS ============ */
+  .inspi{background:var(--sable);}
+  .insp-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:180px;gap:clamp(10px,1.4vw,18px);}
+  .insp{position:relative;overflow:hidden;border-radius:var(--radius);display:grid;place-items:center;background:linear-gradient(150deg,var(--paper-2),var(--sable-deep));}
+  .insp:nth-child(1){grid-column:span 2;grid-row:span 2;}
+  .insp:nth-child(4){grid-row:span 2;}
+  .insp:nth-child(6){grid-column:span 2;}
+  .insp .art{width:38%;height:38%;stroke:var(--gold);stroke-width:.9;fill:none;opacity:.55;stroke-linecap:round;stroke-linejoin:round;transition:transform .9s cubic-bezier(.2,.7,.2,1);}
+  .insp:hover .art{transform:scale(1.1) rotate(3deg);}
+  .insp .ref{position:absolute;left:12px;bottom:12px;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);background:rgba(252,250,246,.85);padding:.4em .7em;border-radius:var(--radius);opacity:0;transform:translateY(6px);transition:opacity .4s,transform .4s;}
+  .insp:hover .ref{opacity:1;transform:none;}
+
+  /* ============ TESTIMONIALS ============ */
+  .avis-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(18px,2.4vw,36px);}
+  .avis{border:1px solid var(--line-soft);border-radius:var(--radius);padding:clamp(26px,3vw,40px);background:var(--paper);display:flex;flex-direction:column;gap:1.3rem;}
+  .stars{display:flex;gap:.25rem;}
+  .stars svg{width:16px;height:16px;fill:var(--gold);stroke:none;}
+  .avis blockquote{margin:0;font-family:var(--serif);font-size:1.24rem;line-height:1.45;color:var(--ink);}
+  .avis .who{margin-top:auto;display:flex;flex-direction:column;gap:.15rem;}
+  .avis .who b{font-size:.9rem;letter-spacing:.02em;}
+  .avis .who span{font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--stone);}
+
+  /* ============ SOCIAL ============ */
+  .social{text-align:center;}
+  .social .handle{font-family:var(--serif);font-size:clamp(1.6rem,3vw,2.3rem);margin:.4rem 0 .3rem;}
+  .social .subs{display:inline-flex;gap:1.4rem;margin-top:1rem;}
+  .social .subs a{display:inline-flex;align-items:center;gap:.5em;font-size:.76rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);border-bottom:1px solid var(--line);padding-bottom:.4em;transition:color .3s,border-color .3s;}
+  .social .subs a:hover{color:var(--gold-deep);border-color:var(--gold);}
+  .social .subs svg{width:17px;height:17px;stroke:currentColor;stroke-width:1.5;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+  .soc-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:clamp(8px,1.2vw,14px);margin-top:clamp(34px,5vw,56px);}
+  .soc{aspect-ratio:1;border-radius:var(--radius);background:linear-gradient(150deg,var(--paper-2),var(--sable-deep));display:grid;place-items:center;overflow:hidden;}
+  .soc svg{width:34%;height:34%;stroke:var(--gold);stroke-width:.9;fill:none;opacity:.5;stroke-linecap:round;stroke-linejoin:round;transition:transform .7s;}
+  .soc:hover svg{transform:scale(1.15);}
+
+  /* ============ FOOTER ============ */
+  footer{background:var(--ink);color:var(--paper-2);padding-block:clamp(60px,8vw,96px) 2.4rem;}
+  .foot-top{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:clamp(28px,4vw,56px);padding-bottom:clamp(40px,5vw,60px);border-bottom:1px solid rgba(255,255,255,.12);}
+  .foot-brand .mark{width:30px;height:30px;stroke:var(--gold);stroke-width:1.2;fill:none;margin-bottom:1.1rem;}
+  .foot-brand .word{font-family:var(--serif);font-size:1.3rem;letter-spacing:.4em;text-transform:uppercase;display:block;margin-bottom:1.1rem;padding-left:.4em;}
+  .foot-brand p{font-size:.9rem;color:#b7ac9b;max-width:34ch;}
+  .foot-col h5{font-family:var(--sans);font-size:.68rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin:0 0 1.2rem;font-weight:600;}
+  .foot-col ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.7rem;}
+  .foot-col a{font-size:.88rem;color:#c8bdac;transition:color .3s;}
+  .foot-col a:hover{color:#fff;}
+  .foot-col address{font-style:normal;font-size:.88rem;color:#c8bdac;line-height:1.9;}
+  .foot-bottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;padding-top:2rem;font-size:.72rem;letter-spacing:.08em;color:#8f8677;}
+  .foot-bottom .made{color:var(--gold);}
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width:1080px){
+    .cat-grid{grid-template-columns:repeat(3,1fr);}
+    .prod-grid{grid-template-columns:repeat(2,1fr);}
+    .steps{grid-template-columns:repeat(2,1fr);row-gap:2.6rem;}
+    .soc-grid{grid-template-columns:repeat(3,1fr);}
+  }
+  @media (max-width:820px){
+    .nav-links{display:none;}
+    .burger{display:grid;place-items:center;color:var(--ink);}
+    .burger svg{width:24px;height:24px;stroke:currentColor;stroke-width:1.5;fill:none;stroke-linecap:round;}
+    .univers{grid-template-columns:1fr;}
+    .coll-grid{grid-template-columns:1fr;}
+    .avis-grid{grid-template-columns:1fr;}
+    .pack-inner{grid-template-columns:1fr;}
+    .pack-visual{min-height:220px;order:-1;}
+    .insp-grid{grid-template-columns:repeat(2,1fr);grid-auto-rows:150px;}
+    .insp:nth-child(1){grid-column:span 2;}
+    .foot-top{grid-template-columns:1fr 1fr;}
+  }
+  @media (max-width:520px){
+    .cat-grid{grid-template-columns:repeat(2,1fr);}
+    .prod-grid{grid-template-columns:1fr;}
+    .steps{grid-template-columns:1fr;}
+    .soc-grid{grid-template-columns:repeat(2,1fr);}
+    .foot-top{grid-template-columns:1fr;}
+    .hero-cta .btn{flex:1;justify-content:center;}
+  }
+
+  /* mobile menu panel */
+  .mpanel{position:fixed;inset:0;z-index:30;background:var(--paper);transform:translateY(-100%);transition:transform .5s cubic-bezier(.2,.7,.2,1);display:flex;flex-direction:column;padding:2rem var(--gutter);}
+  .mpanel.open{transform:none;}
+  .mpanel-top{display:flex;justify-content:space-between;align-items:center;height:82px;}
+  .mpanel .word{font-family:var(--serif);font-size:1.3rem;letter-spacing:.4em;text-transform:uppercase;padding-left:.4em;}
+  .mpanel nav{display:flex;flex-direction:column;gap:.4rem;margin-top:2rem;}
+  .mpanel nav a{font-family:var(--serif);font-size:2rem;padding:.4rem 0;border-bottom:1px solid var(--line-soft);color:var(--ink);}
+  .mpanel .close svg{width:26px;height:26px;stroke:var(--ink);stroke-width:1.5;fill:none;stroke-linecap:round;}
+</style>
+
+<!-- ============ SVG SPRITE ============ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-sun" viewBox="0 0 24 24"><path d="M2 20h20"/><path d="M6 20a6 6 0 0 1 12 0"/><path d="M12 3v3M4.5 6l1.8 1.8M19.5 6l-1.8 1.8M2 12.5h2.4M19.6 12.5H22"/></symbol>
+  <symbol id="i-sprig" viewBox="0 0 24 24"><path d="M12 22V5"/><path d="M12 13c.3-3 2.4-4.7 5-4.6-.2 3-2.3 4.8-5 4.6z"/><path d="M12 10c-.3-3-2.4-4.7-5-4.6.2 3 2.3 4.8 5 4.6z"/><path d="M12 8c.2-2.2 1.7-3.5 3.8-3.4-.2 2.2-1.7 3.6-3.8 3.4z"/></symbol>
+  <symbol id="i-arch" viewBox="0 0 24 24"><path d="M5 22V11a7 7 0 0 1 14 0v11"/><path d="M3 22h18"/></symbol>
+  <symbol id="i-coupe" viewBox="0 0 24 24"><path d="M7 3h10v2.5a5 5 0 0 1-10 0z"/><path d="M12 10.5V19"/><path d="M8 20h8"/></symbol>
+  <symbol id="i-candle" viewBox="0 0 24 24"><path d="M12 3c1.9 2.3 2.8 3.8 2.8 5.4a2.8 2.8 0 0 1-5.6 0c0-1 .5-1.9 1.4-3"/><rect x="9.2" y="11" width="5.6" height="10" rx="1"/></symbol>
+  <symbol id="i-camera" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="12" cy="13.5" r="3.2"/><path d="M8.5 7l1.4-2.2h4.2L15.5 7"/></symbol>
+  <symbol id="i-chair" viewBox="0 0 24 24"><path d="M7 4v8M17 4v8M6.5 12h11M8 12l-1 8M16 12l1 8M9 20h6"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20.5C7 16.6 3.5 13.4 3.5 9.6 3.5 7.2 5.4 5.4 7.7 5.4c1.7 0 3.2 1 4.3 2.6 1.1-1.6 2.6-2.6 4.3-2.6 2.3 0 4.2 1.8 4.2 4.2 0 3.8-3.5 7-8.5 10.9z"/></symbol>
+  <symbol id="i-bag" viewBox="0 0 24 24"><path d="M6 8h12l-1 12H7z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="16" rx="2"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/><path d="M7.5 13.5h3M13.5 13.5h3M7.5 17h3"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="M21 4L10.5 14.5"/><path d="M21 4l-7 17-3.5-7.5L3 10z"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M9 12h6M9 15.5h6M9 8.5h2"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.3 5.9L20.5 9l-4.8 4 1.6 6.4L12 16.2 6.7 19.4 8.3 13 3.5 9l6.2-.1z"/></symbol>
+  <symbol id="i-ig" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></symbol>
+  <symbol id="i-tt" viewBox="0 0 24 24"><path d="M13.5 3v11.5a3.5 3.5 0 1 1-3-3.46"/><path d="M13.5 5.2c.6 2.3 2.3 3.9 4.7 4.1"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-table" viewBox="0 0 24 24"><path d="M3 9h18M5 9v3M19 9v3M4 6h16v3H4zM7 12v8M17 12v8"/></symbol>
+  <symbol id="i-flower" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.4"/><path d="M12 9.6c-.7-2.2.3-4.1 0-4.6-.3.5.7 2.4 0 4.6M12 14.4c.7 2.2-.3 4.1 0 4.6.3-.5-.7-2.4 0-4.6M9.6 12c-2.2-.7-4.1.3-4.6 0 .5-.3 2.4.7 4.6 0M14.4 12c2.2.7 4.1-.3 4.6 0-.5.3-2.4-.7-4.6 0"/></symbol>
+  <symbol id="i-lantern" viewBox="0 0 24 24"><path d="M9 4h6M10 4v2M14 4v2"/><rect x="7.5" y="6" width="9" height="12" rx="2"/><path d="M12 6v12M9.5 20h5"/></symbol>
+</svg>
+
+<!-- ============ ANNOUNCE ============ -->
+<div class="announce">Location de mobilier &amp; décoration événementielle — Livraison à <b>Amiens &amp; ses alentours</b></div>
+
+<!-- ============ HEADER ============ -->
+<header class="site-head" id="head">
+  <div class="wrap nav">
+    <a class="brand" href="#" aria-label="Solstice, accueil">
+      <svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13.5" r="4"/><path d="M12 3v3M4.7 6.7l1.6 1.6M19.3 6.7l-1.6 1.6M2.5 13.5h2M19.5 13.5h2M4 20h16"/></svg>
+      <span class="word">Solstice</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#catalogue">Catalogue</a></li>
+      <li><a href="#univers">Nos univers</a></li>
+      <li><a href="#inspirations">Inspirations</a></li>
+      <li><a href="#apropos">À propos</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div class="nav-tools">
+      <button aria-label="Favoris"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg></button>
+      <button aria-label="Panier"><svg class="icon" aria-hidden="true"><use href="#i-bag"/></svg><span class="count">3</span></button>
+      <button class="burger" id="burger" aria-label="Menu"><svg aria-hidden="true"><use href="#i-menu"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<!-- mobile panel -->
+<div class="mpanel" id="mpanel">
+  <div class="mpanel-top">
+    <span class="word">Solstice</span>
+    <button class="close" id="mclose" aria-label="Fermer"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
+  </div>
+  <nav>
+    <a href="#catalogue">Catalogue</a>
+    <a href="#univers">Nos univers</a>
+    <a href="#inspirations">Inspirations</a>
+    <a href="#apropos">À propos</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</div>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <svg class="hero-sun" viewBox="0 0 600 320" aria-hidden="true">
+    <circle cx="300" cy="300" r="120"/>
+    <circle cx="300" cy="300" r="170"/>
+    <circle cx="300" cy="300" r="220"/>
+    <g stroke-width="1">
+      <path d="M300 40v70M180 70l34 62M420 70l-34 62M70 170l64 34M530 170l-64 34M40 300h70M490 300h70"/>
+    </g>
+  </svg>
+  <div class="hero-inner">
+    <span class="eyebrow reveal">Mobilier &amp; décoration d'événements · Amiens</span>
+    <h1 class="reveal d1">Le décor de vos <em>plus beaux</em> moments.</h1>
+    <p class="lede reveal d2">Mobilier, art de la table et décoration en location pour vos mariages, anniversaires et réceptions. On imagine, vous savourez.</p>
+    <div class="hero-cta reveal d3">
+      <a class="btn btn-ink" href="#catalogue">Découvrir le catalogue <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+      <a class="btn btn-ghost" href="#process">Composer mon événement</a>
+    </div>
+  </div>
+  <div class="scrollcue" aria-hidden="true"><span class="bar"></span>Défiler</div>
+</section>
+
+<!-- ============ UNIVERS ============ -->
+<section class="univers" id="univers">
+  <a class="uni uni-ete reveal" href="#">
+    <svg class="glyph" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sun"/></svg>
+    <div class="uni-body">
+      <span class="tag">Solstice d'Été</span>
+      <h3>Lumière &amp; grands airs</h3>
+      <p>Lin froissé, pampa, tables sous la treille et éclats dorés. La saison des célébrations en plein air.</p>
+      <span class="uni-link">Explorer l'été <svg aria-hidden="true"><use href="#i-arrow"/></svg></span>
+    </div>
+  </a>
+  <a class="uni uni-hiver reveal d1" href="#">
+    <svg class="glyph" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-candle"/></svg>
+    <div class="uni-body">
+      <span class="tag">Solstice d'Hiver</span>
+      <h3>Velours &amp; bougies</h3>
+      <p>Ambiances cocon, verrerie fumée et touches dorées. Pour des réceptions chaleureuses et feutrées.</p>
+      <span class="uni-link">Explorer l'hiver <svg aria-hidden="true"><use href="#i-arrow"/></svg></span>
+    </div>
+  </a>
+</section>
+
+<!-- ============ CATEGORIES ============ -->
+<section class="section cats">
+  <div class="wrap">
+    <div class="sec-head center">
+      <span class="eyebrow center reveal">Explorer par catégorie</span>
+      <h2 class="reveal d1">Tout pour dresser la scène</h2>
+    </div>
+    <div class="cat-grid">
+      <a class="cat reveal" href="#"><svg aria-hidden="true"><use href="#i-chair"/></svg><span>Mobilier</span></a>
+      <a class="cat reveal d1" href="#"><svg aria-hidden="true"><use href="#i-coupe"/></svg><span>Art de la table</span></a>
+      <a class="cat reveal d2" href="#"><svg aria-hidden="true"><use href="#i-flower"/></svg><span>Décoration</span></a>
+      <a class="cat reveal d3" href="#"><svg aria-hidden="true"><use href="#i-lantern"/></svg><span>Ambiance &amp; lumière</span></a>
+      <a class="cat reveal d2" href="#"><svg aria-hidden="true"><use href="#i-camera"/></svg><span>Animations</span></a>
+      <a class="cat reveal d3" href="#"><svg aria-hidden="true"><use href="#i-arch"/></svg><span>Cérémonie</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ NOUVEAUTES / CATALOGUE ============ -->
+<section class="section" id="catalogue">
+  <div class="wrap">
+    <div class="sec-flex">
+      <div>
+        <span class="eyebrow reveal">Nouveautés &amp; coups de cœur</span>
+        <h2 class="reveal d1" style="margin-top:1rem;">Nos pièces du moment</h2>
+      </div>
+      <a class="link-more reveal d1" href="#">Voir tout le catalogue <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+    </div>
+    <div class="prod-grid">
+      <article class="card reveal">
+        <div class="card-media"><svg class="art" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chair"/></svg>
+          <span class="card-tag gold">Coup de cœur</span>
+          <button class="fav" aria-label="Ajouter aux favoris"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
+          <button class="card-add">Ajouter au panier</button>
+        </div>
+        <div class="card-info"><h4>Chaise Napoléon transparente</h4>
+          <div class="card-meta"><span class="card-price">4 €<span> / jour</span></span><span class="card-caution">caution 15 €</span></div>
+        </div>
+      </article>
+      <article class="card reveal d1">
+        <div class="card-media"><svg class="art" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arch"/></svg>
+          <span class="card-tag">Nouveau</span>
+          <button class="fav" aria-label="Ajouter aux favoris"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
+          <button class="card-add">Ajouter au panier</button>
+        </div>
+        <div class="card-info"><h4>Arche ronde en bois clair</h4>
+          <div class="card-meta"><span class="card-price">45 €<span> / week-end</span></span><span class="card-caution">caution 80 €</span></div>
+        </div>
+      </article>
+      <article class="card reveal d2">
+        <div class="card-media"><svg class="art" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-coupe"/></svg>
+          <button class="fav" aria-label="Ajouter aux favoris"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
+          <button class="card-add">Ajouter au panier</button>
+        </div>
+        <div class="card-info"><h4>Ménagère dorée · 6 couverts</h4>
+          <div class="card-meta"><span class="card-price">12 €<span> / jour</span></span><span class="card-caution">caution 40 €</span></div>
+        </div>
+      </article>
+      <article class="card reveal d3">
+        <div class="card-media"><svg class="art" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-camera"/></svg>
+          <span class="card-tag gold">Coup de cœur</span>
+          <button class="fav" aria-label="Ajouter aux favoris"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
+          <button class="card-add">Ajouter au panier</button>
+        </div>
+        <div class="card-info"><h4>Photobooth vintage &amp; toile</h4>
+          <div class="card-meta"><span class="card-price">90 €<span> / week-end</span></span><span class="card-caution">caution 150 €</span></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COLLECTIONS ============ -->
+<section class="section collections">
+  <div class="wrap">
+    <div class="sec-flex">
+      <div>
+        <span class="eyebrow reveal">Nos ambiances</span>
+        <h2 class="reveal d1" style="margin-top:1rem;">Des collections qui donnent le ton</h2>
+      </div>
+      <a class="link-more reveal d1" href="#" style="color:var(--gold);border-color:var(--gold);">Toutes les collections <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+    </div>
+    <div class="coll-grid">
+      <a class="coll coll-1 reveal" href="#">
+        <svg class="glyph" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-coupe"/></svg>
+        <div class="coll-body"><span class="n">Solstice d'Été</span><h3>Dolce Vita</h3><p>Terrasses ensoleillées, citrons et lin naturel.</p></div>
+      </a>
+      <a class="coll coll-2 reveal d1" href="#">
+        <svg class="glyph" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sprig"/></svg>
+        <div class="coll-body"><span class="n">Solstice d'Été</span><h3>Garden Party</h3><p>Verdure, guinguette chic et vaisselle champêtre.</p></div>
+      </a>
+      <a class="coll coll-3 reveal d2" href="#">
+        <svg class="glyph" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-candle"/></svg>
+        <div class="coll-body"><span class="n">Solstice d'Hiver</span><h3>Black &amp; Gold</h3><p>Noir profond, dorures et éclat des grands soirs.</p></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROCESS ============ -->
+<section class="section" id="process">
+  <div class="wrap">
+    <div class="sec-head center">
+      <span class="eyebrow center reveal">Simple &amp; sans engagement</span>
+      <h2 class="reveal d1">Réserver en quatre temps</h2>
+      <p class="lede reveal d2" style="text-align:center;">Pas de paiement en ligne : vous envoyez une demande, on vous prépare un devis sur mesure.</p>
+    </div>
+    <div class="steps">
+      <div class="step reveal"><span class="no"></span><div class="rule"></div><svg aria-hidden="true"><use href="#i-bag"/></svg><h4>Composez votre sélection</h4><p>Parcourez le catalogue et ajoutez vos pièces favorites au panier.</p></div>
+      <div class="step reveal d1"><span class="no"></span><div class="rule"></div><svg aria-hidden="true"><use href="#i-cal"/></svg><h4>Choisissez vos dates</h4><p>Retrait ou livraison, et le lieu de votre événement à Amiens et alentours.</p></div>
+      <div class="step reveal d2"><span class="no"></span><div class="rule"></div><svg aria-hidden="true"><use href="#i-send"/></svg><h4>Envoyez votre demande</h4><p>Sans engagement. On vérifie les disponibilités de chaque pièce.</p></div>
+      <div class="step reveal d3"><span class="no"></span><div class="rule"></div><svg aria-hidden="true"><use href="#i-doc"/></svg><h4>Recevez votre devis</h4><p>Sous 24 à 48 h. Vous validez, et tout est prêt pour le jour J.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PACK ============ -->
+<section class="section" style="padding-top:0;">
+  <div class="wrap">
+    <div class="pack reveal">
+      <div class="pack-inner">
+        <div class="pack-copy">
+          <span class="eyebrow">Clé en main</span>
+          <h3>Le Pack Garden Party</h3>
+          <p>Tables, chaises, vaisselle, verrerie et décoration végétale pour recevoir jusqu'à 20 invités. Une ambiance complète, pensée pour vous simplifier la vie.</p>
+          <a class="btn btn-ink" href="#">Découvrir le pack <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        </div>
+        <div class="pack-visual">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-table"/></svg>
+          <div class="pack-price"><span>à partir de</span><b>190 €</b></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ INSPIRATIONS ============ -->
+<section class="section inspi" id="inspirations">
+  <div class="wrap">
+    <div class="sec-flex">
+      <div>
+        <span class="eyebrow reveal">Galerie d'inspirations</span>
+        <h2 class="reveal d1" style="margin-top:1rem;">Ils se sont dit oui avec Solstice</h2>
+      </div>
+      <a class="link-more reveal d1" href="#">Voir la galerie <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+    </div>
+    <div class="insp-grid reveal">
+      <div class="insp"><svg class="art" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arch"/></svg><span class="ref">Cérémonie · arche fleurie</span></div>
+      <div class="insp"><svg class="art" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-coupe"/></svg><span class="ref">Art de la table</span></div>
+      <div class="insp"><svg class="art" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-candle"/></svg><span class="ref">Ambiance bougies</span></div>
+      <div class="insp"><svg class="art" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sprig"/></svg><span class="ref">Décor végétal</span></div>
+      <div class="insp"><svg class="art" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chair"/></svg><span class="ref">Mobilier lounge</span></div>
+      <div class="insp"><svg class="art" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-lantern"/></svg><span class="ref">Guirlandes &amp; lanternes</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ AVIS ============ -->
+<section class="section" id="apropos">
+  <div class="wrap">
+    <div class="sec-head center">
+      <span class="eyebrow center reveal">Ils nous ont fait confiance</span>
+      <h2 class="reveal d1">Des événements, de vrais souvenirs</h2>
+    </div>
+    <div class="avis-grid">
+      <figure class="avis reveal">
+        <div class="stars" aria-label="5 sur 5"><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg></div>
+        <blockquote>« Une décoration de mariage sublime et un accompagnement adorable. Nos invités n'en revenaient pas. »</blockquote>
+        <figcaption class="who"><b>Camille &amp; Thomas</b><span>Mariage · Amiens</span></figcaption>
+      </figure>
+      <figure class="avis reveal d1">
+        <div class="stars" aria-label="5 sur 5"><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg></div>
+        <blockquote>« Le Pack Garden Party a transformé l'anniversaire de ma fille. Tout était prêt, il n'y avait plus qu'à profiter. »</blockquote>
+        <figcaption class="who"><b>Léa M.</b><span>Anniversaire · Longueau</span></figcaption>
+      </figure>
+      <figure class="avis reveal d2">
+        <div class="stars" aria-label="5 sur 5"><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg></div>
+        <blockquote>« Du matériel haut de gamme, une livraison à l'heure et un vrai sens du détail. Je recommande les yeux fermés. »</blockquote>
+        <figcaption class="who"><b>Sarah &amp; Julien</b><span>Réception · Boves</span></figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SOCIAL ============ -->
+<section class="section social">
+  <div class="wrap">
+    <span class="eyebrow center reveal">Suivez-nous</span>
+    <div class="handle reveal d1">@solstice.evenements</div>
+    <div class="subs reveal d2">
+      <a href="#"><svg aria-hidden="true"><use href="#i-ig"/></svg>Instagram</a>
+      <a href="#"><svg aria-hidden="true"><use href="#i-tt"/></svg>TikTok</a>
+    </div>
+    <div class="soc-grid reveal">
+      <div class="soc"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arch"/></svg></div>
+      <div class="soc"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-coupe"/></svg></div>
+      <div class="soc"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-candle"/></svg></div>
+      <div class="soc"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sprig"/></svg></div>
+      <div class="soc"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chair"/></svg></div>
+      <div class="soc"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-lantern"/></svg></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer id="contact">
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13.5" r="4"/><path d="M12 3v3M4.7 6.7l1.6 1.6M19.3 6.7l-1.6 1.6M2.5 13.5h2M19.5 13.5h2M4 20h16"/></svg>
+        <span class="word">Solstice</span>
+        <p>Location de mobilier et de décoration pour vos événements. Le décor de vos plus beaux moments, à Amiens et ses alentours.</p>
+      </div>
+      <div class="foot-col">
+        <h5>Le catalogue</h5>
+        <ul><li><a href="#">Mobilier</a></li><li><a href="#">Art de la table</a></li><li><a href="#">Décoration</a></li><li><a href="#">Cérémonie</a></li><li><a href="#">Nos collections</a></li></ul>
+      </div>
+      <div class="foot-col">
+        <h5>La maison</h5>
+        <ul><li><a href="#">Nos univers</a></li><li><a href="#">Inspirations</a></li><li><a href="#">À propos</a></li><li><a href="#">FAQ</a></li></ul>
+      </div>
+      <div class="foot-col">
+        <h5>Contact</h5>
+        <address>
+          Amiens, Somme (80)<br>
+          Livraison Amiens &amp; ~30 km<br>
+          bonjour@solstice-events.fr<br>
+          Sur rendez-vous
+        </address>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Solstice — Tous droits réservés.</span>
+      <span class="made">Maquette · direction visuelle</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.documentElement.classList.add('js');
+
+  // sticky header shadow
+  var head = document.getElementById('head');
+  var onScroll = function(){ head.classList.toggle('stuck', window.scrollY > 10); };
+  onScroll(); window.addEventListener('scroll', onScroll, {passive:true});
+
+  // reveal on scroll
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var els = document.querySelectorAll('.reveal');
+  if(reduce || !('IntersectionObserver' in window)){
+    els.forEach(function(el){ el.classList.add('in'); });
+  } else {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, {threshold:0.12, rootMargin:'0px 0px -8% 0px'});
+    els.forEach(function(el){ io.observe(el); });
+  }
+
+  // favorites toggle (mockup delight)
+  document.querySelectorAll('.fav').forEach(function(b){
+    b.addEventListener('click', function(e){ e.preventDefault(); b.classList.toggle('on'); });
+  });
+
+  // mobile menu
+  var panel = document.getElementById('mpanel');
+  var open = function(){ panel.classList.add('open'); document.body.style.overflow='hidden'; };
+  var close = function(){ panel.classList.remove('open'); document.body.style.overflow=''; };
+  document.getElementById('burger').addEventListener('click', open);
+  document.getElementById('mclose').addEventListener('click', close);
+  panel.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', close); });
+</script>
+</body>
+</html>
