@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nos univers — Solstice</title>
+<meta name="description" content="Solstice s&#x27;organise autour de deux univers : Solstice d&#x27;Été, lumineux et doré, et Solstice d&#x27;Hiver, velours et bougies, déclinés en collections.">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#FBF8F2">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/site.css">
+<style>
+/* ===== Nos univers — styles de page ===== */
+
+/* Bandeau des deux pôles (intro) */
+.sband{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin-top:clamp(34px,5vw,56px);}
+.sband > div{position:relative;overflow:hidden;padding:clamp(26px,4vw,44px);min-height:clamp(190px,24vw,270px);display:flex;flex-direction:column;justify-content:flex-end;gap:.28rem;}
+.sband .s-ete{background:linear-gradient(150deg,var(--ete-1),var(--ete-2) 68%,var(--ete-3));color:var(--ink);}
+.sband .s-hiver{background:linear-gradient(150deg,var(--hiver-1),var(--hiver-2) 58%,var(--hiver-3));color:var(--paper);}
+.sband .s-glyph{position:absolute;top:9%;right:8%;width:clamp(70px,12vw,120px);height:auto;stroke-width:.7;fill:none;stroke-linecap:round;stroke-linejoin:round;opacity:.3;}
+.sband .s-ete .s-glyph{stroke:var(--hiver-2);}
+.sband .s-hiver .s-glyph{stroke:var(--gold-soft);opacity:.35;}
+.sband .s-tag{font-size:.62rem;letter-spacing:.24em;text-transform:uppercase;opacity:.82;}
+.sband strong{font-family:var(--serif);font-weight:400;font-size:clamp(1.5rem,3vw,2.1rem);line-height:1.05;}
+.sband .s-sub{font-size:.8rem;letter-spacing:.02em;opacity:.85;}
+
+/* Sections univers */
+.uni-ete-sec{background:linear-gradient(160deg,var(--ete-1),var(--ete-2) 62%,var(--ete-3));color:var(--ink);}
+.uni-ete-sec .eyebrow{color:var(--hiver-1);}
+.uni-ete-sec .eyebrow::before{background:var(--hiver-1);opacity:.6;}
+.uni-ete-sec h2{color:var(--ink);}
+.uni-ete-sec .lead{color:var(--ink);}
+.uni-hiver-sec{background:linear-gradient(160deg,var(--hiver-1),var(--hiver-2) 58%,var(--hiver-3));}
+.uni-hiver-sec .lead{color:var(--paper);}
+
+.uni-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(30px,5vw,64px);align-items:center;}
+.uni-copy{display:flex;flex-direction:column;gap:1.15rem;}
+.uni-copy .lead{margin:0;}
+
+.kw-list{display:flex;flex-wrap:wrap;gap:.5rem;list-style:none;padding:0;margin:.1rem 0 0;}
+.kw-list li{font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;padding:.5em .9em;border-radius:99px;}
+.uni-ete-sec .kw-list li{border:1px solid rgba(34,28,21,.26);background:rgba(255,255,255,.16);color:var(--ink);}
+.uni-hiver-sec .kw-list li{border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.05);color:var(--paper);}
+
+.assoc{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem 1rem;margin-top:.3rem;}
+.assoc-label{font-size:.64rem;letter-spacing:.2em;text-transform:uppercase;opacity:.7;}
+.assoc-list{display:flex;flex-wrap:wrap;gap:.5rem .8rem;list-style:none;padding:0;margin:0;}
+.assoc-list a{display:inline-flex;align-items:center;font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;font-weight:600;border-bottom:1px solid currentColor;padding-bottom:.25em;transition:opacity .3s;}
+.assoc-list a:hover{opacity:.65;}
+
+.uni-visual{position:relative;aspect-ratio:4/5;border-radius:var(--radius);display:grid;place-items:center;overflow:hidden;}
+.uni-ete-sec .uni-visual{background:rgba(255,255,255,.2);}
+.uni-hiver-sec .uni-visual{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);}
+.uni-visual .art{width:44%;height:44%;stroke-width:.8;fill:none;opacity:.55;stroke-linecap:round;stroke-linejoin:round;transition:transform .9s cubic-bezier(.2,.7,.2,1);}
+.uni-ete-sec .uni-visual .art{stroke:var(--hiver-2);}
+.uni-hiver-sec .uni-visual .art{stroke:var(--gold-soft);}
+.uni-visual:hover .art{transform:scale(1.07);}
+.uni-visual .cap{position:absolute;left:14px;bottom:14px;font-size:.58rem;letter-spacing:.13em;text-transform:uppercase;background:rgba(251,248,242,.9);color:var(--ink-soft);padding:.4em .7em;border-radius:99px;}
+
+/* Grille des collections */
+.colls{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(14px,1.8vw,24px);}
+.coll{position:relative;aspect-ratio:3/4;overflow:hidden;border-radius:var(--radius);display:flex;flex-direction:column;justify-content:flex-end;padding:clamp(20px,2.4vw,30px);color:#fff;transition:transform .4s ease,box-shadow .4s ease;}
+.coll:hover{transform:translateY(-5px);box-shadow:0 24px 40px -30px rgba(34,28,21,.6);}
+.coll::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(20,15,9,.55),transparent 60%);}
+.coll > *{position:relative;z-index:1;}
+.coll .glyph{position:absolute;top:8%;right:8%;width:clamp(60px,10vw,104px);height:auto;stroke:#fff;stroke-width:.7;fill:none;opacity:.4;stroke-linecap:round;stroke-linejoin:round;}
+.coll .n{font-size:.6rem;letter-spacing:.24em;text-transform:uppercase;opacity:.85;}
+.coll h3{font-size:clamp(1.4rem,2.2vw,2rem);margin:.3em 0 .35em;color:#fff;}
+.coll p{font-size:.84rem;opacity:.92;max-width:26ch;}
+.coll-dolce{background:linear-gradient(158deg,var(--ete-1),var(--ete-2) 60%,var(--ete-3));}
+.coll-garden{background:linear-gradient(158deg,var(--sand),var(--gold-soft) 55%,var(--gold-deep));}
+.coll-black{background:linear-gradient(158deg,var(--hiver-1),var(--hiver-2) 55%,var(--hiver-3));}
+.coll-white{background:linear-gradient(158deg,var(--paper),var(--paper-2) 45%,var(--sand-2));color:var(--ink);}
+.coll-white::after{background:linear-gradient(to top,rgba(255,255,255,.45),transparent 55%);}
+.coll-white .glyph{stroke:var(--gold-deep);opacity:.5;}
+.coll-white .n{color:var(--gold-deep);opacity:1;}
+.coll-white h3{color:var(--ink);}
+.coll-white p{color:var(--ink-soft);opacity:1;}
+
+/* Articulation univers / collections / catégories */
+.artic{display:flex;flex-wrap:wrap;align-items:stretch;gap:clamp(14px,1.8vw,22px);}
+.node{flex:1 1 230px;border:1px solid var(--line);border-radius:var(--radius);background:var(--paper);padding:clamp(24px,2.8vw,34px);display:flex;flex-direction:column;gap:.65rem;}
+.node .ic{width:32px;height:32px;stroke:var(--gold-deep);stroke-width:1.15;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+.node .step{font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-deep);}
+.node h3{font-size:1.3rem;}
+.node p{font-size:.9rem;color:var(--ink-soft);}
+.artic .arrow{align-self:center;color:var(--gold);flex:0 0 auto;}
+.artic .arrow svg{width:26px;height:26px;stroke:currentColor;stroke-width:1.4;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+.artic-ex{margin-top:clamp(24px,3vw,34px);max-width:72ch;color:var(--ink-soft);font-size:1rem;border-left:2px solid var(--gold);padding-left:1.1rem;}
+.artic-ex strong{color:var(--ink);}
+
+/* CTA final */
+.cta{background:linear-gradient(150deg,var(--ete-1),var(--ete-2) 72%,var(--ete-3));border-radius:var(--radius);padding:clamp(42px,6vw,82px) clamp(24px,5vw,60px);text-align:center;color:var(--ink);}
+.cta .eyebrow{color:var(--hiver-1);}
+.cta .eyebrow::before,.cta .eyebrow::after{background:var(--hiver-1);opacity:.6;}
+.cta h2{color:var(--ink);font-size:clamp(1.9rem,4vw,3rem);margin:.6rem auto 0;max-width:20ch;}
+.cta p{color:var(--ink);max-width:56ch;margin:1.1rem auto 0;opacity:.92;}
+.cta-btns{display:flex;flex-wrap:wrap;gap:.9rem;justify-content:center;margin-top:2.1rem;}
+.cta .btn-ink{background:var(--ink);}
+.cta .btn-ghost{border-color:rgba(34,28,21,.4);color:var(--ink);}
+.cta .btn-ghost:hover{background:var(--ink);color:var(--ete-1);border-color:var(--ink);}
+
+/* Responsive */
+@media (max-width:860px){
+  .uni-grid{grid-template-columns:1fr;}
+  .uni-visual{order:-1;aspect-ratio:16/10;}
+  .colls{grid-template-columns:repeat(2,1fr);}
+  .artic .arrow{display:none;}
+}
+@media (max-width:560px){
+  .sband{grid-template-columns:1fr;}
+  .colls{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-sun" viewBox="0 0 24 24"><path d="M2 20h20"/><path d="M6 20a6 6 0 0 1 12 0"/><path d="M12 3v3M4.5 6l1.8 1.8M19.5 6l-1.8 1.8M2 12.5h2.4M19.6 12.5H22"/></symbol>
+  <symbol id="i-sprig" viewBox="0 0 24 24"><path d="M12 22V5"/><path d="M12 13c.3-3 2.4-4.7 5-4.6-.2 3-2.3 4.8-5 4.6z"/><path d="M12 10c-.3-3-2.4-4.7-5-4.6.2 3 2.3 4.8 5 4.6z"/><path d="M12 8c.2-2.2 1.7-3.5 3.8-3.4-.2 2.2-1.7 3.6-3.8 3.4z"/></symbol>
+  <symbol id="i-arch" viewBox="0 0 24 24"><path d="M5 22V11a7 7 0 0 1 14 0v11"/><path d="M3 22h18"/></symbol>
+  <symbol id="i-coupe" viewBox="0 0 24 24"><path d="M7 3h10v2.5a5 5 0 0 1-10 0z"/><path d="M12 10.5V19"/><path d="M8 20h8"/></symbol>
+  <symbol id="i-candle" viewBox="0 0 24 24"><path d="M12 3c1.9 2.3 2.8 3.8 2.8 5.4a2.8 2.8 0 0 1-5.6 0c0-1 .5-1.9 1.4-3"/><rect x="9.2" y="11" width="5.6" height="10" rx="1"/></symbol>
+  <symbol id="i-camera" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="12" cy="13.5" r="3.2"/><path d="M8.5 7l1.4-2.2h4.2L15.5 7"/></symbol>
+  <symbol id="i-chair" viewBox="0 0 24 24"><path d="M7 4v8M17 4v8M6.5 12h11M8 12l-1 8M16 12l1 8M9 20h6"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20.5C7 16.6 3.5 13.4 3.5 9.6 3.5 7.2 5.4 5.4 7.7 5.4c1.7 0 3.2 1 4.3 2.6 1.1-1.6 2.6-2.6 4.3-2.6 2.3 0 4.2 1.8 4.2 4.2 0 3.8-3.5 7-8.5 10.9z"/></symbol>
+  <symbol id="i-bag" viewBox="0 0 24 24"><path d="M6 8h12l-1 12H7z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="16" rx="2"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/><path d="M7.5 13.5h3M13.5 13.5h3M7.5 17h3"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="M21 4L10.5 14.5"/><path d="M21 4l-7 17-3.5-7.5L3 10z"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M9 12h6M9 15.5h6M9 8.5h2"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.3 5.9L20.5 9l-4.8 4 1.6 6.4L12 16.2 6.7 19.4 8.3 13 3.5 9l6.2-.1z"/></symbol>
+  <symbol id="i-ig" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></symbol>
+  <symbol id="i-tt" viewBox="0 0 24 24"><path d="M13.5 3v11.5a3.5 3.5 0 1 1-3-3.46"/><path d="M13.5 5.2c.6 2.3 2.3 3.9 4.7 4.1"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-table" viewBox="0 0 24 24"><path d="M3 9h18M5 9v3M19 9v3M4 6h16v3H4zM7 12v8M17 12v8"/></symbol>
+  <symbol id="i-flower" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.4"/><path d="M12 9.6c-.7-2.2.3-4.1 0-4.6-.3.5.7 2.4 0 4.6M12 14.4c.7 2.2-.3 4.1 0 4.6.3-.5-.7-2.4 0-4.6M9.6 12c-2.2-.7-4.1.3-4.6 0 .5-.3 2.4.7 4.6 0M14.4 12c2.2.7 4.1-.3 4.6 0-.5.3-2.4-.7-4.6 0"/></symbol>
+  <symbol id="i-lantern" viewBox="0 0 24 24"><path d="M9 4h6M10 4v2M14 4v2"/><rect x="7.5" y="6" width="9" height="12" rx="2"/><path d="M12 6v12M9.5 20h5"/></symbol>
+</svg>
+<div class="announce">Location de mobilier &amp; décoration — <b>Amiens &amp; alentours</b></div>
+<header class="site-head" id="head">
+  <div class="wrap nav">
+    <a class="brand" href="/" aria-label="Solstice, accueil"><svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13.5" r="4"/><path d="M12 3v3M4.7 6.7l1.6 1.6M19.3 6.7l-1.6 1.6M2.5 13.5h2M19.5 13.5h2M4 20h16"/></svg><span class="word">Solstice</span></a>
+    <ul class="nav-links"><li><a href="/catalogue">Catalogue</a></li><li><a href="/nos-univers" aria-current="page">Nos univers</a></li><li><a href="/inspirations">Inspirations</a></li><li><a href="/a-propos">À propos</a></li><li><a href="/contact">Contact</a></li></ul>
+    <div class="nav-tools">
+      <button class="desktop-only" aria-label="Favoris"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg></button>
+      <button aria-label="Panier"><svg class="icon" aria-hidden="true"><use href="#i-bag"/></svg><span class="count">3</span></button>
+      <button class="burger" id="burger" aria-label="Ouvrir le menu"><svg aria-hidden="true"><use href="#i-menu"/></svg></button>
+    </div>
+  </div>
+</header>
+<div class="mpanel" id="mpanel">
+  <div class="mpanel-top"><span class="word">Solstice</span><button class="close" id="mclose" aria-label="Fermer le menu"><svg aria-hidden="true"><use href="#i-close"/></svg></button></div>
+  <nav><a href="/catalogue">Catalogue</a><a href="/nos-univers">Nos univers</a><a href="/inspirations">Inspirations</a><a href="/a-propos">À propos</a><a href="/contact">Contact</a></nav>
+  <div class="m-cta"><a class="btn btn-ink" href="/catalogue">Découvrir le catalogue <svg aria-hidden="true"><use href="#i-arrow"/></svg></a></div>
+</div>
+<main>
+<section class="page-hero">
+  <div class="wrap">
+    <nav class="crumbs"><a href="/">Accueil</a><span class="sep">/</span><span>Nos univers</span></nav>
+    <span class="eyebrow">Le concept Solstice</span>
+    <h1>Deux solstices, <em>mille</em> façons de célébrer.</h1>
+    <p class="lede">Été lumineux ou hiver feutré : chez Solstice, chaque événement puise dans l'un de nos deux grands univers, puis se précise au fil d'une collection et des pièces que vous choisissez.</p>
+  </div>
+</section>
+
+<!-- INTRO — l'idée des deux solstices -->
+<section class="section tint">
+  <div class="wrap">
+    <div class="sec-head center">
+      <span class="eyebrow center reveal">L'idée directrice</span>
+      <h2 class="reveal d1">Une maison rythmée par la lumière</h2>
+      <p class="lede reveal d2" style="text-align:center;">Comme l'année, Solstice tourne autour de deux pôles. Deux atmosphères opposées et complémentaires, entre lesquelles vous composez le décor qui vous ressemble.</p>
+    </div>
+    <div class="prose reveal d1" style="margin-inline:auto;text-align:center;">
+      <p>On ne loue pas du matériel : on aide à préparer l'un des plus beaux jours d'une vie. C'est pourquoi tout commence par une intention, une lumière, une saison — avant même de parler de tables ou de chaises.</p>
+      <p>Le <strong>Solstice d'Été</strong> célèbre le grand air, le doré et la clarté ; le <strong>Solstice d'Hiver</strong> installe le velours, les bougies et la chaleur d'un cocon. Choisissez votre pôle, puis laissez-vous guider vers la collection qui donnera le ton.</p>
+    </div>
+    <div class="sband reveal d2">
+      <div class="s-ete">
+        <svg class="s-glyph" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sun"/></svg>
+        <span class="s-tag">Le pôle chaud</span>
+        <strong>Solstice d'Été</strong>
+        <span class="s-sub">Lumineux · doré · plein air</span>
+      </div>
+      <div class="s-hiver">
+        <svg class="s-glyph" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-candle"/></svg>
+        <span class="s-tag">Le pôle feutré</span>
+        <strong>Solstice d'Hiver</strong>
+        <span class="s-sub">Velours · bougies · cocon</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLSTICE D'ÉTÉ -->
+<section class="section uni-ete-sec" id="ete">
+  <div class="wrap">
+    <div class="uni-grid">
+      <div class="uni-copy">
+        <span class="eyebrow reveal">Solstice d'Été</span>
+        <h2 class="reveal d1">Lumière, doré &amp; grands airs</h2>
+        <p class="lead reveal d1">La saison des célébrations à ciel ouvert. Lin froissé, pampa et olivier, tables dressées sous la treille et éclats de laiton au soleil couchant. Un décor solaire, généreux et raffiné, pour recevoir dehors comme dans un jardin d'été.</p>
+        <ul class="kw-list reveal d2">
+          <li>Lin naturel</li>
+          <li>Pampa &amp; olivier</li>
+          <li>Vaisselle claire</li>
+          <li>Guirlandes guinguette</li>
+          <li>Éclats dorés</li>
+          <li>Terrasses ombragées</li>
+        </ul>
+        <div class="assoc reveal d2">
+          <span class="assoc-label">Collections associées</span>
+          <ul class="assoc-list">
+            <li><a href="/catalogue">Dolce Vita</a></li>
+            <li><a href="/catalogue">Garden Party</a></li>
+            <li><a href="/catalogue">White Party</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="uni-visual reveal d1">
+        <svg class="art" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sun"/></svg>
+        <span class="cap">Garden party au soleil couchant</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLSTICE D'HIVER -->
+<section class="section dark uni-hiver-sec" id="hiver">
+  <div class="wrap">
+    <div class="uni-grid">
+      <div class="uni-visual reveal d1">
+        <svg class="art" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-candle"/></svg>
+        <span class="cap">Réception aux chandelles</span>
+      </div>
+      <div class="uni-copy">
+        <span class="eyebrow reveal">Solstice d'Hiver</span>
+        <h2 class="reveal d1">Velours, bougies &amp; brun chaud</h2>
+        <p class="lead reveal d1">Quand les jours raccourcissent, on resserre les tables et l'on tamise la lumière. Velours côtelé, verrerie fumée, forêts de bougies et dorures profondes : une ambiance cocon, feutrée et enveloppante, pour des réceptions d'hiver pleines de chaleur.</p>
+        <ul class="kw-list reveal d2">
+          <li>Velours côtelé</li>
+          <li>Verrerie fumée</li>
+          <li>Bougies &amp; chandeliers</li>
+          <li>Dorures</li>
+          <li>Bruns profonds</li>
+          <li>Esprit cocon</li>
+        </ul>
+        <div class="assoc reveal d2">
+          <span class="assoc-label">Collections associées</span>
+          <ul class="assoc-list">
+            <li><a href="/catalogue">Black &amp; Gold</a></li>
+            <li><a href="/catalogue">White Party</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GRILLE DES COLLECTIONS -->
+<section class="section" id="collections">
+  <div class="wrap">
+    <div class="sec-flex">
+      <div class="titles">
+        <span class="eyebrow reveal">Nos ambiances</span>
+        <h2 class="reveal d1">Quatre collections pour donner le ton</h2>
+      </div>
+      <a class="link-more reveal d1" href="/catalogue">Voir le catalogue <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+    </div>
+    <p class="lede reveal d1" style="margin-bottom:clamp(30px,4vw,44px);">Au sein de chaque univers, une collection resserre le style : matières, couleurs et petits détails qui feront la signature de votre événement.</p>
+    <div class="colls">
+      <a class="coll coll-dolce reveal" href="/catalogue">
+        <svg class="glyph" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-coupe"/></svg>
+        <span class="n">Solstice d'Été</span>
+        <h3>Dolce Vita</h3>
+        <p>Terrasses ensoleillées, citrons et lin naturel. L'art de vivre italien.</p>
+      </a>
+      <a class="coll coll-garden reveal d1" href="/catalogue">
+        <svg class="glyph" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sprig"/></svg>
+        <span class="n">Solstice d'Été</span>
+        <h3>Garden Party</h3>
+        <p>Verdure douce, guinguette chic et vaisselle champêtre. Recevoir au jardin.</p>
+      </a>
+      <a class="coll coll-white reveal d2" href="/catalogue">
+        <svg class="glyph" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-lantern"/></svg>
+        <span class="n">Été &amp; Hiver</span>
+        <h3>White Party</h3>
+        <p>Total look immaculé, épuré et lumineux. Solaire l'été, givré l'hiver.</p>
+      </a>
+      <a class="coll coll-black reveal d3" href="/catalogue">
+        <svg class="glyph" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-candle"/></svg>
+        <span class="n">Solstice d'Hiver</span>
+        <h3>Black &amp; Gold</h3>
+        <p>Noir profond, dorures et éclat des grands soirs. L'élégance des fêtes.</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ARTICULATION univers / collections / catégories -->
+<section class="section sand">
+  <div class="wrap">
+    <div class="sec-head center">
+      <span class="eyebrow center reveal">Comment ça s'articule</span>
+      <h2 class="reveal d1">Univers, collections, catégories</h2>
+      <p class="lede reveal d2" style="text-align:center;">Trois niveaux de lecture, du plus large au plus concret. Vous descendez l'un après l'autre, jusqu'aux pièces à ajouter à votre sélection.</p>
+    </div>
+    <div class="artic reveal d1">
+      <div class="node">
+        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sun"/></svg>
+        <span class="step">Niveau 1 · Le climat</span>
+        <h3>Les univers</h3>
+        <p>Solstice d'Été ou Solstice d'Hiver. L'atmosphère générale : la lumière, la palette, l'esprit de la saison.</p>
+      </div>
+      <div class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-arrow"/></svg></div>
+      <div class="node">
+        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-flower"/></svg>
+        <span class="step">Niveau 2 · Le style</span>
+        <h3>Les collections</h3>
+        <p>Dolce Vita, Garden Party, White Party, Black &amp; Gold. Une direction esthétique précise à l'intérieur d'un univers.</p>
+      </div>
+      <div class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-arrow"/></svg></div>
+      <div class="node">
+        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chair"/></svg>
+        <span class="step">Niveau 3 · Les pièces</span>
+        <h3>Les catégories</h3>
+        <p>Mobilier, art de la table, décoration, ambiance &amp; lumière, animations, cérémonie, confort extérieur — les objets que vous ajoutez à votre sélection.</p>
+      </div>
+    </div>
+    <p class="artic-ex reveal d2">Un exemple : <strong>Solstice d'Été</strong> → collection <strong>Garden Party</strong> → une grande table en bois brut, des chaises bistrot, de la vaisselle champêtre, des photophores et des guirlandes guinguette. Le même mobilier, décliné en <strong>Black &amp; Gold</strong>, prendra tout de suite des airs de réception d'hiver.</p>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section">
+  <div class="wrap">
+    <div class="cta reveal">
+      <span class="eyebrow center">Passons à votre événement</span>
+      <h2>Composez l'univers de votre grand jour</h2>
+      <p>Parcourez le catalogue, ajoutez vos pièces favorites et envoyez votre demande de devis. Réponse sous 24 à 48 h, sans paiement en ligne ni engagement.</p>
+      <div class="cta-btns">
+        <a class="btn btn-ink" href="/catalogue">Découvrir le catalogue <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <a class="btn btn-ghost" href="#collections">Explorer les collections</a>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand"><svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13.5" r="4"/><path d="M12 3v3M4.7 6.7l1.6 1.6M19.3 6.7l-1.6 1.6M2.5 13.5h2M19.5 13.5h2M4 20h16"/></svg><span class="word">Solstice</span><p>Location de mobilier et de décoration pour vos événements. Le décor de vos plus beaux moments, à Amiens et ses alentours.</p></div>
+      <div class="foot-col"><h5>Le catalogue</h5><ul><li><a href="/catalogue">Mobilier</a></li><li><a href="/catalogue">Art de la table</a></li><li><a href="/catalogue">Décoration</a></li><li><a href="/catalogue">Cérémonie</a></li><li><a href="/nos-univers">Nos collections</a></li></ul></div>
+      <div class="foot-col"><h5>La maison</h5><ul><li><a href="/nos-univers">Nos univers</a></li><li><a href="/inspirations">Inspirations</a></li><li><a href="/a-propos">À propos</a></li><li><a href="/faq">FAQ</a></li></ul></div>
+      <div class="foot-col"><h5>Contact</h5><address>Amiens, Somme (80)<br>Livraison Amiens &amp; ~30 km<br>[e-mail de contact]<br>Sur rendez-vous</address></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Solstice — Tous droits réservés.</span>
+      <nav class="foot-legal" aria-label="Liens légaux"><a href="/mentions-legales">Mentions légales</a><a href="/confidentialite">Confidentialité</a><a href="/cookies">Cookies</a><a href="/cgl">Conditions de location</a></nav>
+    </div>
+  </div>
+</footer>
+<script src="/site.js"></script>
+</body>
+</html>

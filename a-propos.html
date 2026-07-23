@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>À propos — Solstice</title>
+<meta name="description" content="Solstice, l&#x27;art de recevoir en location à Amiens : mobilier, art de la table et décoration choisis avec soin pour préparer vos plus beaux jours.">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#FBF8F2">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/site.css">
+<style>
+.about-split{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(30px,5vw,64px);align-items:center;}
+.about-split .prose{max-width:60ch;}
+.about-fig{position:relative;aspect-ratio:4/5;border-radius:var(--radius);background:linear-gradient(150deg,var(--paper-2),var(--sand-2));display:grid;place-items:center;overflow:hidden;}
+.about-fig .art{width:40%;height:40%;stroke:var(--gold);stroke-width:.9;fill:none;opacity:.5;stroke-linecap:round;stroke-linejoin:round;}
+.about-fig .ref{position:absolute;left:14px;bottom:14px;font-size:.6rem;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-soft);background:rgba(251,248,242,.9);padding:.4em .7em;border-radius:99px;}
+
+.about-quote{max-width:840px;margin:0 auto;text-align:center;display:flex;flex-direction:column;align-items:center;gap:1.2rem;}
+.about-quote .ic{width:34px;height:34px;stroke:var(--gold-deep);stroke-width:1.1;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+.about-quote blockquote{margin:0;font-family:var(--serif);font-size:clamp(1.5rem,3.6vw,2.5rem);line-height:1.24;color:var(--ink);}
+.about-quote .attr{font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-deep);}
+
+.about-two{display:grid;grid-template-columns:1fr 1fr;gap:clamp(26px,4vw,52px);}
+.about-two h3{font-size:1.3rem;margin-bottom:.7rem;}
+.about-two p{color:var(--ink-soft);margin-bottom:1rem;max-width:46ch;}
+
+.about-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(24px,3.2vw,46px);counter-reset:astep;}
+.about-step{position:relative;padding-top:2.5rem;}
+.about-step .no{position:absolute;top:0;left:0;font-family:var(--serif);font-size:1rem;color:var(--gold-deep);letter-spacing:.1em;}
+.about-step .no::before{counter-increment:astep;content:"0" counter(astep);}
+.about-step .rule{height:1px;background:var(--line);margin:.2rem 0 1.3rem;}
+.about-step .ic{width:29px;height:29px;stroke:var(--ink);stroke-width:1.25;fill:none;stroke-linecap:round;stroke-linejoin:round;margin-bottom:1rem;}
+.about-step h3{font-size:1.22rem;margin-bottom:.5rem;}
+.about-step p{font-size:.92rem;color:var(--ink-soft);max-width:34ch;}
+
+.tba{background:rgba(176,138,84,.12);color:var(--gold-deep);padding:.05em .4em;border-radius:3px;}
+
+.cta-dark{text-align:center;}
+.cta-dark .lede{color:#c6bba7;max-width:54ch;margin-inline:auto;text-align:center;}
+.cta-dark .cta-btns{display:flex;gap:.9rem;justify-content:center;flex-wrap:wrap;margin-top:2.2rem;}
+.cta-dark .btn-ink{background:var(--paper);color:var(--ink);}
+.cta-dark .btn-ink:hover{background:var(--gold-soft);color:var(--ink);}
+.cta-dark .btn-ghost{border-color:rgba(255,255,255,.4);color:var(--paper);}
+.cta-dark .btn-ghost:hover{background:var(--paper);color:var(--ink);border-color:var(--paper);}
+
+@media(max-width:860px){
+  .about-split{grid-template-columns:1fr;}
+  .about-fig{aspect-ratio:3/2;}
+  .about-two{grid-template-columns:1fr;}
+}
+@media(max-width:760px){.about-steps{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-sun" viewBox="0 0 24 24"><path d="M2 20h20"/><path d="M6 20a6 6 0 0 1 12 0"/><path d="M12 3v3M4.5 6l1.8 1.8M19.5 6l-1.8 1.8M2 12.5h2.4M19.6 12.5H22"/></symbol>
+  <symbol id="i-sprig" viewBox="0 0 24 24"><path d="M12 22V5"/><path d="M12 13c.3-3 2.4-4.7 5-4.6-.2 3-2.3 4.8-5 4.6z"/><path d="M12 10c-.3-3-2.4-4.7-5-4.6.2 3 2.3 4.8 5 4.6z"/><path d="M12 8c.2-2.2 1.7-3.5 3.8-3.4-.2 2.2-1.7 3.6-3.8 3.4z"/></symbol>
+  <symbol id="i-arch" viewBox="0 0 24 24"><path d="M5 22V11a7 7 0 0 1 14 0v11"/><path d="M3 22h18"/></symbol>
+  <symbol id="i-coupe" viewBox="0 0 24 24"><path d="M7 3h10v2.5a5 5 0 0 1-10 0z"/><path d="M12 10.5V19"/><path d="M8 20h8"/></symbol>
+  <symbol id="i-candle" viewBox="0 0 24 24"><path d="M12 3c1.9 2.3 2.8 3.8 2.8 5.4a2.8 2.8 0 0 1-5.6 0c0-1 .5-1.9 1.4-3"/><rect x="9.2" y="11" width="5.6" height="10" rx="1"/></symbol>
+  <symbol id="i-camera" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="12" cy="13.5" r="3.2"/><path d="M8.5 7l1.4-2.2h4.2L15.5 7"/></symbol>
+  <symbol id="i-chair" viewBox="0 0 24 24"><path d="M7 4v8M17 4v8M6.5 12h11M8 12l-1 8M16 12l1 8M9 20h6"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20.5C7 16.6 3.5 13.4 3.5 9.6 3.5 7.2 5.4 5.4 7.7 5.4c1.7 0 3.2 1 4.3 2.6 1.1-1.6 2.6-2.6 4.3-2.6 2.3 0 4.2 1.8 4.2 4.2 0 3.8-3.5 7-8.5 10.9z"/></symbol>
+  <symbol id="i-bag" viewBox="0 0 24 24"><path d="M6 8h12l-1 12H7z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="16" rx="2"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/><path d="M7.5 13.5h3M13.5 13.5h3M7.5 17h3"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="M21 4L10.5 14.5"/><path d="M21 4l-7 17-3.5-7.5L3 10z"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M9 12h6M9 15.5h6M9 8.5h2"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.3 5.9L20.5 9l-4.8 4 1.6 6.4L12 16.2 6.7 19.4 8.3 13 3.5 9l6.2-.1z"/></symbol>
+  <symbol id="i-ig" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></symbol>
+  <symbol id="i-tt" viewBox="0 0 24 24"><path d="M13.5 3v11.5a3.5 3.5 0 1 1-3-3.46"/><path d="M13.5 5.2c.6 2.3 2.3 3.9 4.7 4.1"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-table" viewBox="0 0 24 24"><path d="M3 9h18M5 9v3M19 9v3M4 6h16v3H4zM7 12v8M17 12v8"/></symbol>
+  <symbol id="i-flower" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.4"/><path d="M12 9.6c-.7-2.2.3-4.1 0-4.6-.3.5.7 2.4 0 4.6M12 14.4c.7 2.2-.3 4.1 0 4.6.3-.5-.7-2.4 0-4.6M9.6 12c-2.2-.7-4.1.3-4.6 0 .5-.3 2.4.7 4.6 0M14.4 12c2.2.7 4.1-.3 4.6 0-.5.3-2.4-.7-4.6 0"/></symbol>
+  <symbol id="i-lantern" viewBox="0 0 24 24"><path d="M9 4h6M10 4v2M14 4v2"/><rect x="7.5" y="6" width="9" height="12" rx="2"/><path d="M12 6v12M9.5 20h5"/></symbol>
+</svg>
+<div class="announce">Location de mobilier &amp; décoration — <b>Amiens &amp; alentours</b></div>
+<header class="site-head" id="head">
+  <div class="wrap nav">
+    <a class="brand" href="/" aria-label="Solstice, accueil"><svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13.5" r="4"/><path d="M12 3v3M4.7 6.7l1.6 1.6M19.3 6.7l-1.6 1.6M2.5 13.5h2M19.5 13.5h2M4 20h16"/></svg><span class="word">Solstice</span></a>
+    <ul class="nav-links"><li><a href="/catalogue">Catalogue</a></li><li><a href="/nos-univers">Nos univers</a></li><li><a href="/inspirations">Inspirations</a></li><li><a href="/a-propos" aria-current="page">À propos</a></li><li><a href="/contact">Contact</a></li></ul>
+    <div class="nav-tools">
+      <button class="desktop-only" aria-label="Favoris"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg></button>
+      <button aria-label="Panier"><svg class="icon" aria-hidden="true"><use href="#i-bag"/></svg><span class="count">3</span></button>
+      <button class="burger" id="burger" aria-label="Ouvrir le menu"><svg aria-hidden="true"><use href="#i-menu"/></svg></button>
+    </div>
+  </div>
+</header>
+<div class="mpanel" id="mpanel">
+  <div class="mpanel-top"><span class="word">Solstice</span><button class="close" id="mclose" aria-label="Fermer le menu"><svg aria-hidden="true"><use href="#i-close"/></svg></button></div>
+  <nav><a href="/catalogue">Catalogue</a><a href="/nos-univers">Nos univers</a><a href="/inspirations">Inspirations</a><a href="/a-propos">À propos</a><a href="/contact">Contact</a></nav>
+  <div class="m-cta"><a class="btn btn-ink" href="/catalogue">Découvrir le catalogue <svg aria-hidden="true"><use href="#i-arrow"/></svg></a></div>
+</div>
+<main>
+<section class="page-hero">
+  <div class="wrap">
+    <nav class="crumbs"><a href="/">Accueil</a><span class="sep">/</span><span>À propos</span></nav>
+    <span class="eyebrow">La maison Solstice</span>
+    <h1>On ne loue pas du matériel, on prépare vos <em>plus beaux</em> jours.</h1>
+    <p class="lede">Solstice est né à Amiens d'une conviction simple : recevoir devrait être un plaisir, jamais une charge. Nous mettons entre vos mains un mobilier et une décoration choisis avec soin, pour qu'au jour dit, il ne vous reste plus qu'à savourer.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="about-split">
+      <div class="reveal">
+        <span class="eyebrow">Notre histoire</span>
+        <h2 style="margin:1rem 0 1.4rem;">Une maison née de l'envie de bien recevoir</h2>
+        <div class="prose">
+          <p>Tout a commencé par une évidence : un événement réussi ne se mesure pas au nombre d'objets posés sur une table, mais à l'émotion qu'ils font naître. Une lumière douce, une belle vaisselle, des chaises que l'on a envie de tirer pour s'asseoir — et soudain, un repas devient un souvenir.</p>
+          <p>Derrière Solstice, il y a <span class="tba">[à compléter — prénom]</span>, <span class="tba">[à compléter — quelques mots sur le parcours et l'étincelle à l'origine du projet]</span>. De cette histoire personnelle est née l'envie de rendre le beau accessible : proposer, en location, des pièces que l'on aurait aimé posséder — sans les acheter, les stocker, ni s'en encombrer une fois la fête passée.</p>
+          <p>Aujourd'hui, Solstice habille mariages, anniversaires et réceptions à Amiens et ses alentours, des grandes célébrations aux dîners plus intimes, avec la même attention portée au moindre détail.</p>
+        </div>
+      </div>
+      <figure class="about-fig reveal d1">
+        <svg class="art" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-camera"/></svg>
+        <span class="ref">Portrait · à venir</span>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="section sand">
+  <div class="wrap">
+    <div class="about-quote reveal">
+      <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sun"/></svg>
+      <blockquote>« On ne loue pas du matériel : on aide à préparer l'un des plus beaux jours d'une vie. »</blockquote>
+      <span class="attr">La promesse Solstice</span>
+    </div>
+  </div>
+</section>
+
+<section class="section tint">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow reveal">Notre façon de faire</span>
+      <h2 class="reveal d1">Le soin, jusque dans le détail</h2>
+    </div>
+    <div class="about-two">
+      <div class="reveal">
+        <h3>L'exigence du détail</h3>
+        <p>Chaque pièce qui part chez vous est vérifiée, nettoyée et préparée à la main : verrerie polie, textile repassé, bois entretenu, bougies choisies une à une. Rien n'est laissé au hasard, parce que ce sont ces petites choses, mises bout à bout, qui font la différence entre une jolie table et une table dont on se souvient.</p>
+        <p>Nous pensons aussi les accords : matières, teintes et lumières s'assemblent pour composer une ambiance cohérente, fidèle à nos deux univers — <em>Solstice d'Été</em>, lumineux et doré, et <em>Solstice d'Hiver</em>, velours, bougies et brun chaud.</p>
+      </div>
+      <div class="reveal d1">
+        <h3>Un ancrage à Amiens</h3>
+        <p>Profondément attachés à la Somme, nous rayonnons sur Amiens et ses alentours, jusqu'à une trentaine de kilomètres (livraison par paliers). Connaître le territoire, ses lieux et ses saisons, c'est aussi savoir vous conseiller au plus juste.</p>
+        <p>Nous privilégions les circuits courts et le rythme des saisons : des partenaires proches, des matières naturelles et des ambiances qui évoluent au fil de l'année, pour des décors qui semblent vraiment à leur place, ici, chez nous.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="sec-head center">
+      <span class="eyebrow center reveal">Ce qui nous guide</span>
+      <h2 class="reveal d1">Nos valeurs, à chaque événement</h2>
+    </div>
+    <div class="grid grid-4">
+      <div class="tile reveal">
+        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-star"/></svg>
+        <h3>Sélection soignée</h3>
+        <p>Chaque référence est choisie à la main, testée et validée. Nous préférons une collection resserrée et impeccable à un catalogue interminable.</p>
+      </div>
+      <div class="tile reveal d1">
+        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-heart"/></svg>
+        <h3>Accompagnement sur mesure</h3>
+        <p>Un interlocuteur, des conseils sincères et une écoute réelle. Nous composons avec vous, selon votre lieu, votre budget et l'esprit de votre événement.</p>
+      </div>
+      <div class="tile reveal d2">
+        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sprig"/></svg>
+        <h3>Local &amp; de saison</h3>
+        <p>Ancrés à Amiens, au rythme des saisons. Des partenaires proches, des matières naturelles et des ambiances fidèles au moment de l'année.</p>
+      </div>
+      <div class="tile reveal d3">
+        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-table"/></svg>
+        <h3>Matériel haut de gamme</h3>
+        <p>Du mobilier et de l'art de la table entretenus avec exigence, renouvelés régulièrement, pour un rendu digne des plus belles réceptions.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section tint">
+  <div class="wrap">
+    <div class="sec-head center">
+      <span class="eyebrow center reveal">Simple &amp; sans engagement</span>
+      <h2 class="reveal d1">Comment on travaille ensemble</h2>
+      <p class="lede reveal d2" style="text-align:center;">Pas de paiement en ligne. Vous nous adressez une demande, nous vous préparons un devis sur mesure, et l'on prend soin de tout jusqu'au jour J.</p>
+    </div>
+    <div class="about-steps">
+      <div class="about-step reveal">
+        <span class="no"></span>
+        <div class="rule"></div>
+        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-send"/></svg>
+        <h3>La demande</h3>
+        <p>Vous composez votre sélection au fil du catalogue, précisez vos dates, votre lieu et le type d'événement, puis vous nous l'envoyez. Sans engagement.</p>
+      </div>
+      <div class="about-step reveal d1">
+        <span class="no"></span>
+        <div class="rule"></div>
+        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-doc"/></svg>
+        <h3>Le devis</h3>
+        <p>Sous 24 à 48 h, nous vérifions les disponibilités et vous adressons un devis personnalisé — location, caution, retrait ou livraison. Vous validez à votre rythme.</p>
+      </div>
+      <div class="about-step reveal d2">
+        <span class="no"></span>
+        <div class="rule"></div>
+        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sun"/></svg>
+        <h3>Le jour J</h3>
+        <p>Retrait à Amiens ou livraison chez vous : tout arrive prêt, propre et à l'heure. Il ne vous reste plus qu'à recevoir et à profiter de l'instant.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section dark cta-dark">
+  <div class="wrap">
+    <span class="eyebrow center reveal">Et maintenant ?</span>
+    <h2 class="reveal d1" style="margin:1rem 0 1.2rem;">Composons ensemble votre événement</h2>
+    <p class="lede reveal d2">Parcourez nos pièces et nos packs clé en main, ou racontez-nous votre projet : nous vous répondons sous 24 à 48 h.</p>
+    <div class="cta-btns reveal d3">
+      <a class="btn btn-ink" href="/catalogue">Découvrir le catalogue <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+      <a class="btn btn-ghost" href="/contact">Demander un devis <svg aria-hidden="true"><use href="#i-send"/></svg></a>
+    </div>
+  </div>
+</section>
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand"><svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13.5" r="4"/><path d="M12 3v3M4.7 6.7l1.6 1.6M19.3 6.7l-1.6 1.6M2.5 13.5h2M19.5 13.5h2M4 20h16"/></svg><span class="word">Solstice</span><p>Location de mobilier et de décoration pour vos événements. Le décor de vos plus beaux moments, à Amiens et ses alentours.</p></div>
+      <div class="foot-col"><h5>Le catalogue</h5><ul><li><a href="/catalogue">Mobilier</a></li><li><a href="/catalogue">Art de la table</a></li><li><a href="/catalogue">Décoration</a></li><li><a href="/catalogue">Cérémonie</a></li><li><a href="/nos-univers">Nos collections</a></li></ul></div>
+      <div class="foot-col"><h5>La maison</h5><ul><li><a href="/nos-univers">Nos univers</a></li><li><a href="/inspirations">Inspirations</a></li><li><a href="/a-propos">À propos</a></li><li><a href="/faq">FAQ</a></li></ul></div>
+      <div class="foot-col"><h5>Contact</h5><address>Amiens, Somme (80)<br>Livraison Amiens &amp; ~30 km<br>[e-mail de contact]<br>Sur rendez-vous</address></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Solstice — Tous droits réservés.</span>
+      <nav class="foot-legal" aria-label="Liens légaux"><a href="/mentions-legales">Mentions légales</a><a href="/confidentialite">Confidentialité</a><a href="/cookies">Cookies</a><a href="/cgl">Conditions de location</a></nav>
+    </div>
+  </div>
+</footer>
+<script src="/site.js"></script>
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact — Solstice</title>
+<meta name="description" content="Contactez Solstice, location de mobilier et décoration d&#x27;événements à Amiens et alentours. Demande de devis sans engagement, réponse sous 24 à 48 h.">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#FBF8F2">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/site.css">
+<style>
+.contact-layout{display:grid;grid-template-columns:.85fr 1.15fr;gap:clamp(36px,5vw,80px);align-items:start;}
+.contact-col-head{margin-bottom:1.4rem;}
+.contact-col-head h2{font-size:clamp(1.4rem,2.6vw,1.85rem);margin:.6rem 0 0;}
+.coords{display:flex;flex-direction:column;border-top:1px solid var(--line);}
+.coord{display:flex;gap:1.1rem;align-items:flex-start;padding:1.35rem 0;border-bottom:1px solid var(--line);}
+.coord svg.ic{width:23px;height:23px;stroke:var(--gold-deep);stroke-width:1.25;fill:none;stroke-linecap:round;stroke-linejoin:round;flex:none;margin-top:.2rem;}
+.coord h3{font-size:1.06rem;margin-bottom:.28rem;}
+.coord p{color:var(--ink-soft);font-size:.92rem;line-height:1.62;}
+.coord a.inline{color:var(--gold-deep);border-bottom:1px solid var(--gold-soft);transition:color .3s,border-color .3s;}
+.coord a.inline:hover{color:var(--ink);border-color:var(--ink);}
+.tbc{color:var(--stone);font-style:italic;}
+.socials{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:.7rem;}
+.social-link{display:inline-flex;align-items:center;gap:.55em;font-size:.71rem;letter-spacing:.12em;text-transform:uppercase;font-weight:600;color:var(--ink-soft);border:1px solid var(--line);border-radius:99px;padding:.62em 1.15em;transition:border-color .3s,color .3s,background .3s;}
+.social-link svg{width:16px;height:16px;stroke:currentColor;stroke-width:1.4;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+.social-link:hover{border-color:var(--gold);color:var(--gold-deep);background:rgba(176,138,84,.06);}
+.form-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:clamp(24px,3.2vw,42px);box-shadow:0 34px 64px -52px rgba(34,28,21,.55);}
+.form-card h2{font-size:clamp(1.5rem,3vw,2rem);margin:.7rem 0 .4rem;}
+.form-card .form-intro{margin-bottom:1.8rem;}
+.form-card .form-note{font-size:.82rem;color:var(--stone);margin-top:1.1rem;}
+.btn-submit{width:100%;}
+.step-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;}
+.step-n{font-family:var(--serif);font-size:1.7rem;color:var(--gold);line-height:1;}
+.steps-lede{text-align:center;}
+@media (max-width:860px){.contact-layout{grid-template-columns:1fr;gap:2.6rem;}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-sun" viewBox="0 0 24 24"><path d="M2 20h20"/><path d="M6 20a6 6 0 0 1 12 0"/><path d="M12 3v3M4.5 6l1.8 1.8M19.5 6l-1.8 1.8M2 12.5h2.4M19.6 12.5H22"/></symbol>
+  <symbol id="i-sprig" viewBox="0 0 24 24"><path d="M12 22V5"/><path d="M12 13c.3-3 2.4-4.7 5-4.6-.2 3-2.3 4.8-5 4.6z"/><path d="M12 10c-.3-3-2.4-4.7-5-4.6.2 3 2.3 4.8 5 4.6z"/><path d="M12 8c.2-2.2 1.7-3.5 3.8-3.4-.2 2.2-1.7 3.6-3.8 3.4z"/></symbol>
+  <symbol id="i-arch" viewBox="0 0 24 24"><path d="M5 22V11a7 7 0 0 1 14 0v11"/><path d="M3 22h18"/></symbol>
+  <symbol id="i-coupe" viewBox="0 0 24 24"><path d="M7 3h10v2.5a5 5 0 0 1-10 0z"/><path d="M12 10.5V19"/><path d="M8 20h8"/></symbol>
+  <symbol id="i-candle" viewBox="0 0 24 24"><path d="M12 3c1.9 2.3 2.8 3.8 2.8 5.4a2.8 2.8 0 0 1-5.6 0c0-1 .5-1.9 1.4-3"/><rect x="9.2" y="11" width="5.6" height="10" rx="1"/></symbol>
+  <symbol id="i-camera" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="12" cy="13.5" r="3.2"/><path d="M8.5 7l1.4-2.2h4.2L15.5 7"/></symbol>
+  <symbol id="i-chair" viewBox="0 0 24 24"><path d="M7 4v8M17 4v8M6.5 12h11M8 12l-1 8M16 12l1 8M9 20h6"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20.5C7 16.6 3.5 13.4 3.5 9.6 3.5 7.2 5.4 5.4 7.7 5.4c1.7 0 3.2 1 4.3 2.6 1.1-1.6 2.6-2.6 4.3-2.6 2.3 0 4.2 1.8 4.2 4.2 0 3.8-3.5 7-8.5 10.9z"/></symbol>
+  <symbol id="i-bag" viewBox="0 0 24 24"><path d="M6 8h12l-1 12H7z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="16" rx="2"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/><path d="M7.5 13.5h3M13.5 13.5h3M7.5 17h3"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="M21 4L10.5 14.5"/><path d="M21 4l-7 17-3.5-7.5L3 10z"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M9 12h6M9 15.5h6M9 8.5h2"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.3 5.9L20.5 9l-4.8 4 1.6 6.4L12 16.2 6.7 19.4 8.3 13 3.5 9l6.2-.1z"/></symbol>
+  <symbol id="i-ig" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></symbol>
+  <symbol id="i-tt" viewBox="0 0 24 24"><path d="M13.5 3v11.5a3.5 3.5 0 1 1-3-3.46"/><path d="M13.5 5.2c.6 2.3 2.3 3.9 4.7 4.1"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-table" viewBox="0 0 24 24"><path d="M3 9h18M5 9v3M19 9v3M4 6h16v3H4zM7 12v8M17 12v8"/></symbol>
+  <symbol id="i-flower" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.4"/><path d="M12 9.6c-.7-2.2.3-4.1 0-4.6-.3.5.7 2.4 0 4.6M12 14.4c.7 2.2-.3 4.1 0 4.6.3-.5-.7-2.4 0-4.6M9.6 12c-2.2-.7-4.1.3-4.6 0 .5-.3 2.4.7 4.6 0M14.4 12c2.2.7 4.1-.3 4.6 0-.5.3-2.4-.7-4.6 0"/></symbol>
+  <symbol id="i-lantern" viewBox="0 0 24 24"><path d="M9 4h6M10 4v2M14 4v2"/><rect x="7.5" y="6" width="9" height="12" rx="2"/><path d="M12 6v12M9.5 20h5"/></symbol>
+</svg>
+<div class="announce">Location de mobilier &amp; décoration — <b>Amiens &amp; alentours</b></div>
+<header class="site-head" id="head">
+  <div class="wrap nav">
+    <a class="brand" href="/" aria-label="Solstice, accueil"><svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13.5" r="4"/><path d="M12 3v3M4.7 6.7l1.6 1.6M19.3 6.7l-1.6 1.6M2.5 13.5h2M19.5 13.5h2M4 20h16"/></svg><span class="word">Solstice</span></a>
+    <ul class="nav-links"><li><a href="/catalogue">Catalogue</a></li><li><a href="/nos-univers">Nos univers</a></li><li><a href="/inspirations">Inspirations</a></li><li><a href="/a-propos">À propos</a></li><li><a href="/contact" aria-current="page">Contact</a></li></ul>
+    <div class="nav-tools">
+      <button class="desktop-only" aria-label="Favoris"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg></button>
+      <button aria-label="Panier"><svg class="icon" aria-hidden="true"><use href="#i-bag"/></svg><span class="count">3</span></button>
+      <button class="burger" id="burger" aria-label="Ouvrir le menu"><svg aria-hidden="true"><use href="#i-menu"/></svg></button>
+    </div>
+  </div>
+</header>
+<div class="mpanel" id="mpanel">
+  <div class="mpanel-top"><span class="word">Solstice</span><button class="close" id="mclose" aria-label="Fermer le menu"><svg aria-hidden="true"><use href="#i-close"/></svg></button></div>
+  <nav><a href="/catalogue">Catalogue</a><a href="/nos-univers">Nos univers</a><a href="/inspirations">Inspirations</a><a href="/a-propos">À propos</a><a href="/contact">Contact</a></nav>
+  <div class="m-cta"><a class="btn btn-ink" href="/catalogue">Découvrir le catalogue <svg aria-hidden="true"><use href="#i-arrow"/></svg></a></div>
+</div>
+<main>
+<section class="page-hero">
+  <div class="wrap">
+    <nav class="crumbs"><a href="/">Accueil</a><span class="sep">/</span><span>Contact</span></nav>
+    <span class="eyebrow">Parlons de votre projet</span>
+    <h1>Écrivons ensemble <em>votre plus beau jour</em></h1>
+    <p class="lede">Une envie, une date, une question ? Écrivez-nous sans engagement. Nous étudions chaque demande avec soin et vous répondons avec un premier devis sur mesure sous 24 à 48 heures.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="contact-layout">
+
+      <div class="reveal">
+        <div class="contact-col-head">
+          <span class="eyebrow">Nous joindre</span>
+          <h2>Plusieurs façons de nous parler</h2>
+        </div>
+        <div class="coords">
+          <div class="coord">
+            <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sun"/></svg>
+            <div>
+              <h3>Amiens &amp; alentours</h3>
+              <p>Basés à Amiens (80), nous accompagnons les événements de la Somme et des Hauts-de-France. Adresse de l'atelier : <span class="tbc">[à compléter]</span>.</p>
+            </div>
+          </div>
+          <div class="coord">
+            <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-bag"/></svg>
+            <div>
+              <h3>Retrait ou livraison</h3>
+              <p>Retrait à l'atelier ou livraison à domicile dans un rayon d'environ 30 km autour d'Amiens, avec des paliers de frais selon la distance. Au-delà, écrivez-nous : nous trouvons une solution.</p>
+            </div>
+          </div>
+          <div class="coord">
+            <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-send"/></svg>
+            <div>
+              <h3>Par e-mail</h3>
+              <p>Le plus simple pour nous joindre : <a class="inline" href="#">[à compléter]</a>. Nous lisons chaque message et répondons personnellement.</p>
+            </div>
+          </div>
+          <div class="coord">
+            <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-cal"/></svg>
+            <div>
+              <h3>Sur rendez-vous</h3>
+              <p>L'atelier se visite sur rendez-vous : l'occasion de voir les pièces, de toucher les matières et de composer votre ambiance à nos côtés. Créneaux et horaires : <span class="tbc">[à compléter]</span>.</p>
+            </div>
+          </div>
+          <div class="coord">
+            <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-heart"/></svg>
+            <div>
+              <h3>Suivez nos inspirations</h3>
+              <p>Coulisses, nouveautés et vraies mises en scène : retrouvez-nous sur les réseaux.</p>
+              <div class="socials">
+                <a class="social-link" href="#" aria-label="Suivre Solstice sur Instagram"><svg aria-hidden="true"><use href="#i-ig"/></svg>Instagram</a>
+                <a class="social-link" href="#" aria-label="Suivre Solstice sur TikTok"><svg aria-hidden="true"><use href="#i-tt"/></svg>TikTok</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-card reveal d1">
+        <span class="eyebrow">Demande de devis</span>
+        <h2>Racontez-nous votre événement</h2>
+        <p class="lede form-intro">Quelques informations suffisent pour démarrer. Cette demande est gratuite et sans engagement.</p>
+        <form class="form-grid" action="#" novalidate>
+          <div class="field">
+            <label for="c-nom">Nom &amp; prénom</label>
+            <input id="c-nom" name="nom" type="text" autocomplete="name" placeholder="Camille Durand">
+          </div>
+          <div class="field">
+            <label for="c-email">E-mail</label>
+            <input id="c-email" name="email" type="email" autocomplete="email" placeholder="vous@exemple.fr">
+          </div>
+          <div class="field">
+            <label for="c-tel">Téléphone</label>
+            <input id="c-tel" name="telephone" type="tel" autocomplete="tel" placeholder="06 00 00 00 00">
+          </div>
+          <div class="field">
+            <label for="c-type">Type d'événement</label>
+            <select id="c-type" name="type">
+              <option value="" selected>Choisir…</option>
+              <option value="mariage">Mariage</option>
+              <option value="fiancailles">Fiançailles</option>
+              <option value="anniversaire">Anniversaire</option>
+              <option value="bapteme">Baptême / communion</option>
+              <option value="reception">Réception privée</option>
+              <option value="professionnel">Événement professionnel</option>
+              <option value="autre">Autre</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="c-date">Date de l'événement</label>
+            <input id="c-date" name="date" type="date">
+          </div>
+          <div class="field">
+            <label for="c-invites">Nombre d'invités</label>
+            <input id="c-invites" name="invites" type="number" min="1" inputmode="numeric" placeholder="Ex. 60">
+          </div>
+          <div class="field full">
+            <label for="c-message">Votre message</label>
+            <textarea id="c-message" name="message" placeholder="Dites-nous en quelques mots l'ambiance rêvée, le lieu, les pièces qui vous font envie (mobilier, art de la table, décoration, lumière…) et si vous préférez le retrait ou la livraison."></textarea>
+          </div>
+          <div class="field full">
+            <label class="consent" for="c-consent">
+              <input id="c-consent" name="consent" type="checkbox">
+              <span>J'accepte que mes données soient traitées conformément à la <a class="inline" href="/confidentialite">politique de confidentialité</a>. Elles servent uniquement à répondre à ma demande.</span>
+            </label>
+          </div>
+          <div class="field full">
+            <button class="btn btn-ink btn-submit" type="submit">Envoyer ma demande <svg aria-hidden="true"><use href="#i-send"/></svg></button>
+            <p class="form-note">Réponse sous 24 à 48 heures. Aucun paiement en ligne : nous revenons vers vous avec un devis sur mesure.</p>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="section tint">
+  <div class="wrap">
+    <div class="sec-head center">
+      <span class="eyebrow center reveal">Simple &amp; sans engagement</span>
+      <h2 class="reveal d1">Comment se passe une réservation</h2>
+      <p class="lede steps-lede reveal d2">De votre premier message au jour J, quatre étapes suffisent. On s'occupe des détails, vous profitez de l'essentiel.</p>
+    </div>
+    <div class="grid grid-4">
+      <div class="tile reveal">
+        <div class="step-top"><span class="step-n">01</span><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-bag"/></svg></div>
+        <h3>Composez votre sélection</h3>
+        <p>Parcourez le catalogue et retenez les pièces qui vous inspirent, ou confiez-nous simplement votre projet.</p>
+      </div>
+      <div class="tile reveal d1">
+        <div class="step-top"><span class="step-n">02</span><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-cal"/></svg></div>
+        <h3>Choisissez vos dates</h3>
+        <p>Indiquez la date de l'événement, le lieu et votre préférence entre retrait à l'atelier et livraison.</p>
+      </div>
+      <div class="tile reveal d2">
+        <div class="step-top"><span class="step-n">03</span><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-send"/></svg></div>
+        <h3>Envoyez votre demande</h3>
+        <p>Sans engagement. Nous vérifions les disponibilités de chaque pièce et étudions votre ambiance.</p>
+      </div>
+      <div class="tile reveal d3">
+        <div class="step-top"><span class="step-n">04</span><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-doc"/></svg></div>
+        <h3>Recevez votre devis</h3>
+        <p>Sous 24 à 48 h, avec les frais de livraison et la caution. Vous validez, et tout est prêt pour le jour J.</p>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand"><svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13.5" r="4"/><path d="M12 3v3M4.7 6.7l1.6 1.6M19.3 6.7l-1.6 1.6M2.5 13.5h2M19.5 13.5h2M4 20h16"/></svg><span class="word">Solstice</span><p>Location de mobilier et de décoration pour vos événements. Le décor de vos plus beaux moments, à Amiens et ses alentours.</p></div>
+      <div class="foot-col"><h5>Le catalogue</h5><ul><li><a href="/catalogue">Mobilier</a></li><li><a href="/catalogue">Art de la table</a></li><li><a href="/catalogue">Décoration</a></li><li><a href="/catalogue">Cérémonie</a></li><li><a href="/nos-univers">Nos collections</a></li></ul></div>
+      <div class="foot-col"><h5>La maison</h5><ul><li><a href="/nos-univers">Nos univers</a></li><li><a href="/inspirations">Inspirations</a></li><li><a href="/a-propos">À propos</a></li><li><a href="/faq">FAQ</a></li></ul></div>
+      <div class="foot-col"><h5>Contact</h5><address>Amiens, Somme (80)<br>Livraison Amiens &amp; ~30 km<br>[e-mail de contact]<br>Sur rendez-vous</address></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Solstice — Tous droits réservés.</span>
+      <nav class="foot-legal" aria-label="Liens légaux"><a href="/mentions-legales">Mentions légales</a><a href="/confidentialite">Confidentialité</a><a href="/cookies">Cookies</a><a href="/cgl">Conditions de location</a></nav>
+    </div>
+  </div>
+</footer>
+<script src="/site.js"></script>
+</body>
+</html>

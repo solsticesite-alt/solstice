@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Catalogue — Solstice</title>
+<meta name="description" content="Catalogue Solstice : mobilier, art de la table, décoration et lumière à louer autour d&#x27;Amiens. Filtrez par ambiance, puis demandez votre devis.">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#FBF8F2">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/site.css">
+<style>
+.filterbar{border:1px solid var(--line);border-radius:var(--radius);background:var(--paper);padding:clamp(18px,2.4vw,28px);}
+.fb-row{display:flex;flex-wrap:wrap;gap:1rem 1.1rem;align-items:flex-end;}
+.fb-field{display:flex;flex-direction:column;gap:.45rem;flex:1 1 160px;min-width:150px;}
+.fb-field label{font-size:.63rem;letter-spacing:.17em;text-transform:uppercase;color:var(--ink-soft);font-weight:600;}
+.fb-field select{font-family:inherit;font-size:.9rem;color:var(--ink);background-color:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:.72em 2.4em .72em .9em;appearance:none;-webkit-appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23B08A54' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 9l7 7 7-7'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .85em center;transition:border-color .3s,box-shadow .3s;}
+.fb-field select:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(176,138,84,.14);}
+.fb-chips{display:flex;flex-wrap:wrap;align-items:center;gap:.55rem;margin-top:1.15rem;padding-top:1.15rem;border-top:1px solid var(--line-soft);}
+.fb-chips .lbl{font-size:.63rem;letter-spacing:.17em;text-transform:uppercase;color:var(--stone);font-weight:600;margin-right:.3rem;}
+.chip{font-family:var(--sans);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--ink-soft);background:var(--paper-2);border:1px solid var(--line);border-radius:99px;padding:.55em 1.05em;cursor:pointer;transition:color .3s,background .3s,border-color .3s;}
+.chip:hover{border-color:var(--gold);color:var(--gold-deep);}
+.chip.on{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+.fb-hint{font-size:.72rem;color:var(--stone);letter-spacing:.04em;}
+.cat-grid{margin-top:clamp(30px,4vw,46px);}
+.cat-note{margin:clamp(38px,5vw,56px) auto 0;text-align:center;font-family:var(--serif);font-style:italic;font-size:clamp(1.08rem,2.1vw,1.35rem);color:var(--ink-soft);max-width:58ch;line-height:1.5;}
+.cat-note::before{content:"";display:block;width:34px;height:1px;background:var(--gold);margin:0 auto 1.4rem;}
+.cta-actions{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;margin-top:.6rem;}
+.cta-lede{text-align:center;margin-inline:auto;}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-sun" viewBox="0 0 24 24"><path d="M2 20h20"/><path d="M6 20a6 6 0 0 1 12 0"/><path d="M12 3v3M4.5 6l1.8 1.8M19.5 6l-1.8 1.8M2 12.5h2.4M19.6 12.5H22"/></symbol>
+  <symbol id="i-sprig" viewBox="0 0 24 24"><path d="M12 22V5"/><path d="M12 13c.3-3 2.4-4.7 5-4.6-.2 3-2.3 4.8-5 4.6z"/><path d="M12 10c-.3-3-2.4-4.7-5-4.6.2 3 2.3 4.8 5 4.6z"/><path d="M12 8c.2-2.2 1.7-3.5 3.8-3.4-.2 2.2-1.7 3.6-3.8 3.4z"/></symbol>
+  <symbol id="i-arch" viewBox="0 0 24 24"><path d="M5 22V11a7 7 0 0 1 14 0v11"/><path d="M3 22h18"/></symbol>
+  <symbol id="i-coupe" viewBox="0 0 24 24"><path d="M7 3h10v2.5a5 5 0 0 1-10 0z"/><path d="M12 10.5V19"/><path d="M8 20h8"/></symbol>
+  <symbol id="i-candle" viewBox="0 0 24 24"><path d="M12 3c1.9 2.3 2.8 3.8 2.8 5.4a2.8 2.8 0 0 1-5.6 0c0-1 .5-1.9 1.4-3"/><rect x="9.2" y="11" width="5.6" height="10" rx="1"/></symbol>
+  <symbol id="i-camera" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="12" cy="13.5" r="3.2"/><path d="M8.5 7l1.4-2.2h4.2L15.5 7"/></symbol>
+  <symbol id="i-chair" viewBox="0 0 24 24"><path d="M7 4v8M17 4v8M6.5 12h11M8 12l-1 8M16 12l1 8M9 20h6"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20.5C7 16.6 3.5 13.4 3.5 9.6 3.5 7.2 5.4 5.4 7.7 5.4c1.7 0 3.2 1 4.3 2.6 1.1-1.6 2.6-2.6 4.3-2.6 2.3 0 4.2 1.8 4.2 4.2 0 3.8-3.5 7-8.5 10.9z"/></symbol>
+  <symbol id="i-bag" viewBox="0 0 24 24"><path d="M6 8h12l-1 12H7z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="16" rx="2"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/><path d="M7.5 13.5h3M13.5 13.5h3M7.5 17h3"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="M21 4L10.5 14.5"/><path d="M21 4l-7 17-3.5-7.5L3 10z"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M9 12h6M9 15.5h6M9 8.5h2"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.3 5.9L20.5 9l-4.8 4 1.6 6.4L12 16.2 6.7 19.4 8.3 13 3.5 9l6.2-.1z"/></symbol>
+  <symbol id="i-ig" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></symbol>
+  <symbol id="i-tt" viewBox="0 0 24 24"><path d="M13.5 3v11.5a3.5 3.5 0 1 1-3-3.46"/><path d="M13.5 5.2c.6 2.3 2.3 3.9 4.7 4.1"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-table" viewBox="0 0 24 24"><path d="M3 9h18M5 9v3M19 9v3M4 6h16v3H4zM7 12v8M17 12v8"/></symbol>
+  <symbol id="i-flower" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.4"/><path d="M12 9.6c-.7-2.2.3-4.1 0-4.6-.3.5.7 2.4 0 4.6M12 14.4c.7 2.2-.3 4.1 0 4.6.3-.5-.7-2.4 0-4.6M9.6 12c-2.2-.7-4.1.3-4.6 0 .5-.3 2.4.7 4.6 0M14.4 12c2.2.7 4.1-.3 4.6 0-.5.3-2.4-.7-4.6 0"/></symbol>
+  <symbol id="i-lantern" viewBox="0 0 24 24"><path d="M9 4h6M10 4v2M14 4v2"/><rect x="7.5" y="6" width="9" height="12" rx="2"/><path d="M12 6v12M9.5 20h5"/></symbol>
+</svg>
+<div class="announce">Location de mobilier &amp; décoration — <b>Amiens &amp; alentours</b></div>
+<header class="site-head" id="head">
+  <div class="wrap nav">
+    <a class="brand" href="/" aria-label="Solstice, accueil"><svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13.5" r="4"/><path d="M12 3v3M4.7 6.7l1.6 1.6M19.3 6.7l-1.6 1.6M2.5 13.5h2M19.5 13.5h2M4 20h16"/></svg><span class="word">Solstice</span></a>
+    <ul class="nav-links"><li><a href="/catalogue" aria-current="page">Catalogue</a></li><li><a href="/nos-univers">Nos univers</a></li><li><a href="/inspirations">Inspirations</a></li><li><a href="/a-propos">À propos</a></li><li><a href="/contact">Contact</a></li></ul>
+    <div class="nav-tools">
+      <button class="desktop-only" aria-label="Favoris"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg></button>
+      <button aria-label="Panier"><svg class="icon" aria-hidden="true"><use href="#i-bag"/></svg><span class="count">3</span></button>
+      <button class="burger" id="burger" aria-label="Ouvrir le menu"><svg aria-hidden="true"><use href="#i-menu"/></svg></button>
+    </div>
+  </div>
+</header>
+<div class="mpanel" id="mpanel">
+  <div class="mpanel-top"><span class="word">Solstice</span><button class="close" id="mclose" aria-label="Fermer le menu"><svg aria-hidden="true"><use href="#i-close"/></svg></button></div>
+  <nav><a href="/catalogue">Catalogue</a><a href="/nos-univers">Nos univers</a><a href="/inspirations">Inspirations</a><a href="/a-propos">À propos</a><a href="/contact">Contact</a></nav>
+  <div class="m-cta"><a class="btn btn-ink" href="/catalogue">Découvrir le catalogue <svg aria-hidden="true"><use href="#i-arrow"/></svg></a></div>
+</div>
+<main>
+<section class="page-hero">
+  <div class="wrap">
+    <nav class="crumbs"><a href="/">Accueil</a><span class="sep">/</span><span>Catalogue</span></nav>
+    <span class="eyebrow">Notre collection à louer</span>
+    <h1>Le <em>catalogue</em> Solstice</h1>
+    <p class="lede">Mobilier, art de la table, décoration et lumière : chaque pièce est choisie pour composer des réceptions justes, chaleureuses et mémorables. Parcourez, mettez de côté vos coups de cœur, puis demandez votre devis — sans paiement en ligne.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="sec-flex">
+      <div class="titles">
+        <span class="eyebrow reveal">Explorer</span>
+        <h2 class="reveal d1">Toutes nos pièces</h2>
+      </div>
+      <span class="fb-hint reveal d1">Aperçu — les filtres interactifs arrivent bientôt</span>
+    </div>
+
+    <form class="filterbar reveal" action="#" novalidate aria-label="Filtres du catalogue">
+      <div class="fb-row">
+        <div class="fb-field">
+          <label for="f-categorie">Catégorie</label>
+          <select id="f-categorie">
+            <option>Toutes les catégories</option>
+            <option>Mobilier</option>
+            <option>Art de la table</option>
+            <option>Décoration</option>
+            <option>Ambiance &amp; lumière</option>
+            <option>Animations</option>
+            <option>Cérémonie</option>
+            <option>Confort extérieur</option>
+          </select>
+        </div>
+        <div class="fb-field">
+          <label for="f-style">Style</label>
+          <select id="f-style">
+            <option>Tous les styles</option>
+            <option>Bohème</option>
+            <option>Champêtre</option>
+            <option>Classique chic</option>
+            <option>Minimal</option>
+            <option>Vintage</option>
+            <option>Baroque doré</option>
+          </select>
+        </div>
+        <div class="fb-field">
+          <label for="f-couleur">Couleur</label>
+          <select id="f-couleur">
+            <option>Toutes les couleurs</option>
+            <option>Naturel / bois</option>
+            <option>Blanc</option>
+            <option>Doré</option>
+            <option>Fumé / gris</option>
+            <option>Vert eucalyptus</option>
+            <option>Terracotta</option>
+          </select>
+        </div>
+        <div class="fb-field">
+          <label for="f-theme">Thème</label>
+          <select id="f-theme">
+            <option>Tous les thèmes</option>
+            <option>Dolce Vita</option>
+            <option>Garden Party</option>
+            <option>White Party</option>
+            <option>Black &amp; Gold</option>
+          </select>
+        </div>
+        <div class="fb-field">
+          <label for="f-saison">Saison</label>
+          <select id="f-saison">
+            <option>Toutes les saisons</option>
+            <option>Solstice d'Été</option>
+            <option>Solstice d'Hiver</option>
+          </select>
+        </div>
+        <div class="fb-field">
+          <label for="f-prix">Prix</label>
+          <select id="f-prix">
+            <option>Indifférent</option>
+            <option>Moins de 10 €</option>
+            <option>10 € à 30 €</option>
+            <option>30 € à 60 €</option>
+            <option>Plus de 60 €</option>
+          </select>
+        </div>
+        <div class="fb-field">
+          <label for="f-dispo">Disponibilité</label>
+          <select id="f-dispo">
+            <option>Peu importe</option>
+            <option>Disponible ce week-end</option>
+            <option>Disponible en semaine</option>
+            <option>Sur demande</option>
+          </select>
+        </div>
+      </div>
+      <div class="fb-chips" role="group" aria-label="Ambiances rapides">
+        <span class="lbl">Ambiances</span>
+        <button type="button" class="chip on">Tout voir</button>
+        <button type="button" class="chip">Dolce Vita</button>
+        <button type="button" class="chip">Garden Party</button>
+        <button type="button" class="chip">White Party</button>
+        <button type="button" class="chip">Black &amp; Gold</button>
+        <button type="button" class="chip">Coups de cœur</button>
+        <button type="button" class="chip">Nouveautés</button>
+      </div>
+    </form>
+
+    <div class="grid grid-4 cat-grid">
+      <article class="card reveal">
+        <div class="card-media"><svg class="art" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chair"/></svg>
+          <span class="card-tag gold">Coup de cœur</span>
+          <button class="fav" aria-label="Ajouter la chaise Napoléon aux favoris"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
+        </div>
+        <div class="card-info"><h3>Chaise Napoléon transparente</h3>
+          <div class="card-meta"><span class="card-price">4 €<span> / jour</span></span><span class="card-caution">caution 15 €</span></div>
+        </div>
+      </article>
+
+      <article class="card reveal d1">
+        <div class="card-media"><svg class="art" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-table"/></svg>
+          <button class="fav" aria-label="Ajouter la table de banquet aux favoris"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
+        </div>
+        <div class="card-info"><h3>Table de banquet en bois brut</h3>
+          <div class="card-meta"><span class="card-price">18 €<span> / jour</span></span><span class="card-caution">caution 60 €</span></div>
+        </div>
+      </article>
+
+      <article class="card reveal d2">
+        <div class="card-media"><svg class="art" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arch"/></svg>
+          <span class="card-tag">Nouveau</span>
+          <button class="fav" aria-label="Ajouter l'arche ronde aux favoris"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
+        </div>
+        <div class="card-info"><h3>Arche ronde en bois clair</h3>
+          <div class="card-meta"><span class="card-price">45 €<span> / week-end</span></span><span class="card-caution">caution 80 €</span></div>
+        </div>
+      </article>
+
+      <article class="card reveal d3">
+        <div class="card-media"><svg class="art" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-coupe"/></svg>
+          <button class="fav" aria-label="Ajouter la verrerie fumée aux favoris"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
+        </div>
+        <div class="card-info"><h3>Verrerie fumée · lot de 6</h3>
+          <div class="card-meta"><span class="card-price">9 €<span> / jour</span></span><span class="card-caution">caution 30 €</span></div>
+        </div>
+      </article>
+
+      <article class="card reveal">
+        <div class="card-media"><svg class="art" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-star"/></svg>
+          <span class="card-tag gold">Coup de cœur</span>
+          <button class="fav" aria-label="Ajouter la ménagère dorée aux favoris"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
+        </div>
+        <div class="card-info"><h3>Ménagère dorée · 6 couverts</h3>
+          <div class="card-meta"><span class="card-price">12 €<span> / jour</span></span><span class="card-caution">caution 40 €</span></div>
+        </div>
+      </article>
+
+      <article class="card reveal d1">
+        <div class="card-media"><svg class="art" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-camera"/></svg>
+          <span class="card-tag gold">Coup de cœur</span>
+          <button class="fav" aria-label="Ajouter le photobooth vintage aux favoris"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
+        </div>
+        <div class="card-info"><h3>Photobooth vintage &amp; toile</h3>
+          <div class="card-meta"><span class="card-price">90 €<span> / week-end</span></span><span class="card-caution">caution 150 €</span></div>
+        </div>
+      </article>
+
+      <article class="card reveal d2">
+        <div class="card-media"><svg class="art" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-lantern"/></svg>
+          <span class="card-tag">Nouveau</span>
+          <button class="fav" aria-label="Ajouter la guirlande guinguette aux favoris"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
+        </div>
+        <div class="card-info"><h3>Guirlande guinguette · 25 m</h3>
+          <div class="card-meta"><span class="card-price">15 €<span> / week-end</span></span><span class="card-caution">caution 25 €</span></div>
+        </div>
+      </article>
+
+      <article class="card reveal d3">
+        <div class="card-media"><svg class="art" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sun"/></svg>
+          <button class="fav" aria-label="Ajouter le brasero convivial aux favoris"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
+        </div>
+        <div class="card-info"><h3>Brasero convivial en acier</h3>
+          <div class="card-meta"><span class="card-price">35 €<span> / week-end</span></span><span class="card-caution">caution 90 €</span></div>
+        </div>
+      </article>
+    </div>
+
+    <p class="cat-note reveal">Fiches détaillées, dimensions et disponibilités en temps réel arrivent très bientôt. En attendant, glissez vos pièces en favoris et confiez-nous votre date : nous vérifions tout pour vous.</p>
+  </div>
+</section>
+
+<section class="section sand">
+  <div class="wrap">
+    <div class="sec-flex">
+      <div class="titles">
+        <span class="eyebrow reveal">Pour compléter la table</span>
+        <h2 class="reveal d1">Vous aimerez aussi…</h2>
+      </div>
+      <a class="link-more reveal d1" href="/contact">Demander un conseil déco <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+    </div>
+    <div class="grid grid-4">
+      <article class="card reveal">
+        <div class="card-media"><svg class="art" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sprig"/></svg>
+          <button class="fav" aria-label="Ajouter le chemin de table eucalyptus aux favoris"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
+        </div>
+        <div class="card-info"><h3>Chemin de table eucalyptus</h3>
+          <div class="card-meta"><span class="card-price">6 €<span> / jour</span></span><span class="card-caution">caution 10 €</span></div>
+        </div>
+      </article>
+
+      <article class="card reveal d1">
+        <div class="card-media"><svg class="art" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-flower"/></svg>
+          <span class="card-tag">Nouveau</span>
+          <button class="fav" aria-label="Ajouter le centre de table fleuri aux favoris"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
+        </div>
+        <div class="card-info"><h3>Centre de table fleuri</h3>
+          <div class="card-meta"><span class="card-price">14 €<span> / jour</span></span><span class="card-caution">caution 20 €</span></div>
+        </div>
+      </article>
+
+      <article class="card reveal d2">
+        <div class="card-media"><svg class="art" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-candle"/></svg>
+          <button class="fav" aria-label="Ajouter les photophores aux favoris"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
+        </div>
+        <div class="card-info"><h3>Photophores verre &amp; bougies</h3>
+          <div class="card-meta"><span class="card-price">3 €<span> / jour</span></span><span class="card-caution">caution 8 €</span></div>
+        </div>
+      </article>
+
+      <article class="card reveal d3">
+        <div class="card-media"><svg class="art" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-doc"/></svg>
+          <button class="fav" aria-label="Ajouter la nappe en lin lavé aux favoris"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
+        </div>
+        <div class="card-info"><h3>Nappe en lin lavé froissé</h3>
+          <div class="card-meta"><span class="card-price">8 €<span> / jour</span></span><span class="card-caution">caution 15 €</span></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section tint">
+  <div class="wrap">
+    <div class="sec-head center">
+      <span class="eyebrow center reveal">Prêt·e à composer votre grand jour</span>
+      <h2 class="reveal d1">Réservez vos pièces, sans paiement en ligne</h2>
+      <p class="lede cta-lede reveal d1">Envoyez-nous votre date, votre lieu et vos coups de cœur. Nous vous répondons sous 24 à 48 h avec un devis clair : location, caution, retrait ou livraison autour d'Amiens (jusqu'à ~30 km, par paliers).</p>
+      <div class="cta-actions reveal d2">
+        <a class="btn btn-ink" href="/contact">Demander un devis <svg aria-hidden="true"><use href="#i-send"/></svg></a>
+        <a class="btn btn-ghost" href="/contact">Nous contacter <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand"><svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13.5" r="4"/><path d="M12 3v3M4.7 6.7l1.6 1.6M19.3 6.7l-1.6 1.6M2.5 13.5h2M19.5 13.5h2M4 20h16"/></svg><span class="word">Solstice</span><p>Location de mobilier et de décoration pour vos événements. Le décor de vos plus beaux moments, à Amiens et ses alentours.</p></div>
+      <div class="foot-col"><h5>Le catalogue</h5><ul><li><a href="/catalogue">Mobilier</a></li><li><a href="/catalogue">Art de la table</a></li><li><a href="/catalogue">Décoration</a></li><li><a href="/catalogue">Cérémonie</a></li><li><a href="/nos-univers">Nos collections</a></li></ul></div>
+      <div class="foot-col"><h5>La maison</h5><ul><li><a href="/nos-univers">Nos univers</a></li><li><a href="/inspirations">Inspirations</a></li><li><a href="/a-propos">À propos</a></li><li><a href="/faq">FAQ</a></li></ul></div>
+      <div class="foot-col"><h5>Contact</h5><address>Amiens, Somme (80)<br>Livraison Amiens &amp; ~30 km<br>[e-mail de contact]<br>Sur rendez-vous</address></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Solstice — Tous droits réservés.</span>
+      <nav class="foot-legal" aria-label="Liens légaux"><a href="/mentions-legales">Mentions légales</a><a href="/confidentialite">Confidentialité</a><a href="/cookies">Cookies</a><a href="/cgl">Conditions de location</a></nav>
+    </div>
+  </div>
+</footer>
+<script src="/site.js"></script>
+</body>
+</html>
