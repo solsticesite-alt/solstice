@@ -52,7 +52,7 @@
   html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;}
   @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto;}}
   body{
-    margin:0;background:var(--paper);color:var(--ink);
+    margin:0;background:transparent;color:var(--ink);
     font-family:var(--sans);font-size:16px;line-height:1.65;font-weight:400;
     -webkit-font-smoothing:antialiased;overflow-x:hidden;
   }
@@ -68,6 +68,20 @@
     content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.4;mix-blend-mode:multiply;
     background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='150' height='150'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/></svg>");
   }
+
+  /* ==================== FOND SOLSTICE UNIFIÉ ==================== */
+  .page-bg{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;
+    background:
+      radial-gradient(60% 42% at 84% 10%, rgba(250,207,110,.42), rgba(250,207,110,0) 60%),
+      radial-gradient(55% 40% at 14% 88%, rgba(150,175,168,.42), rgba(150,175,168,0) 62%),
+      linear-gradient(158deg,#FDF4DC 0%,#F8EBCE 22%,#F1E5D0 44%,#E9E4D6 64%,#DFE3DA 82%,#D5DCD5 100%);}
+  .page-bg > svg{position:absolute;inset:0;width:100%;height:100%;}
+  /* cards flottant sur le ciel */
+  .cat{box-shadow:0 18px 38px -30px rgba(34,28,21,.4);}
+  .card-media{box-shadow:0 22px 46px -34px rgba(34,28,21,.5);}
+  .avis{box-shadow:0 22px 46px -36px rgba(34,28,21,.38);}
+  .coll{box-shadow:0 26px 52px -34px rgba(20,15,9,.5);}
+  .pack{box-shadow:0 30px 60px -40px rgba(120,80,30,.5);}
 
   /* ============================ TYPO HELPERS ============================ */
   .eyebrow{
@@ -142,18 +156,11 @@
   .hero{
     position:relative;overflow:hidden;isolation:isolate;
     min-height:clamp(540px,86vh,860px);display:flex;align-items:center;
-    background:
-      radial-gradient(120% 78% at 50% 4%, #FDF8EE 0%, #F5E9D4 46%, #ECDBBD 100%);
+    background:transparent;
   }
-  .hero-glow{
-    position:absolute;inset:0;z-index:-1;pointer-events:none;
-    background:radial-gradient(42% 44% at 50% 40%, rgba(176,138,84,.20), rgba(176,138,84,0) 68%);
-  }
-  .hero-sun{
-    position:absolute;left:50%;top:38%;transform:translate(-50%,-50%);z-index:-1;
-    width:min(760px,120vw);height:auto;stroke:var(--gold);stroke-width:.5;fill:none;opacity:.4;pointer-events:none;
-  }
-  .hero-fade{position:absolute;left:0;right:0;bottom:0;height:120px;z-index:-1;background:linear-gradient(180deg,rgba(251,248,242,0),var(--paper));pointer-events:none;}
+  .hero-glow{display:none;}
+  .hero-sun{display:none;}
+  .hero-fade{display:none;}
   .hero-inner{padding-block:clamp(48px,9vh,110px);}
   .hero h1{
     font-size:clamp(2.7rem,7.4vw,5.7rem);line-height:1.02;margin:.34em 0 .4em;letter-spacing:-.015em;max-width:15ch;
@@ -179,7 +186,7 @@
   .link-more svg{width:14px;height:14px;stroke:currentColor;stroke-width:1.5;fill:none;stroke-linecap:round;stroke-linejoin:round;}
 
   /* ============================ UNIVERS ============================ */
-  .univers-wrap{background:var(--paper);padding-top:clamp(50px,7vw,88px);}
+  .univers-wrap{background:transparent;padding-top:clamp(50px,7vw,88px);}
   .univers-intro{text-align:center;max-width:var(--wrap);margin:0 auto clamp(30px,4vw,46px);padding-inline:var(--gutter);}
   .univers-intro h2{font-size:clamp(2rem,4.6vw,3.3rem);margin-top:.7rem;}
   .univers-intro h2 em{font-style:italic;color:var(--gold-deep);}
@@ -225,7 +232,7 @@
   @keyframes uni-fall{0%{transform:translateY(-30px);opacity:0;}12%{opacity:.9;}100%{transform:translateY(640px);opacity:0;}}
 
   /* ============================ CATEGORIES ============================ */
-  .cats{background:var(--paper);}
+  .cats{background:transparent;}
   .cat-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:clamp(10px,1.4vw,18px);}
   .cat{
     background:var(--paper);border:1px solid var(--line-soft);border-radius:var(--radius);
@@ -264,13 +271,13 @@
   @media (hover:none){.card-add{position:static;opacity:1;transform:none;margin-top:.85rem;}}
 
   /* ============================ COLLECTIONS (dark) ============================ */
-  .collections{position:relative;background:var(--ink);color:var(--paper);}
-  .collections::before{content:"";position:absolute;top:0;left:0;right:0;height:130px;background:linear-gradient(180deg,var(--paper),var(--ink));}
-  .collections::after{content:"";position:absolute;bottom:0;left:0;right:0;height:130px;background:linear-gradient(180deg,var(--ink),var(--paper));}
+  .collections{position:relative;}
+  .collections::before{display:none;}
+  .collections::after{display:none;}
   .collections .wrap{position:relative;z-index:1;}
-  .collections .eyebrow{color:var(--gold-soft);}
-  .collections .eyebrow::before{background:var(--gold-soft);}
-  .collections .sec-flex h2{color:var(--paper);}
+  .collections .eyebrow{color:var(--gold-deep);}
+  .collections .eyebrow::before{background:var(--gold);}
+  .collections .sec-flex h2{color:var(--ink);}
   .coll-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,1.8vw,24px);}
   .coll{position:relative;aspect-ratio:3/4;overflow:hidden;border-radius:var(--radius);display:flex;align-items:flex-end;padding:clamp(20px,2.3vw,32px);}
   .coll-1{background:linear-gradient(158deg,#EACA9C,#CE9B60);}
@@ -310,7 +317,7 @@
   .pack-price span{font-family:var(--sans);font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;color:#5c3a1c;}
 
   /* ============================ INSPIRATIONS ============================ */
-  .inspi{background:linear-gradient(180deg,var(--paper) 0%,var(--paper-2) 40%,var(--paper-2) 100%);}
+  .inspi{background:transparent;}
   .insp-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:180px;gap:clamp(10px,1.3vw,16px);}
   .insp{position:relative;overflow:hidden;border-radius:var(--radius);display:grid;place-items:center;background:linear-gradient(150deg,var(--paper-2),var(--sand-2));}
   .insp:nth-child(1){grid-column:span 2;grid-row:span 2;}
@@ -417,6 +424,23 @@
     .sec-flex{align-items:flex-start;}
   }
 </style>
+
+<div class="page-bg" aria-hidden="true">
+  <svg viewBox="0 0 1000 1500" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <radialGradient id="bgSun" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#FBD98A" stop-opacity=".55"/><stop offset="100%" stop-color="#FBD98A" stop-opacity="0"/></radialGradient>
+      <radialGradient id="bgMoon" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#DDE6E2" stop-opacity=".5"/><stop offset="100%" stop-color="#DDE6E2" stop-opacity="0"/></radialGradient>
+    </defs>
+    <circle cx="810" cy="175" r="150" fill="url(#bgSun)"/>
+    <circle cx="810" cy="175" r="62" fill="#F7CB5E" opacity=".5"/>
+    <g stroke="#E4A94A" stroke-width="3" stroke-linecap="round" opacity=".38"><path d="M810 70v-32 M892 92l23-23 M916 175h32 M892 258l23 23 M728 92l-23-23 M704 175h-32 M728 258l-23 23"/></g>
+    <path d="M900 155 Q470 770 150 1330" fill="none" stroke="#C39A56" stroke-width="1.4" stroke-dasharray="1 12" opacity=".3"/>
+    <g fill="#A9B4AC" opacity=".55"><circle cx="300" cy="1010" r="2.4"/><circle cx="430" cy="1120" r="1.8"/><circle cx="250" cy="1220" r="2"/><circle cx="380" cy="1300" r="2.6"/><circle cx="520" cy="1250" r="1.8"/><circle cx="160" cy="1090" r="1.6"/><circle cx="470" cy="1000" r="1.6"/></g>
+    <circle cx="205" cy="1235" r="125" fill="url(#bgMoon)"/>
+    <circle cx="205" cy="1235" r="56" fill="#EBEFE9" opacity=".62"/>
+    <circle cx="187" cy="1219" r="10" fill="#D6DCD4" opacity=".5"/><circle cx="221" cy="1251" r="7" fill="#D6DCD4" opacity=".5"/><circle cx="214" cy="1216" r="5" fill="#D6DCD4" opacity=".45"/>
+  </svg>
+</div>
 
 <!-- ============================ SVG SPRITE ============================ -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -648,7 +672,7 @@
         <span class="eyebrow reveal">Nos ambiances</span>
         <h2 class="reveal d1">Des collections qui donnent le ton</h2>
       </div>
-      <a class="link-more reveal d1" href="/nos-univers" style="color:var(--gold-soft);border-color:var(--gold-soft);">Toutes les collections <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+      <a class="link-more reveal d1" href="/nos-univers">Toutes les collections <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
     </div>
     <div class="coll-grid">
       <a class="coll coll-1 reveal" href="#">
