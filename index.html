@@ -260,8 +260,10 @@
   @keyframes uni-fall{0%{transform:translateY(-30px);opacity:0;}12%{opacity:.9;}100%{transform:translateY(640px);opacity:0;}}
 
   /* ============================ CATEGORIES ============================ */
-  .cats{background:transparent;}
-  .cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,2vw,26px);}
+  .cats{background:transparent;padding-block:clamp(30px,3.8vw,60px);}
+  .cats .sec-head{margin-bottom:clamp(12px,1.8vw,24px);}
+  .cats .sec-head h2{font-size:clamp(1.6rem,3vw,2.5rem);}
+  .cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,1.6vw,22px);}
   .cat{
     position:relative;display:flex;flex-direction:column;text-decoration:none;overflow:hidden;
     border-radius:clamp(16px,1.6vw,22px);
@@ -272,10 +274,10 @@
     transition:transform .55s cubic-bezier(.2,.7,.2,1),box-shadow .55s,border-color .55s;
   }
   .cat:hover{transform:translateY(-7px);box-shadow:0 40px 64px -34px rgba(60,40,18,.5);border-color:var(--gold-soft);}
-  .cat-scene{position:relative;aspect-ratio:11/9;display:grid;place-items:center;padding:clamp(12px,1.8vw,22px) clamp(12px,1.8vw,22px) 0;}
-  .cat-art{width:100%;height:100%;overflow:visible;transition:transform .55s cubic-bezier(.2,.7,.2,1);}
+  .cat-scene{position:relative;display:grid;place-items:center;padding:clamp(8px,1.1vw,15px) clamp(10px,1.4vw,18px) 0;}
+  .cat-art{width:100%;height:clamp(140px,15.5vw,205px);overflow:visible;transition:transform .55s cubic-bezier(.2,.7,.2,1);}
   .cat:hover .cat-art{transform:translateY(-4px) scale(1.045);}
-  .cat-foot{display:flex;align-items:center;justify-content:space-between;gap:.6rem;padding:clamp(10px,1.4vw,16px) clamp(16px,1.8vw,22px) clamp(15px,1.8vw,20px);}
+  .cat-foot{display:flex;align-items:center;justify-content:space-between;gap:.6rem;padding:clamp(6px,1vw,12px) clamp(14px,1.6vw,20px) clamp(11px,1.4vw,16px);}
   .cat-name{font-family:var(--serif);font-size:clamp(1.04rem,1.5vw,1.28rem);color:var(--ink);line-height:1.1;}
   .cat-arw{width:28px;height:28px;border-radius:99px;display:grid;place-items:center;flex:none;background:rgba(176,138,84,.14);color:var(--gold-deep);transition:background .4s,color .4s,transform .4s;}
   .cat:hover .cat-arw{background:var(--gold);color:#fff;transform:translateX(3px);}
@@ -801,20 +803,27 @@
               <linearGradient id="tabG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F3D08A"/><stop offset=".5" stop-color="#E3AC5A"/><stop offset="1" stop-color="#CE8B3A"/></linearGradient>
             </defs>
             <circle cx="100" cy="76" r="82" fill="url(#tabBg)"/>
-            <ellipse cx="98" cy="142" rx="64" ry="9" fill="#7a5a24" opacity=".14"/>
-            <g fill="none" stroke="#C9A24C" stroke-width="3" stroke-linecap="round"><path d="M48 132V94"/><path d="M42 94V79M48 96V77M54 94V79"/></g>
-            <rect x="146.2" y="94" width="3.4" height="38" rx="1.6" fill="#C9A24C"/>
-            <path d="M146.5 94 C146 82 148 75 152 73 C153 82 152 90 149.9 94 Z" fill="#C9A24C"/>
-            <ellipse cx="98" cy="116" rx="54" ry="20" fill="url(#tabP)" stroke="#C9A24C" stroke-width="2.2"/>
-            <ellipse cx="98" cy="112" rx="41" ry="15" fill="#F8F0E0" stroke="#D9B96A" stroke-width="1.6"/>
-            <ellipse cx="98" cy="109" rx="27" ry="9.5" fill="url(#tabP)" stroke="#C9A24C" stroke-width="1.3"/>
-            <path d="M89 108 L98 88 L107 108 Z" fill="#EBDBB6" stroke="#D9B96A" stroke-width="1"/>
+            <ellipse cx="100" cy="138" rx="62" ry="9" fill="#7a5a24" opacity=".13"/>
+            <!-- fourchette -->
+            <g stroke="#C9A24C" stroke-width="3.2" stroke-linecap="round" fill="none"><path d="M42 132V86"/></g>
+            <g stroke="#C9A24C" stroke-width="2" stroke-linecap="round"><path d="M37 86V73M42 87V71M47 86V73"/></g>
+            <!-- couteau -->
+            <rect x="152.4" y="94" width="3.4" height="38" rx="1.7" fill="#C9A24C"/>
+            <path d="M154 94 C153 80 155 72 159 70 C160 80 159 88 157 94 Z" fill="#C9A24C"/>
+            <!-- assiette -->
+            <ellipse cx="100" cy="116" rx="46" ry="15" fill="url(#tabP)" stroke="#C9A24C" stroke-width="2.4"/>
+            <ellipse cx="100" cy="114" rx="33" ry="10" fill="#FBF4E6" stroke="#D9B96A" stroke-width="1.4"/>
+            <path d="M72 116 a28 9 0 0 0 56 0" fill="none" stroke="#E4D2A8" stroke-width="1.2" opacity=".55"/>
+            <!-- serviette pliée -->
+            <path d="M100 84 C94 97 92 107 92 116 L108 116 C108 107 106 97 100 84 Z" fill="#ECDCB8" stroke="#D3BC8E" stroke-width="1"/>
+            <g stroke="#D3BC8E" stroke-width=".8" opacity=".6" fill="none"><path d="M100 86 C98 99 97 108 97 116M100 86 C102 99 103 108 103 116"/></g>
+            <!-- verre à vin -->
             <g class="lift">
-              <ellipse cx="122" cy="118" rx="12" ry="4" fill="#D9B96A"/>
-              <rect x="120.5" y="92" width="3" height="26" fill="#E7C77E"/>
-              <path d="M108 56c0 22 6 30 14 34c8-4 14-12 14-34c-9-5-19-5-28 0z" fill="url(#tabG)"/>
-              <path d="M114 60c0 15 3 22 8 27" fill="none" stroke="#FBEBC6" stroke-width="2" opacity=".6"/>
-              <path d="M110 60c9-4 17-4 24 0" fill="none" stroke="#CE8B3A" stroke-width="1.4" opacity=".6"/>
+              <ellipse cx="160" cy="114" rx="10.5" ry="3.4" fill="#D9B96A"/>
+              <rect x="158.6" y="90" width="2.8" height="24" fill="#E7C77E"/>
+              <path d="M148 56 C148 76 153 85 160 89 C167 85 172 76 172 56 C164 52 156 52 148 56 Z" fill="url(#tabG)"/>
+              <path d="M150 60 C156 64 164 64 170 60" fill="none" stroke="#CE8B3A" stroke-width="1.4" opacity=".55"/>
+              <path d="M153 60 C153 74 156 81 160 85" fill="none" stroke="#FBEBC6" stroke-width="2" opacity=".6"/>
             </g>
           </svg>
         </div>
