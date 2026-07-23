@@ -230,14 +230,14 @@
   .uni-ete .uni-scrim{background:linear-gradient(to top,rgba(138,76,26,.55),rgba(138,76,26,.08) 42%,transparent 62%),linear-gradient(102deg,rgba(138,76,26,.32),rgba(138,76,26,.04) 40%,transparent 56%);}
   .uni-hiver .uni-scrim{background:linear-gradient(to top,rgba(8,12,10,.76),rgba(8,12,10,.16) 46%,transparent 66%),linear-gradient(102deg,rgba(8,12,10,.5),rgba(8,12,10,.08) 42%,transparent 58%);}
   .uni-body{position:relative;z-index:2;max-width:30ch;}
-  .uni .tag{font-family:var(--sans);font-size:.68rem;letter-spacing:.3em;text-transform:uppercase;font-weight:700;display:inline-flex;align-items:center;gap:.6em;}
-  .uni .tag::before{content:"";width:22px;height:1px;background:currentColor;opacity:.7;}
-  .uni-ete .tag{color:#7a3f14;} .uni-hiver .tag{color:var(--gold-soft);}
-  .uni h3{font-family:var(--serif);font-size:clamp(2.1rem,3.9vw,3.4rem);line-height:1.02;margin:.34em 0 .42em;}
+  .uni .tag{font-family:var(--sans);font-size:.76rem;letter-spacing:.28em;text-transform:uppercase;font-weight:700;display:inline-flex;align-items:center;gap:.7em;}
+  .uni .tag::before{content:"";width:26px;height:1.5px;background:currentColor;opacity:.9;}
+  .uni-ete .tag{color:#5f2f0d;} .uni-hiver .tag{color:#EFDDB2;}
+  .uni h3{font-family:var(--serif);font-size:clamp(2rem,3.7vw,3.2rem);line-height:1.04;margin:.34em 0 .42em;min-height:2.16em;}
   .uni h3 em{font-style:italic;}
   .uni-ete h3{color:#2c1a0a;} .uni-ete h3 em{color:#a85a1e;}
   .uni-hiver h3{color:#fff;} .uni-hiver h3 em{color:var(--gold-soft);}
-  .uni p{font-size:1rem;line-height:1.55;max-width:34ch;margin-bottom:1.3em;}
+  .uni p{font-size:1rem;line-height:1.55;max-width:34ch;margin-bottom:1.3em;min-height:4.65em;}
   .uni-ete p{color:#4a2f15;} .uni-hiver p{color:#d9d1c1;}
   .uni-kw{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.5em;}
   .uni-kw span{font-size:.63rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;padding:.5em .9em;border-radius:99px;border:1px solid;}
@@ -636,15 +636,16 @@
           <radialGradient id="bulbE" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FFEBA6" stop-opacity=".85"/><stop offset="1" stop-color="#FFEBA6" stop-opacity="0"/></radialGradient>
           <linearGradient id="linenE" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F8EFDA"/><stop offset="1" stop-color="#E5D0A6"/></linearGradient>
         </defs>
-        <!-- soleil (haut droite) -->
-        <circle class="sun-glow" cx="352" cy="200" r="130" fill="url(#sunGlowE)"/>
-        <g stroke="#EEA836" stroke-width="2.6" stroke-linecap="round" opacity=".7"><path d="M352 154V136 M352 246v18 M398 200h18 M306 200h-18 M384 168l13 -13 M320 168l-13 -13 M384 232l13 13 M320 232l-13 13"/></g>
-        <circle cx="352" cy="200" r="33" fill="#F7CB5E"/>
-        <!-- guirlande guinguette (festonnée, visible) -->
+        <!-- soleil rayonnant (haut droite) -->
+        <circle class="sun-glow" cx="356" cy="182" r="146" fill="url(#sunGlowE)"/>
+        <g stroke="#EEA836" stroke-width="2.8" stroke-linecap="round" opacity=".78"><path d="M398 182h22 M392.4 203l19 11 M377 218.4l11 19 M356 224v22 M335 218.4l-11 19 M319.6 203l-19 11 M314 182h-22 M319.6 161l-19 -11 M335 145.6l-11 -19 M356 140v-22 M377 145.6l11 -19 M392.4 161l19 -11"/></g>
+        <circle cx="356" cy="182" r="34" fill="#F7CB5E"/>
+        <circle cx="356" cy="182" r="19" fill="#FCE3A4" opacity=".8"/>
+        <!-- guirlande guinguette (festonnée) -->
         <path d="M-12 184 Q90 250 175 250 Q250 250 300 212" fill="none" stroke="#7a5a30" stroke-width="1.2" opacity=".5"/>
-        <g stroke="#7a5a30" stroke-width="1" opacity=".5"><path d="M40 207v9 M90 224v9 M150 237v9 M205 237v9 M258 221v9"/></g>
-        <g fill="url(#bulbE)"><circle cx="40" cy="220" r="8"/><circle cx="90" cy="237" r="8"/><circle cx="150" cy="250" r="8"/><circle cx="205" cy="250" r="8"/><circle cx="258" cy="234" r="8"/></g>
-        <g fill="#F4CE72"><circle cx="40" cy="220" r="3.6"/><circle cx="90" cy="237" r="3.6"/><circle cx="150" cy="250" r="3.6"/><circle cx="205" cy="250" r="3.6"/><circle cx="258" cy="234" r="3.6"/></g>
+        <g stroke="#7a5a30" stroke-width="1" opacity=".5"><path d="M57 222v9 M104 239v9 M149 249v9 M231 244v9 M273 229v9"/></g>
+        <g fill="url(#bulbE)"><circle cx="57" cy="234" r="8"/><circle cx="104" cy="251" r="8"/><circle cx="149" cy="261" r="8"/><circle cx="231" cy="256" r="8"/><circle cx="273" cy="241" r="8"/></g>
+        <g fill="#F4CE72"><circle cx="57" cy="234" r="3.6"/><circle cx="104" cy="251" r="3.6"/><circle cx="149" cy="261" r="3.6"/><circle cx="231" cy="256" r="3.6"/><circle cx="273" cy="241" r="3.6"/></g>
         <!-- pétales flottants -->
         <g fill="#e0a06a" opacity=".6"><ellipse cx="150" cy="286" rx="5" ry="2.6" transform="rotate(22 150 286)"/><ellipse cx="120" cy="360" rx="4.2" ry="2.2" transform="rotate(-16 120 360)"/><ellipse cx="188" cy="330" rx="4" ry="2" transform="rotate(10 188 330)"/></g>
         <!-- arche de cérémonie (droite) -->
@@ -653,20 +654,23 @@
         <g fill="#cf7d45"><circle cx="312" cy="242" r="5"/><circle cx="336" cy="240" r="5"/><circle cx="300" cy="228" r="4"/></g>
         <g stroke="#dcbb84" stroke-width="1.6" stroke-linecap="round" fill="none" opacity=".9"><path d="M322 226C322 206 320 194 322 182 M322 196l-9 -8 M322 196l9 -8 M322 210l-9 -8 M322 210l9 -8"/></g>
         <!-- table d'honneur dressée sous l'arche -->
-        <path d="M262 450 C264 502 256 556 266 600 L374 600 C384 556 376 502 378 450 Z" fill="url(#linenE)"/>
-        <g stroke="#e6d2a6" stroke-width="1.2" opacity=".7" fill="none"><path d="M292 456C290 510 292 556 290 600 M320 458v142 M348 456C350 510 348 556 350 600"/></g>
-        <ellipse cx="320" cy="450" rx="62" ry="14" fill="url(#linenE)" stroke="#d8bd8e" stroke-width="1.2"/>
-        <path d="M308 450 C308 464 332 464 332 450 Z" fill="#cdb082"/>
-        <g fill="#8f9d66"><circle cx="304" cy="440" r="6"/><circle cx="336" cy="440" r="6"/></g>
-        <g stroke="#d9b781" stroke-width="1.6" stroke-linecap="round" fill="none" opacity=".92"><path d="M320 450C318 428 316 414 318 400 M320 450C332 432 342 422 350 414 M320 450C308 432 298 424 290 416 M318 400l-8 -7 M318 400l8 -7"/></g>
-        <g stroke="#efdcae" stroke-width="1.6" fill="none" stroke-linecap="round"><path d="M280 444a6 6 0 0 0 12 0"/><path d="M286 444v9 M281 453h10"/><path d="M348 444a6 6 0 0 0 12 0"/><path d="M354 444v9 M349 453h10"/></g>
+        <path d="M262 452 C264 504 256 556 266 600 L374 600 C384 556 376 504 378 452 Z" fill="url(#linenE)"/>
+        <g stroke="#e6d2a6" stroke-width="1.2" opacity=".55" fill="none"><path d="M292 458C290 512 292 556 290 600 M320 460v140 M348 458C350 512 348 556 350 600"/></g>
+        <ellipse cx="320" cy="452" rx="62" ry="14" fill="url(#linenE)" stroke="#d8bd8e" stroke-width="1.2"/>
+        <!-- bougeoirs allumés -->
+        <g><rect x="298" y="430" width="3.6" height="22" rx="1.6" fill="#efe0c0"/><path class="flame" d="M299.8 430c-2.2 -3 -2.2 -5.4 0 -8.4c2.2 3 2.2 5.4 0 8.4Z" fill="#F6C56A"/></g>
+        <g><rect x="340" y="430" width="3.6" height="22" rx="1.6" fill="#efe0c0"/><path class="flame f2" d="M341.8 430c-2.2 -3 -2.2 -5.4 0 -8.4c2.2 3 2.2 5.4 0 8.4Z" fill="#F6C56A"/></g>
+        <!-- centre de table fleuri (pampa &amp; eucalyptus) -->
+        <rect x="314" y="430" width="12" height="22" rx="2.5" fill="#e7d4a8" stroke="#cdb082" stroke-width="1"/>
+        <g stroke="#d9b781" stroke-width="1.7" stroke-linecap="round" fill="none" opacity=".92"><path d="M320 432C315 408 313 392 315 378 M315 378l-7 -6 M315 378l6 -6 M315 392l-7 -6 M315 392l6 -6"/><path d="M320 432C331 414 342 404 351 396 M351 396l-1 -8 M351 396l7 -3"/><path d="M320 432C310 416 302 408 295 400 M295 400l0 -8 M295 400l-7 -1"/></g>
+        <g fill="#8f9d66"><ellipse cx="305" cy="414" rx="6" ry="3" transform="rotate(-38 305 414)"/><ellipse cx="337" cy="410" rx="6" ry="3" transform="rotate(38 337 410)"/><ellipse cx="322" cy="404" rx="5.5" ry="2.8" transform="rotate(6 322 404)"/></g>
         <!-- graminées au sol (droite) -->
         <g stroke="#c99a5a" stroke-width="1.7" fill="none" stroke-linecap="round" opacity=".85"><path d="M374 600C374 548 368 512 360 484 M360 484l15 12 M360 500l-16 10 M360 516l15 12 M360 532l-16 10"/></g>
       </svg>
       <div class="uni-scrim"></div>
       <div class="uni-body">
         <span class="tag">Solstice d'Été</span>
-        <h3>Lumière &amp; <em>grands airs</em></h3>
+        <h3>Lumière &amp;<br><em>grands airs</em></h3>
         <p>Lin froissé, pampa, tables sous la treille et éclats dorés — la saison des célébrations en plein air.</p>
         <div class="uni-kw"><span>Garden party</span><span>Doré</span><span>Plein air</span><span>Pampa</span></div>
         <span class="uni-link">Explorer l'été <svg aria-hidden="true"><use href="#i-arrow"/></svg></span>
@@ -683,13 +687,13 @@
         <circle cx="342" cy="198" r="92" fill="url(#moonGlowW)"/>
         <circle cx="342" cy="198" r="30" fill="#E9EEE9" mask="url(#mMoonW)"/>
         <g fill="#E7EFEA"><circle class="twinkle" cx="56" cy="196" r="3.2"/><circle class="twinkle t2" cx="112" cy="224" r="2.6"/><circle class="twinkle t3" cx="168" cy="202" r="3"/><circle class="twinkle" cx="72" cy="262" r="2.4"/><circle class="twinkle t2" cx="224" cy="252" r="2.4"/><circle class="twinkle t3" cx="132" cy="288" r="2.2"/><circle class="twinkle" cx="300" cy="176" r="2.2"/><circle class="twinkle t2" cx="262" cy="304" r="2"/></g>
-        <!-- neige -->
-        <g fill="#EAF1F2"><circle class="snow" cx="58" cy="0" r="2.6" style="animation-duration:9s;animation-delay:-1s"/><circle class="snow" cx="128" cy="0" r="2" style="animation-duration:12s;animation-delay:-5s"/><circle class="snow" cx="196" cy="0" r="2.8" style="animation-duration:8s;animation-delay:-3s"/><circle class="snow" cx="268" cy="0" r="2" style="animation-duration:11s;animation-delay:-7s"/><circle class="snow" cx="332" cy="0" r="2.4" style="animation-duration:10s;animation-delay:-2s"/><circle class="snow" cx="96" cy="0" r="2.2" style="animation-duration:13s;animation-delay:-9s"/><circle class="snow" cx="238" cy="0" r="2.2" style="animation-duration:9.5s;animation-delay:-6s"/><circle class="snow" cx="300" cy="0" r="1.8" style="animation-duration:12.5s;animation-delay:-4s"/></g>
+        <!-- neige (abondante) -->
+        <g fill="#EAF1F2"><circle class="snow" cx="40" cy="0" r="2.6" style="animation-duration:9s;animation-delay:-1s"/><circle class="snow" cx="78" cy="0" r="1.8" style="animation-duration:12s;animation-delay:-5s"/><circle class="snow" cx="118" cy="0" r="2.8" style="animation-duration:8s;animation-delay:-3s"/><circle class="snow" cx="150" cy="0" r="2" style="animation-duration:11s;animation-delay:-7s"/><circle class="snow" cx="186" cy="0" r="2.4" style="animation-duration:10s;animation-delay:-2s"/><circle class="snow" cx="216" cy="0" r="1.8" style="animation-duration:13s;animation-delay:-9s"/><circle class="snow" cx="250" cy="0" r="2.6" style="animation-duration:9.5s;animation-delay:-6s"/><circle class="snow" cx="286" cy="0" r="2" style="animation-duration:12.5s;animation-delay:-4s"/><circle class="snow" cx="318" cy="0" r="2.4" style="animation-duration:8.5s;animation-delay:-8s"/><circle class="snow" cx="352" cy="0" r="1.8" style="animation-duration:11.5s;animation-delay:-2.5s"/><circle class="snow" cx="60" cy="0" r="2" style="animation-duration:10.5s;animation-delay:-10s"/><circle class="snow" cx="100" cy="0" r="2.2" style="animation-duration:9s;animation-delay:-6.5s"/><circle class="snow" cx="168" cy="0" r="1.6" style="animation-duration:12s;animation-delay:-3.5s"/><circle class="snow" cx="234" cy="0" r="2" style="animation-duration:8s;animation-delay:-9.5s"/><circle class="snow" cx="300" cy="0" r="2.2" style="animation-duration:10s;animation-delay:-5s"/><circle class="snow" cx="336" cy="0" r="1.8" style="animation-duration:13s;animation-delay:-7.5s"/></g>
         <!-- guirlande de sapin givrée (visible) -->
         <path d="M-10 210 Q150 262 300 216" fill="none" stroke="#24402c" stroke-width="8" stroke-linecap="round" opacity=".92"/>
-        <g stroke="#356043" stroke-width="2" stroke-linecap="round" opacity=".85"><path d="M30 222l-11 -10M30 222l12 -8M80 232l-11 -10M80 232l12 -8M135 237l-11 -10M135 237l12 -8M190 235l-11 -10M190 235l12 -8M245 226l-11 -10M245 226l12 -8M290 215l-11 -10M290 215l12 -8"/></g>
-        <g fill="#dfeceb" opacity=".85"><circle cx="56" cy="228" r="2"/><circle cx="110" cy="235" r="2.2"/><circle cx="164" cy="237" r="2"/><circle cx="220" cy="232" r="2.2"/><circle cx="272" cy="222" r="2"/></g>
-        <g fill="#b0472f"><circle cx="96" cy="234" r="3"/><circle cx="180" cy="238" r="3"/><circle cx="258" cy="224" r="3"/></g>
+        <g stroke="#356043" stroke-width="2" stroke-linecap="round" opacity=".85"><path d="M22 219l-11 -10M22 219l12 -8M69 230l-11 -10M69 230l12 -8M116 236l-11 -10M116 236l12 -8M163 238l-11 -10M163 238l12 -8M209 235l-11 -10M209 235l12 -8M255 228l-11 -10M255 228l12 -8M285 220l-11 -10M285 220l12 -8"/></g>
+        <g fill="#dfeceb" opacity=".85"><circle cx="45" cy="224" r="2"/><circle cx="140" cy="237" r="2.2"/><circle cx="190" cy="236" r="2"/><circle cx="268" cy="225" r="2.2"/></g>
+        <g fill="#b0472f"><circle cx="92" cy="233" r="3"/><circle cx="163" cy="238" r="3"/><circle cx="240" cy="230" r="3"/></g>
         <!-- lanterne suspendue -->
         <path d="M150 237V264" stroke="#8a9490" stroke-width="1.4"/>
         <path d="M144 264a6 6 0 0 1 12 0" fill="none" stroke="#9fb0ad" stroke-width="1.6"/>
@@ -714,7 +718,7 @@
       <div class="uni-scrim"></div>
       <div class="uni-body">
         <span class="tag">Solstice d'Hiver</span>
-        <h3>Velours &amp; <em>bougies</em></h3>
+        <h3>Velours &amp;<br><em>bougies</em></h3>
         <p>Ambiances cocon, verrerie fumée et lueurs dorées — pour des réceptions chaleureuses et feutrées.</p>
         <div class="uni-kw"><span>Cocon</span><span>Chandelles</span><span>Velours</span><span>Feutré</span></div>
         <span class="uni-link">Explorer l'hiver <svg aria-hidden="true"><use href="#i-arrow"/></svg></span>
