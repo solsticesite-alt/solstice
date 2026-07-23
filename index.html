@@ -3,10 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Solstice — Location de mobilier & décoration d'événements · Amiens</title>
-<meta name="description" content="Solstice — location de mobilier, art de la table et décoration pour vos mariages, anniversaires et réceptions, à Amiens et ses alentours. On imagine, vous savourez.">
-<meta name="robots" content="index, follow">
+<title>Solstice — Location de mobilier &amp; décoration d'événements · Amiens</title>
+<meta name="description" content="Location de mobilier, art de la table et décoration pour mariages, anniversaires et réceptions à Amiens et ses alentours. Deux univers : Solstice d'Été et Solstice d'Hiver.">
 <meta name="theme-color" content="#FBF8F2">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Solstice — Location de mobilier &amp; décoration d'événements">
+<meta property="og:description" content="Le décor de vos plus beaux moments, à Amiens et ses alentours.">
+<meta property="og:locale" content="fr_FR">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 </head>
 <body>
@@ -163,7 +166,7 @@
   /* ============================ HERO ============================ */
   .hero{
     position:relative;overflow:hidden;isolation:isolate;
-    min-height:clamp(540px,86vh,860px);display:flex;align-items:center;
+    min-height:calc(100vh - 116px);min-height:calc(100svh - 116px);display:flex;align-items:center;
     background:transparent;
   }
   .hero-glow{display:none;}
@@ -172,7 +175,7 @@
   .hero-inner{display:grid;grid-template-columns:1.04fr .96fr;align-items:center;gap:clamp(24px,4vw,56px);}
   .hero-copy{min-width:0;}
   .hero-emblem{position:relative;display:flex;justify-content:center;align-items:center;}
-  .emblem{width:min(100%,500px);height:auto;filter:drop-shadow(0 30px 54px rgba(90,60,25,.28));}
+  .emblem{width:auto;height:min(62vh,470px);max-width:100%;filter:drop-shadow(0 30px 54px rgba(90,60,25,.28));}
   @media (prefers-reduced-motion:no-preference){
     .emblem{animation:emb-float 12s ease-in-out infinite;}
     .emb-halo{transform-box:fill-box;transform-origin:center;animation:emb-pulse 6.5s ease-in-out infinite;}
@@ -183,16 +186,16 @@
   @keyframes emb-fall{0%{transform:translateY(-20px);opacity:0;}15%{opacity:.85;}100%{transform:translateY(360px);opacity:0;}}
   @media (max-width:900px){
     .hero-inner{grid-template-columns:1fr;}
-    .hero-emblem{margin-top:1.6rem;}
-    .emblem{width:min(76%,300px);}
+    .hero-emblem{margin-top:1.4rem;}
+    .emblem{width:min(64%,260px);height:auto;}
   }
-  .hero-inner{padding-block:clamp(48px,9vh,110px);}
+  .hero-inner{padding-block:clamp(12px,2vh,30px);}
   .hero h1{
-    font-size:clamp(2.7rem,7.4vw,5.7rem);line-height:1.02;margin:.34em 0 .4em;letter-spacing:-.015em;max-width:15ch;
+    font-size:clamp(2.4rem,5.6vw,4.7rem);line-height:1.03;margin:.3em 0 .34em;letter-spacing:-.015em;max-width:15ch;
   }
   .hero h1 em{font-style:italic;color:var(--gold-deep);}
   .hero .lede{font-size:clamp(1.02rem,1.5vw,1.2rem);max-width:46ch;color:var(--ink-soft);}
-  .hero-cta{display:flex;flex-wrap:wrap;gap:.9rem;margin-top:2.3rem;}
+  .hero-cta{display:flex;flex-wrap:wrap;gap:.9rem;margin-top:1.6rem;}
   .scrollcue{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);z-index:1;font-size:.6rem;letter-spacing:.28em;text-transform:uppercase;color:var(--stone);display:flex;flex-direction:column;align-items:center;gap:.6rem;}
   .scrollcue .bar{width:1px;height:38px;background:linear-gradient(var(--gold),transparent);animation:cue 2.4s ease-in-out infinite;}
   @keyframes cue{0%,100%{transform:scaleY(.4);transform-origin:top;opacity:.4;}50%{transform:scaleY(1);opacity:1;}}
@@ -552,31 +555,58 @@
       </div>
     </div>
     <div class="hero-emblem reveal d2">
-      <svg class="emblem" viewBox="0 0 400 400" role="img" aria-label="Emblème Solstice : un été ensoleillé et un hiver étoilé">
+      <svg class="emblem" viewBox="0 0 380 472" role="img" aria-label="Une arche de cérémonie ouvrant sur un lever de soleil d'été qui se fond dans une nuit d'hiver étoilée">
         <defs>
-          <clipPath id="embClip"><circle cx="200" cy="200" r="190"/></clipPath>
-          <linearGradient id="dayG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FCE7BA"/><stop offset=".55" stop-color="#F5C877"/><stop offset="1" stop-color="#E7A44C"/></linearGradient>
-          <linearGradient id="nightG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#35564F"/><stop offset=".55" stop-color="#213A3C"/><stop offset="1" stop-color="#111E28"/></linearGradient>
-          <radialGradient id="sunCore" cx="50%" cy="42%" r="60%"><stop offset="0" stop-color="#FFEFB2"/><stop offset="1" stop-color="#F3B53E"/></radialGradient>
-          <radialGradient id="sunHalo" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FFDE8A" stop-opacity=".8"/><stop offset="1" stop-color="#FFDE8A" stop-opacity="0"/></radialGradient>
-          <radialGradient id="moonHalo" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#DDECEC" stop-opacity=".45"/><stop offset="1" stop-color="#DDECEC" stop-opacity="0"/></radialGradient>
+          <clipPath id="archClip"><path d="M40 446 L40 178 A150 150 0 0 1 340 178 L340 446 Z"/></clipPath>
+          <linearGradient id="skyG" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#FCE6B2"/><stop offset=".32" stop-color="#F3CB82"/>
+            <stop offset=".48" stop-color="#CFA36A"/><stop offset=".60" stop-color="#8C9070"/>
+            <stop offset=".74" stop-color="#496A60"/><stop offset="1" stop-color="#223B37"/>
+          </linearGradient>
+          <linearGradient id="groundG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1E1910" stop-opacity="0"/><stop offset="1" stop-color="#1E1910" stop-opacity=".2"/></linearGradient>
+          <radialGradient id="sunCore" cx="50%" cy="42%" r="60%"><stop offset="0" stop-color="#FFF1C2"/><stop offset="1" stop-color="#F1B33E"/></radialGradient>
+          <radialGradient id="sunHalo" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FFDE8A" stop-opacity=".72"/><stop offset="1" stop-color="#FFDE8A" stop-opacity="0"/></radialGradient>
+          <radialGradient id="moonHalo" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#DCEBE6" stop-opacity=".4"/><stop offset="1" stop-color="#DCEBE6" stop-opacity="0"/></radialGradient>
+          <mask id="mCrescent"><circle cx="276" cy="106" r="33" fill="#fff"/><circle cx="291" cy="95" r="28" fill="#000"/></mask>
         </defs>
-        <g clip-path="url(#embClip)">
-          <path d="M0 0 H224 L176 400 H0 Z" fill="url(#dayG)"/>
-          <path d="M224 0 H400 V400 H176 Z" fill="url(#nightG)"/>
-          <circle class="emb-halo" cx="132" cy="150" r="118" fill="url(#sunHalo)"/>
-          <g stroke="#EA9A2E" stroke-width="5" stroke-linecap="round" opacity=".72"><path d="M132 80v-24 M132 220v24 M202 150h24 M62 150h-24 M181 101l17 -17 M181 199l17 17 M83 199l-17 17 M83 101l-17 -17"/></g>
-          <circle cx="132" cy="150" r="62" fill="url(#sunCore)"/>
-          <g stroke="#B4753A" stroke-width="3.4" stroke-linecap="round" fill="none" opacity=".92"><path d="M72 400C72 348 79 312 88 284"/><path d="M88 284c-13 10 -21 22 -25 37M88 284c13 10 21 22 25 37M88 298c-10 8 -16 18 -19 30M88 298c10 8 16 18 19 30"/><path d="M118 400C118 360 123 332 130 310"/><path d="M130 310c-10 8 -16 17 -19 28M130 310c10 8 16 17 19 28"/></g>
-          <circle class="emb-halo" cx="286" cy="128" r="80" fill="url(#moonHalo)"/>
-          <circle cx="286" cy="128" r="44" fill="#EAF0ED"/>
-          <circle cx="305" cy="114" r="38" fill="#223A3C"/>
-          <g fill="#EAF3F1"><circle cx="332" cy="206" r="2.6"/><circle cx="248" cy="88" r="2"/><circle cx="356" cy="150" r="2.2"/><circle cx="300" cy="238" r="2"/><circle cx="346" cy="286" r="2.4"/><circle cx="262" cy="176" r="1.8"/><circle cx="318" cy="96" r="1.8"/></g>
-          <g fill="#FFFFFF" opacity=".85"><circle class="emb-snow" cx="250" cy="0" r="3" style="animation-duration:7s;animation-delay:-1s"/><circle class="emb-snow" cx="300" cy="0" r="2.2" style="animation-duration:9s;animation-delay:-4s"/><circle class="emb-snow" cx="342" cy="0" r="2.6" style="animation-duration:8s;animation-delay:-2.5s"/><circle class="emb-snow" cx="272" cy="0" r="2" style="animation-duration:10s;animation-delay:-6s"/><circle class="emb-snow" cx="360" cy="0" r="2.3" style="animation-duration:8.5s;animation-delay:-3.5s"/></g>
-          <g stroke="#17281F" stroke-width="3.2" stroke-linecap="round" fill="none" opacity=".9"><path d="M322 400V300M322 320l22 -14M322 320l-22 -14M322 344l18 -12M322 344l-18 -12M322 368l14 -9M322 368l-14 -9"/><path d="M356 400V330M356 346l16 -10M356 346l-16 -10M356 368l13 -9M356 368l-13 -9"/></g>
+
+        <g clip-path="url(#archClip)">
+          <rect x="30" y="8" width="320" height="440" fill="url(#skyG)"/>
+          <!-- soleil d'été -->
+          <circle class="emb-halo" cx="120" cy="134" r="96" fill="url(#sunHalo)"/>
+          <g stroke="#E79A2C" stroke-width="4.4" stroke-linecap="round" opacity=".8"><path d="M120 86V72 M120 182v14 M168 134h14 M72 134H58 M154 100l10 -10 M154 168l10 10 M86 168l-10 10 M86 100l-10 -10"/></g>
+          <circle cx="120" cy="134" r="40" fill="url(#sunCore)"/>
+          <!-- lune & étoiles d'hiver -->
+          <circle class="emb-halo" cx="276" cy="106" r="56" fill="url(#moonHalo)"/>
+          <circle cx="276" cy="106" r="33" fill="#EAF2ED" mask="url(#mCrescent)"/>
+          <g fill="#EFF6F1"><circle cx="238" cy="150" r="1.8"/><circle cx="322" cy="158" r="2.1"/><circle cx="302" cy="76" r="1.6"/><circle cx="250" cy="92" r="1.9"/><circle cx="330" cy="118" r="1.7"/><circle cx="222" cy="196" r="1.5"/><circle cx="312" cy="206" r="2"/><circle cx="266" cy="172" r="1.5"/><circle cx="346" cy="184" r="1.7"/></g>
+          <g fill="#FFFFFF" opacity=".85"><circle class="emb-snow" cx="242" cy="52" r="2.6" style="animation-duration:7s;animation-delay:-1s"/><circle class="emb-snow" cx="288" cy="52" r="2.1" style="animation-duration:9s;animation-delay:-4s"/><circle class="emb-snow" cx="322" cy="52" r="2.5" style="animation-duration:8s;animation-delay:-2.5s"/><circle class="emb-snow" cx="266" cy="52" r="1.9" style="animation-duration:10s;animation-delay:-6s"/><circle class="emb-snow" cx="338" cy="52" r="2.2" style="animation-duration:8.5s;animation-delay:-3.5s"/></g>
+          <!-- sol -->
+          <rect x="30" y="420" width="320" height="28" fill="url(#groundG)"/>
+          <!-- graminées d'été (gauche) -->
+          <g stroke="#A2662A" stroke-width="3" stroke-linecap="round" fill="none" opacity=".95">
+            <path d="M70 446C70 410 73 388 78 370"/><path d="M78 370c-9 6 -14 14 -16 24M78 370c9 6 14 14 16 24M78 384c-8 5 -12 12 -14 20M78 384c8 5 12 12 14 20"/>
+            <path d="M100 446C100 402 104 374 110 350"/><path d="M110 350c-11 7 -17 16 -20 27M110 350c11 7 17 16 20 27M110 366c-9 6 -14 14 -17 23M110 366c9 6 14 14 17 23"/>
+            <path d="M132 446C132 408 135 386 140 366"/><path d="M140 366c-10 6 -15 15 -18 25M140 366c10 6 15 15 18 25M140 380c-8 5 -12 12 -15 21M140 380c8 5 12 12 15 21"/>
+          </g>
+          <!-- épi de blé central (le solstice) -->
+          <g stroke="#9A8348" stroke-width="2.4" stroke-linecap="round" fill="none" opacity=".9"><path d="M190 446V356"/><path d="M190 360l-6 -5M190 360l6 -5M190 372l-7 -6M190 372l7 -6M190 384l-7 -6M190 384l7 -6M190 396l-7 -6M190 396l7 -6"/></g>
+          <!-- sapins d'hiver (droite) -->
+          <g stroke="#15301E" stroke-width="3" stroke-linecap="round" fill="none" opacity=".95">
+            <path d="M300 446V350"/><path d="M300 364l22 -14M300 364l-22 -14M300 386l19 -13M300 386l-19 -13M300 408l16 -11M300 408l-16 -11M300 428l12 -9M300 428l-12 -9"/>
+            <path d="M334 446V384"/><path d="M334 396l15 -10M334 396l-15 -10M334 414l12 -9M334 414l-12 -9M334 430l9 -7M334 430l-9 -7"/>
+          </g>
         </g>
-        <circle cx="200" cy="200" r="190" fill="none" stroke="#B08A54" stroke-width="2.5" opacity=".6"/>
-        <circle cx="200" cy="200" r="181" fill="none" stroke="#B08A54" stroke-width="1" opacity=".3"/>
+
+        <!-- cadre de l'arche -->
+        <path d="M40 446 L40 178 A150 150 0 0 1 340 178 L340 446" fill="none" stroke="#B08A54" stroke-width="3.6" stroke-linejoin="round"/>
+        <path d="M51 446 L51 183 A139 139 0 0 1 329 183 L329 446" fill="none" stroke="#CBAA76" stroke-width="1.2" opacity=".55"/>
+        <!-- clé de voûte -->
+        <path d="M190 13l10 15 -10 15 -10 -15 Z" fill="#B08A54"/>
+        <path d="M190 20l4.6 8 -4.6 8 -4.6 -8 Z" fill="#FBF8F2"/>
+        <!-- socle -->
+        <path d="M24 446H356" stroke="#B08A54" stroke-width="3.4" stroke-linecap="round"/>
+        <path d="M40 457H340" stroke="#CBAA76" stroke-width="1.3" stroke-linecap="round" opacity=".55"/>
       </svg>
     </div>
   </div>
@@ -925,5 +955,6 @@
   document.getElementById('mclose').addEventListener('click',closeM);
   panel.querySelectorAll('a').forEach(function(a){a.addEventListener('click',closeM);});
 </script>
+
 </body>
 </html>
