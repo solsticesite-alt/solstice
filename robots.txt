@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Fichiers de configuration et documents internes non indexables
+Disallow: /vercel.json
+
+# Sitemap : à ajouter une fois le domaine définitif en place
+# Sitemap: https://ton-domaine.fr/sitemap.xml

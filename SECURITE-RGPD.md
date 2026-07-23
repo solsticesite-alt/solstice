@@ -141,10 +141,15 @@ Quand on construira les vraies fonctions (réservations, panier, espace client),
 ## 8. ✅ Checklist priorisée
 
 **Fait maintenant**
-- [x] En-têtes de sécurité (CSP, HSTS, anti-clickjacking…)
+- [x] En-têtes de sécurité (CSP, HSTS, anti-clickjacking, COOP, CORP…)
 - [x] HTTPS forcé
 - [x] Pages légales (structure + contenu RGPD)
 - [x] Liens légaux dans le footer
+- [x] `robots.txt`, favicon, page **404** personnalisée
+- [x] `.well-known/security.txt` (RFC 9116) — _contact à compléter_
+- [x] `.gitignore` (empêche de committer `.env` / secrets)
+- [x] Métadonnées SEO / Open Graph
+- [x] Aucun fichier de config/interne servi publiquement (build ne copie que le nécessaire)
 
 **À faire dès que possible (tes infos)**
 - [ ] Compléter les `[À COMPLÉTER]` (section 6)

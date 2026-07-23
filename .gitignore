@@ -1,0 +1,24 @@
+# Dépendances
+node_modules/
+.pnp
+.pnp.js
+
+# Secrets & variables d'environnement — NE JAMAIS committer
+.env
+.env.*
+*.pem
+*.key
+
+# Build / sortie
+public/
+dist/
+build/
+.vercel/
+.next/
+
+# Système / éditeurs
+.DS_Store
+Thumbs.db
+*.log
+.idea/
+.vscode/

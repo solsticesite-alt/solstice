@@ -1,0 +1,7 @@
+# Politique de divulgation de vulnérabilités — Solstice
+# https://www.rfc-editor.org/rfc/rfc9116
+
+# [À COMPLÉTER] Remplacer par l'e-mail de contact sécurité définitif
+Contact: mailto:securite@ton-domaine.fr
+Expires: 2027-07-23T00:00:00.000Z
+Preferred-Languages: fr, en
