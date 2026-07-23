@@ -25,7 +25,7 @@
 .social-link{display:inline-flex;align-items:center;gap:.55em;font-size:.71rem;letter-spacing:.12em;text-transform:uppercase;font-weight:600;color:var(--ink-soft);border:1px solid var(--line);border-radius:99px;padding:.62em 1.15em;transition:border-color .3s,color .3s,background .3s;}
 .social-link svg{width:16px;height:16px;stroke:currentColor;stroke-width:1.4;fill:none;stroke-linecap:round;stroke-linejoin:round;}
 .social-link:hover{border-color:var(--gold);color:var(--gold-deep);background:rgba(176,138,84,.06);}
-.form-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:clamp(24px,3.2vw,42px);box-shadow:0 34px 64px -52px rgba(34,28,21,.55);}
+.form-card{background:var(--paper);border:1px solid var(--line);border-radius:clamp(16px,1.8vw,24px);padding:clamp(24px,3.2vw,42px);box-shadow:0 34px 64px -50px rgba(34,28,21,.5);}
 .form-card h2{font-size:clamp(1.5rem,3vw,2rem);margin:.7rem 0 .4rem;}
 .form-card .form-intro{margin-bottom:1.8rem;}
 .form-card .form-note{font-size:.82rem;color:var(--stone);margin-top:1.1rem;}
@@ -59,6 +59,137 @@
   <symbol id="i-table" viewBox="0 0 24 24"><path d="M3 9h18M5 9v3M19 9v3M4 6h16v3H4zM7 12v8M17 12v8"/></symbol>
   <symbol id="i-flower" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.4"/><path d="M12 9.6c-.7-2.2.3-4.1 0-4.6-.3.5.7 2.4 0 4.6M12 14.4c.7 2.2-.3 4.1 0 4.6.3-.5-.7-2.4 0-4.6M9.6 12c-2.2-.7-4.1.3-4.6 0 .5-.3 2.4.7 4.6 0M14.4 12c2.2.7 4.1-.3 4.6 0-.5.3-2.4-.7-4.6 0"/></symbol>
   <symbol id="i-lantern" viewBox="0 0 24 24"><path d="M9 4h6M10 4v2M14 4v2"/><rect x="7.5" y="6" width="9" height="12" rx="2"/><path d="M12 6v12M9.5 20h5"/></symbol>
+<!-- ============ GRAPHISMES COULEUR 3D (réutilisables) ============ -->
+  <symbol id="g3-chair" viewBox="0 0 120 120">
+    <ellipse cx="60" cy="105" rx="32" ry="5.5" fill="#4a6070" opacity=".12"/>
+    <rect x="44" y="26" width="32" height="42" rx="4" fill="#D6E7F0" fill-opacity=".68" stroke="#AECBDC" stroke-width="1.8"/>
+    <path d="M44 40h32" stroke="#AECBDC" stroke-width="1.4" opacity=".7"/><path d="M44 54h32" stroke="#AECBDC" stroke-width="1.4" opacity=".5"/>
+    <rect x="41" y="66" width="38" height="11" rx="2.5" fill="#C9DEEA" fill-opacity=".78" stroke="#AECBDC" stroke-width="1.8"/>
+    <g stroke="#AECBDC" stroke-width="3.4" stroke-linecap="round" opacity=".85"><path d="M46 77V104M74 77V104M51 77L48 104M69 77L72 104"/></g>
+    <g stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".55"><path d="M50 30V62M58 30V62"/></g>
+  </symbol>
+  <symbol id="g3-arch" viewBox="0 0 120 120">
+    <defs><linearGradient id="g3archW" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#B0824C"/><stop offset="1" stop-color="#8A5E32"/></linearGradient><radialGradient id="g3archFl" cx="50%" cy="40%" r="60%"><stop offset="0" stop-color="#EAA98E"/><stop offset="1" stop-color="#D07A63"/></radialGradient></defs>
+    <ellipse cx="60" cy="106" rx="34" ry="5" fill="#5a3f26" opacity=".14"/>
+    <path d="M34 106V56A26 26 0 0 1 86 56V106" fill="none" stroke="url(#g3archW)" stroke-width="5" stroke-linecap="round"/>
+    <g fill="#8FA06A"><circle cx="42" cy="38" r="7"/><circle cx="54" cy="31" r="8.5"/><circle cx="68" cy="31" r="7.5"/><circle cx="80" cy="39" r="6.5"/><circle cx="34" cy="64" r="5"/><circle cx="33" cy="77" r="4.5"/><circle cx="86" cy="66" r="5"/></g>
+    <g fill="url(#g3archFl)"><circle cx="50" cy="34" r="4.5"/><circle cx="64" cy="33" r="4"/></g>
+    <g fill="#C77A4E"><circle cx="50" cy="34" r="1.8"/><circle cx="64" cy="33" r="1.6"/></g>
+  </symbol>
+  <symbol id="g3-cutlery" viewBox="0 0 120 120">
+    <defs><linearGradient id="g3plate" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FBF3E2"/><stop offset="1" stop-color="#E7D8BC"/></linearGradient><linearGradient id="g3tglass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F3D08A"/><stop offset=".5" stop-color="#E3AC5A"/><stop offset="1" stop-color="#CE8B3A"/></linearGradient></defs>
+    <ellipse cx="58" cy="94" rx="38" ry="5.5" fill="#7a5a24" opacity=".12"/>
+    <g stroke="#C9A24C" stroke-width="2.6" stroke-linecap="round"><path d="M26 96V66"/></g>
+    <g stroke="#C9A24C" stroke-width="1.7" stroke-linecap="round"><path d="M22 66V54M26 67V52M30 66V54"/></g>
+    <rect x="90.6" y="66" width="2.8" height="30" rx="1.4" fill="#C9A24C"/>
+    <path d="M92 66C91 54 93 48 96.5 46.5C97.6 55 96.6 62 94.4 66Z" fill="#C9A24C"/>
+    <ellipse cx="58" cy="82" rx="30" ry="9.6" fill="url(#g3plate)" stroke="#C9A24C" stroke-width="2"/>
+    <ellipse cx="58" cy="80" rx="21" ry="6.4" fill="#FBF4E6" stroke="#D9B96A" stroke-width="1.1"/>
+    <path d="M58 60C54 68 53 75 53 82L63 82C63 75 62 68 58 60Z" fill="#ECDCB8" stroke="#D3BC8E" stroke-width=".9"/>
+    <ellipse cx="98" cy="82" rx="7.5" ry="2.6" fill="#D9B96A"/><rect x="96.8" y="64" width="2.4" height="18" fill="#E7C77E"/>
+    <path d="M90 42C90 55 93.5 61 98 63C102.5 61 106 55 106 42C100 39 94 39 90 42Z" fill="url(#g3tglass)"/>
+  </symbol>
+  <symbol id="g3-camera" viewBox="0 0 120 120">
+    <defs><linearGradient id="g3camB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F1E7D0"/><stop offset="1" stop-color="#DFD0B0"/></linearGradient><radialGradient id="g3camL" cx="42%" cy="38%" r="65%"><stop offset="0" stop-color="#F0C070"/><stop offset=".55" stop-color="#8A6A3A"/><stop offset="1" stop-color="#2C2620"/></radialGradient></defs>
+    <ellipse cx="60" cy="98" rx="36" ry="6" fill="#5a4326" opacity=".14"/>
+    <rect x="26" y="50" width="68" height="46" rx="11" fill="url(#g3camB)"/>
+    <path d="M38 50H82A10 10 0 0 1 92 60V64H28V60A10 10 0 0 1 38 50Z" fill="#CC8A52"/>
+    <rect x="50" y="39" width="22" height="12" rx="3" fill="#B0522C"/><rect x="78" y="44" width="12" height="8" rx="2" fill="#EAF2F6"/>
+    <circle cx="35" cy="60" r="2.6" fill="#B0522C"/>
+    <circle cx="58" cy="74" r="19" fill="#3a332a"/><circle cx="58" cy="74" r="14.5" fill="#241f1a"/><circle cx="58" cy="74" r="9.5" fill="url(#g3camL)"/><circle cx="52.5" cy="68.5" r="3" fill="#fff" opacity=".55"/>
+  </symbol>
+  <symbol id="g3-vase" viewBox="0 0 120 120">
+    <defs><linearGradient id="g3vase" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#D08A57"/><stop offset="1" stop-color="#A5673A"/></linearGradient><radialGradient id="g3fl" cx="50%" cy="40%" r="60%"><stop offset="0" stop-color="#EAA98E"/><stop offset="1" stop-color="#D07A63"/></radialGradient></defs>
+    <ellipse cx="60" cy="106" rx="24" ry="4.5" fill="#5a4326" opacity=".16"/>
+    <g stroke="#8FA06A" stroke-width="2" stroke-linecap="round" fill="none"><path d="M60 80C63 66 64 58 66 52"/><path d="M60 80C55 70 52 65 49 62"/><path d="M60 80C68 72 73 69 77 67"/><path d="M60 80C57 64 55 50 55 38"/></g>
+    <g stroke="#E4CDA0" stroke-width="1.5" stroke-linecap="round"><path d="M55 38c-1-6-1-9 0-13M55 38c-4-3-6-7-7-10M55 38c4-3 6-7 7-10M55 30c-3-2-5-4-6-7M55 30c3-2 5-4 6-7"/></g>
+    <circle cx="67" cy="51" r="9" fill="url(#g3fl)"/><circle cx="67" cy="51" r="3.4" fill="#B85A46"/>
+    <circle cx="50" cy="61" r="7" fill="#E9B48A"/><circle cx="50" cy="61" r="2.6" fill="#C77A4E"/>
+    <circle cx="77" cy="66" r="5.5" fill="url(#g3fl)"/><circle cx="77" cy="66" r="2" fill="#B85A46"/>
+    <path d="M50 106C47 93 48 85 52 80L68 80C72 85 73 93 70 106Z" fill="url(#g3vase)"/><ellipse cx="60" cy="80" rx="9" ry="3" fill="#B8794A"/>
+  </symbol>
+  <symbol id="g3-lantern" viewBox="0 0 120 120">
+    <defs><radialGradient id="g3lampGlow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FBC66A" stop-opacity=".85"/><stop offset="1" stop-color="#FBC66A" stop-opacity="0"/></radialGradient><linearGradient id="g3lampF" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#E0B24E"/><stop offset=".5" stop-color="#D0A03C"/><stop offset="1" stop-color="#B0842E"/></linearGradient><linearGradient id="g3lampGl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FBE9C4" stop-opacity=".6"/><stop offset="1" stop-color="#F3C77E" stop-opacity=".38"/></linearGradient></defs>
+    <ellipse cx="60" cy="106" rx="28" ry="5" fill="#6b4a1c" opacity=".16"/>
+    <circle cx="60" cy="72" r="28" fill="url(#g3lampGlow)"/>
+    <rect x="46" y="104" width="28" height="5" rx="2" fill="#B0842E"/>
+    <rect x="44" y="44" width="32" height="60" rx="3" fill="url(#g3lampGl)" stroke="url(#g3lampF)" stroke-width="3.4"/>
+    <g stroke="url(#g3lampF)" stroke-width="2" opacity=".85"><path d="M44 64h32M44 84h32"/></g>
+    <path d="M42 44L60 28L78 44Z" fill="url(#g3lampF)"/><path d="M56 28a4 4 0 0 1 8 0" fill="none" stroke="#C9A24C" stroke-width="2"/>
+    <rect x="53" y="76" width="14" height="28" rx="2" fill="#F2E8CE"/>
+    <path d="M60 76c-3.4-4-3.4-7.6 0-13c3.4 5 3.4 9 0 13z" fill="#FBC66A"/><ellipse cx="60" cy="76" rx="5" ry="2.2" fill="#F6D68A"/>
+  </symbol>
+  <symbol id="g3-candles" viewBox="0 0 120 120">
+    <defs><radialGradient id="g3cGlow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FBC66A" stop-opacity=".8"/><stop offset="1" stop-color="#FBC66A" stop-opacity="0"/></radialGradient></defs>
+    <ellipse cx="60" cy="104" rx="32" ry="5" fill="#5a4326" opacity=".14"/>
+    <circle cx="44" cy="80" r="20" fill="url(#g3cGlow)"/><circle cx="62" cy="70" r="24" fill="url(#g3cGlow)"/><circle cx="80" cy="82" r="18" fill="url(#g3cGlow)"/>
+    <rect x="36" y="66" width="16" height="38" rx="3" fill="#E7DCC4"/><rect x="54" y="52" width="17" height="52" rx="3" fill="#EDE3CE"/><rect x="74" y="70" width="15" height="34" rx="3" fill="#E2D6BC"/>
+    <g stroke="#5a4a2a" stroke-width="1.4" stroke-linecap="round"><path d="M44 66v-5M62.5 52v-6M81.5 70v-5"/></g>
+    <path d="M44 61c-2.6-3.4-2.6-6 0-9.6c2.6 3.6 2.6 6.2 0 9.6z" fill="#FBC66A"/><path d="M62.5 46c-3-3.8-3-6.8 0-11c3 4.2 3 7.2 0 11z" fill="#FBD07A"/><path d="M81.5 65c-2.4-3.2-2.4-5.6 0-9c2.4 3.4 2.4 5.8 0 9z" fill="#FBC66A"/>
+  </symbol>
+  <symbol id="g3-glass" viewBox="0 0 120 120">
+    <defs><linearGradient id="g3gz" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F6DA92"/><stop offset=".5" stop-color="#E7B85E"/><stop offset="1" stop-color="#D2933C"/></linearGradient></defs>
+    <ellipse cx="60" cy="106" rx="22" ry="5" fill="#7a5a24" opacity=".14"/>
+    <ellipse cx="60" cy="104" rx="18" ry="5" fill="#D9B96A"/><rect x="58.4" y="66" width="3.2" height="38" fill="#E7C77E"/>
+    <path d="M40 46C40 62 48 70 60 72C72 70 80 62 80 46C67 41 53 41 40 46Z" fill="url(#g3gz)"/>
+    <path d="M42 48C42 60 49 66 60 68" fill="none" stroke="#FBEBC6" stroke-width="2.4" opacity=".6"/><ellipse cx="60" cy="47" rx="19" ry="4.5" fill="#FBEBC6" opacity=".5"/>
+    <g fill="#FCEFC8"><circle cx="56" cy="40" r="1.6"/><circle cx="63" cy="34" r="1.8"/><circle cx="59" cy="28" r="1.4"/><circle cx="66" cy="24" r="1.5"/></g>
+  </symbol>
+  <symbol id="g3-table" viewBox="0 0 120 120">
+    <defs><linearGradient id="g3linen" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F8EFDA"/><stop offset="1" stop-color="#E5D0A6"/></linearGradient></defs>
+    <ellipse cx="60" cy="108" rx="34" ry="5" fill="#7a5a24" opacity=".12"/>
+    <path d="M36 66C36 92 32 104 36 110L84 110C88 104 84 92 84 66Z" fill="url(#g3linen)"/>
+    <g stroke="#E6D2A6" stroke-width="1" opacity=".6" fill="none"><path d="M50 70C49 90 50 104 49 110M60 71V110M70 70C71 90 70 104 71 110"/></g>
+    <ellipse cx="60" cy="66" rx="34" ry="8.5" fill="url(#g3linen)" stroke="#D8BD8E" stroke-width="1.4"/>
+    <rect x="55" y="46" width="10" height="20" rx="2" fill="#CDB082"/>
+    <g stroke="#D9B781" stroke-width="1.5" stroke-linecap="round" fill="none"><path d="M60 48C57 34 56 26 57 18M60 48C67 34 72 28 78 22M60 48C53 34 48 28 42 22"/></g>
+    <g fill="#8FA06A"><circle cx="50" cy="40" r="4.5"/><circle cx="70" cy="40" r="4.5"/></g>
+    <circle cx="60" cy="26" r="5.5" fill="#E0917A"/><circle cx="60" cy="26" r="2" fill="#B85A46"/>
+  </symbol>
+  <symbol id="g3-foliage" viewBox="0 0 120 120">
+    <ellipse cx="60" cy="106" rx="20" ry="4" fill="#3f5a3a" opacity=".14"/>
+    <g stroke="#7f9070" stroke-width="2.2" fill="none" stroke-linecap="round"><path d="M60 106C58 78 60 54 60 30"/><path d="M60 96C48 88 42 78 40 66"/><path d="M60 88C72 80 78 70 80 58"/></g>
+    <g fill="#9fb18e"><ellipse cx="48" cy="72" rx="9" ry="5" transform="rotate(-32 48 72)"/><ellipse cx="72" cy="64" rx="9" ry="5" transform="rotate(32 72 64)"/><ellipse cx="50" cy="54" rx="8" ry="4.6" transform="rotate(-30 50 54)"/><ellipse cx="70" cy="46" rx="8" ry="4.6" transform="rotate(30 70 46)"/><ellipse cx="54" cy="38" rx="7" ry="4" transform="rotate(-26 54 38)"/><ellipse cx="66" cy="32" rx="7" ry="4" transform="rotate(26 66 32)"/><ellipse cx="60" cy="26" rx="6" ry="3.6"/></g>
+    <g fill="#8ba178"><ellipse cx="42" cy="82" rx="9" ry="5" transform="rotate(-34 42 82)"/><ellipse cx="78" cy="74" rx="9" ry="5" transform="rotate(34 78 74)"/></g>
+  </symbol>
+  <symbol id="g3-lights" viewBox="0 0 120 120">
+    <defs><radialGradient id="g3bulb" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FFEBA6" stop-opacity=".9"/><stop offset="1" stop-color="#FFEBA6" stop-opacity="0"/></radialGradient></defs>
+    <path d="M6 42Q60 80 114 42" fill="none" stroke="#7a5a30" stroke-width="1.6" opacity=".6"/><path d="M6 68Q60 106 114 68" fill="none" stroke="#7a5a30" stroke-width="1.6" opacity=".5"/>
+    <g stroke="#7a5a30" stroke-width="1.2" opacity=".55"><path d="M24 54v7M48 64v7M72 64v7M96 54v7M36 84v7M60 92v7M84 84v7"/></g>
+    <g fill="url(#g3bulb)"><circle cx="24" cy="65" r="9"/><circle cx="48" cy="75" r="9"/><circle cx="72" cy="75" r="9"/><circle cx="96" cy="65" r="9"/><circle cx="36" cy="95" r="9"/><circle cx="60" cy="103" r="9"/><circle cx="84" cy="95" r="9"/></g>
+    <g fill="#F4CE72"><circle cx="24" cy="65" r="4"/><circle cx="48" cy="75" r="4"/><circle cx="72" cy="75" r="4"/><circle cx="96" cy="65" r="4"/><circle cx="36" cy="95" r="4"/><circle cx="60" cy="103" r="4"/><circle cx="84" cy="95" r="4"/></g>
+  </symbol>
+  <symbol id="g3-cart" viewBox="0 0 72 72">
+    <defs><linearGradient id="g3bag" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E9C77E"/><stop offset="1" stop-color="#CE9B54"/></linearGradient></defs>
+    <path d="M20 26h32l-3 34a4 4 0 0 1-4 3.6H27a4 4 0 0 1-4-3.6z" fill="url(#g3bag)"/>
+    <path d="M27 30v-4a9 9 0 0 1 18 0v4" fill="none" stroke="#8A5E2E" stroke-width="3" stroke-linecap="round"/>
+    <path d="M23 33h26" stroke="#fff" stroke-width="1.6" opacity=".35"/>
+  </symbol>
+  <symbol id="g3-cal" viewBox="0 0 72 72">
+    <defs><linearGradient id="g3cal" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F3E7CE"/><stop offset="1" stop-color="#E3D2AE"/></linearGradient></defs>
+    <rect x="16" y="20" width="40" height="38" rx="6" fill="url(#g3cal)"/>
+    <path d="M16 26h40v6a0 0 0 0 1 0 0H16z" fill="#CC9A50"/><rect x="16" y="20" width="40" height="10" rx="6" fill="#CC9A50"/>
+    <g fill="#8A5E2E"><rect x="24" y="15" width="4" height="9" rx="2"/><rect x="44" y="15" width="4" height="9" rx="2"/></g>
+    <g fill="#B0842E"><circle cx="26" cy="42" r="2.4"/><circle cx="36" cy="42" r="2.4"/><circle cx="46" cy="42" r="2.4"/><circle cx="26" cy="50" r="2.4"/><circle cx="36" cy="50" r="2.4"/></g>
+  </symbol>
+  <symbol id="g3-send" viewBox="0 0 72 72">
+    <defs><linearGradient id="g3send" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#EBD7A0"/><stop offset="1" stop-color="#CFA24C"/></linearGradient></defs>
+    <path d="M56 20L16 36L33 41L37 56L45 43L56 20Z" fill="url(#g3send)"/>
+    <path d="M56 20L33 41" fill="none" stroke="#8A5E2E" stroke-width="1.6" opacity=".5"/>
+    <path d="M56 20L45 43" fill="none" stroke="#fff" stroke-width="1.4" opacity=".35"/>
+  </symbol>
+  <symbol id="g3-doc" viewBox="0 0 72 72">
+    <defs><linearGradient id="g3doc" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FBF4E4"/><stop offset="1" stop-color="#ECDDBE"/></linearGradient></defs>
+    <path d="M22 14h20l10 10v34a4 4 0 0 1-4 4H22a4 4 0 0 1-4-4V18a4 4 0 0 1 4-4z" fill="url(#g3doc)"/>
+    <path d="M42 14v10h10" fill="none" stroke="#CBB07A" stroke-width="2"/>
+    <g stroke="#C9A24C" stroke-width="2" stroke-linecap="round"><path d="M26 33h14M26 40h20M26 47h14"/></g>
+    <circle cx="47" cy="52" r="7" fill="#C9A24C"/><path d="M44 52l2.4 2.4 3.8-4.8" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+
+  <symbol id="g3-sun" viewBox="0 0 120 120"><defs><radialGradient id="g3sunC" cx="50%" cy="42%" r="60%"><stop offset="0" stop-color="#FFF1C2"/><stop offset="1" stop-color="#F1B33E"/></radialGradient><radialGradient id="g3sunG" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FBD98A" stop-opacity=".7"/><stop offset="1" stop-color="#FBD98A" stop-opacity="0"/></radialGradient></defs><circle cx="60" cy="60" r="54" fill="url(#g3sunG)"/><g stroke="#EEA836" stroke-width="3.4" stroke-linecap="round"><path d="M60 20V8M60 112v-12M20 60H8M112 60h-12M31 31l-8.5-8.5M97.5 97.5l-8.5-8.5M89 31l8.5-8.5M22.5 97.5l8.5-8.5"/></g><circle cx="60" cy="60" r="26" fill="url(#g3sunC)"/><circle cx="52" cy="52" r="8" fill="#FFF6D8" opacity=".55"/></symbol>
+  <symbol id="g3-star" viewBox="0 0 72 72"><defs><linearGradient id="g3star" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F1D488"/><stop offset="1" stop-color="#C9A24C"/></linearGradient></defs><path d="M36 12l7.2 16L61 30l-12 10.6 3.6 17.4L36 49.6 19.4 58 23 40.6 11 30l17.8-2z" fill="url(#g3star)"/><path d="M36 18l4.8 10.6" stroke="#fff" stroke-width="1.6" opacity=".4" fill="none" stroke-linecap="round"/></symbol>
+  <symbol id="g3-heart" viewBox="0 0 72 72"><defs><linearGradient id="g3heart" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E7A08C"/><stop offset="1" stop-color="#CE7860"/></linearGradient></defs><path d="M36 59C17 45.5 11 36 11 27.4 11 19.8 16.7 14.5 23.4 14.5c4.8 0 9.2 2.9 12.6 7.5 3.4-4.6 7.8-7.5 12.6-7.5 6.7 0 12.4 5.3 12.4 12.9C61 36 55 45.5 36 59z" fill="url(#g3heart)"/><path d="M25 24c-2 1.2-3.4 3.2-3.6 5.8" stroke="#fff" stroke-width="1.8" opacity=".4" fill="none" stroke-linecap="round"/></symbol>
+
 </svg>
 <div class="announce">Location de mobilier &amp; décoration — <b>Amiens &amp; alentours</b></div>
 <header class="site-head" id="head">
