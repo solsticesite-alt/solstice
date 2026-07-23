@@ -11,6 +11,23 @@
 <link rel="stylesheet" href="/site.css">
 </head>
 <body>
+<div class="page-bg" aria-hidden="true">
+  <svg viewBox="0 0 1000 1500" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <radialGradient id="bgSun" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#FBD98A" stop-opacity=".55"/><stop offset="100%" stop-color="#FBD98A" stop-opacity="0"/></radialGradient>
+      <radialGradient id="bgMoon" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#DDE6E2" stop-opacity=".5"/><stop offset="100%" stop-color="#DDE6E2" stop-opacity="0"/></radialGradient>
+    </defs>
+    <circle cx="810" cy="175" r="150" fill="url(#bgSun)"/>
+    <circle cx="810" cy="175" r="62" fill="#F7CB5E" opacity=".5"/>
+    <g stroke="#E4A94A" stroke-width="3" stroke-linecap="round" opacity=".38"><path d="M810 70v-32 M892 92l23-23 M916 175h32 M892 258l23 23 M728 92l-23-23 M704 175h-32 M728 258l-23 23"/></g>
+    <path d="M900 155 Q470 770 150 1330" fill="none" stroke="#C39A56" stroke-width="1.4" stroke-dasharray="1 12" opacity=".3"/>
+    <g fill="#A9B4AC" opacity=".55"><circle cx="300" cy="1010" r="2.4"/><circle cx="430" cy="1120" r="1.8"/><circle cx="250" cy="1220" r="2"/><circle cx="380" cy="1300" r="2.6"/><circle cx="520" cy="1250" r="1.8"/><circle cx="160" cy="1090" r="1.6"/><circle cx="470" cy="1000" r="1.6"/></g>
+    <circle cx="205" cy="1235" r="125" fill="url(#bgMoon)"/>
+    <circle cx="205" cy="1235" r="56" fill="#EBEFE9" opacity=".62"/>
+    <circle cx="187" cy="1219" r="10" fill="#D6DCD4" opacity=".5"/><circle cx="221" cy="1251" r="7" fill="#D6DCD4" opacity=".5"/><circle cx="214" cy="1216" r="5" fill="#D6DCD4" opacity=".45"/>
+  </svg>
+</div>
+
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-sun" viewBox="0 0 24 24"><path d="M2 20h20"/><path d="M6 20a6 6 0 0 1 12 0"/><path d="M12 3v3M4.5 6l1.8 1.8M19.5 6l-1.8 1.8M2 12.5h2.4M19.6 12.5H22"/></symbol>
   <symbol id="i-sprig" viewBox="0 0 24 24"><path d="M12 22V5"/><path d="M12 13c.3-3 2.4-4.7 5-4.6-.2 3-2.3 4.8-5 4.6z"/><path d="M12 10c-.3-3-2.4-4.7-5-4.6.2 3 2.3 4.8 5 4.6z"/><path d="M12 8c.2-2.2 1.7-3.5 3.8-3.4-.2 2.2-1.7 3.6-3.8 3.4z"/></symbol>
