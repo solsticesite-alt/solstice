@@ -6,7 +6,7 @@
 :root{
   color-scheme: light;
   --paper:#FBF8F2; --paper-2:#F5EEE1; --sand:#EEE4D3; --sand-2:#E5D8C1;
-  --ink:#221C15; --ink-2:#2B241B; --ink-soft:#5B5142; --stone:#978B78;
+  --ink:#221C15; --ink-2:#2B241B; --ink-soft:#5B5142; --stone:#6F6455;
   --line:#E6DCCB; --line-soft:#EFE7D8;
   --gold:#B08A54; --gold-deep:#8C6C3D; --gold-soft:#CBAA76;
   --ete-1:#F2DDAC; --ete-2:#DCAA63; --ete-3:#BE8443;
@@ -142,7 +142,7 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opa
 .fav svg{width:17px;height:17px;stroke:var(--ink);stroke-width:1.5;fill:none;transition:fill .3s,stroke .3s;}
 .fav:hover{transform:scale(1.12);} .fav.on svg{fill:var(--gold);stroke:var(--gold);}
 .card-info{padding:1.05rem .1rem 0;}
-.card-info h4{font-size:1.14rem;margin-bottom:.3rem;}
+.card-info h3{font-size:1.14rem;margin-bottom:.3rem;}
 .card-meta{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;}
 .card-price{font-family:var(--serif);font-size:1.04rem;color:var(--ink);}
 .card-price span{font-family:var(--sans);font-size:.7rem;color:var(--stone);letter-spacing:.02em;}

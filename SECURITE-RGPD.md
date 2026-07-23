@@ -171,4 +171,27 @@ Quand on construira les vraies fonctions (réservations, panier, espace client),
 
 ---
 
+## 9. 🔎 Audit indépendant (multi-agents) — résultats
+
+Un audit automatisé (5 angles : en-têtes/CSP · RGPD · exposition de données · infra · hygiène web, chaque trouvaille vérifiée de façon adverse) a confirmé 21 points. Traitement :
+
+**✅ Corrigé**
+- **Accessibilité** : contraste du gris `--stone` relevé de `#978B78` à `#6F6455` (corrige un échec WCAG 2.1 AA sur les textes d'info).
+- **Avis** : témoignages marqués « exemples illustratifs » + intitulés neutralisés (évite une pratique commerciale trompeuse — les avis étant fictifs avant le 1er événement).
+- **Hiérarchie des titres** corrigée sur l'accueil (h2 → h3 pour cartes et étapes).
+- **RGPD** : base légale du formulaire de contact précisée (intérêt légitime, art. 6.1.f) ; droit de réclamation CNIL rendu inconditionnel ; ajout du moyen d'obtenir une copie des garanties de transfert hors UE.
+- **CSP** : `font-src` nettoyé (`data:` inutile retiré).
+- **`X-Robots-Tag: noindex`** ajouté — empêche l'indexation tant que le site est en pré-lancement (pages légales encore en `[À COMPLÉTER]`).
+- Favicon + `theme-color` ajoutés aux pages légales et à la 404 ; doublon `<title>` retiré de l'accueil ; `robots.txt` nettoyé.
+
+**⏳ En attente (dépend du domaine ou de tes infos)**
+- **CSP `script-src 'unsafe-inline'`** → passer à un script externe / hash / nonce quand le JS sera stabilisé (ou au passage à Next.js).
+- `canonical`, `sitemap.xml`, `og:image`/`og:url`, champ `Canonical` du `security.txt` : nécessitent le **domaine définitif**.
+- Vérifier que la **boîte e-mail de contact** existe et aligner l'adresse partout.
+- ⚠️ **Retirer `X-Robots-Tag: noindex` au lancement** — sinon Google n'indexera pas le site.
+- **Dépôt GitHub** : s'il est public, envisager de le passer en privé (le doc interne y est lisible — sans aucun secret toutefois).
+- **Vercel** : activer la « Deployment Protection » sur les préversions (réglage du dashboard, pas du code).
+
+---
+
 _Rappel : ce document couvre les fondamentaux. Pour un enjeu contractuel fort (CGL) ou une configuration particulière, un contrôle par un professionnel du droit reste recommandé._
