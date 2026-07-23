@@ -7,11 +7,6 @@
 <meta name="description" content="Solstice — location de mobilier, art de la table et décoration pour vos mariages, anniversaires et réceptions, à Amiens et ses alentours. On imagine, vous savourez.">
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#FBF8F2">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="Solstice">
-<meta property="og:locale" content="fr_FR">
-<meta property="og:title" content="Solstice — Le décor de vos plus beaux moments">
-<meta property="og:description" content="Location de mobilier & décoration d'événements à Amiens : mariages, anniversaires, réceptions.">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 </head>
 <body>
@@ -174,6 +169,23 @@
   .hero-glow{display:none;}
   .hero-sun{display:none;}
   .hero-fade{display:none;}
+  .hero-inner{display:grid;grid-template-columns:1.04fr .96fr;align-items:center;gap:clamp(24px,4vw,56px);}
+  .hero-copy{min-width:0;}
+  .hero-emblem{position:relative;display:flex;justify-content:center;align-items:center;}
+  .emblem{width:min(100%,500px);height:auto;filter:drop-shadow(0 30px 54px rgba(90,60,25,.28));}
+  @media (prefers-reduced-motion:no-preference){
+    .emblem{animation:emb-float 12s ease-in-out infinite;}
+    .emb-halo{transform-box:fill-box;transform-origin:center;animation:emb-pulse 6.5s ease-in-out infinite;}
+    .emb-snow{animation:emb-fall linear infinite;}
+  }
+  @keyframes emb-float{0%,100%{transform:translateY(0);}50%{transform:translateY(-12px);}}
+  @keyframes emb-pulse{0%,100%{transform:scale(1);opacity:.8;}50%{transform:scale(1.09);opacity:1;}}
+  @keyframes emb-fall{0%{transform:translateY(-20px);opacity:0;}15%{opacity:.85;}100%{transform:translateY(360px);opacity:0;}}
+  @media (max-width:900px){
+    .hero-inner{grid-template-columns:1fr;}
+    .hero-emblem{margin-top:1.6rem;}
+    .emblem{width:min(76%,300px);}
+  }
   .hero-inner{padding-block:clamp(48px,9vh,110px);}
   .hero h1{
     font-size:clamp(2.7rem,7.4vw,5.7rem);line-height:1.02;margin:.34em 0 .4em;letter-spacing:-.015em;max-width:15ch;
@@ -529,22 +541,43 @@
 
 <!-- HERO -->
 <section class="hero">
-  <div class="aura warm" style="right:1%;top:6%;width:440px;height:440px"></div>
-  <svg class="gfx float" style="right:5%;bottom:5%;width:150px" viewBox="0 0 120 240" aria-hidden="true"><use href="#g-pampas"/></svg>
-  <svg class="gfx float2 soft" style="right:19%;bottom:2%;width:118px" viewBox="0 0 130 210" aria-hidden="true"><use href="#g-bloom"/></svg>
-  <div class="hero-glow" aria-hidden="true"></div>
-  <svg class="hero-sun" viewBox="0 0 600 300" aria-hidden="true">
-    <circle cx="300" cy="270" r="120"/><circle cx="300" cy="270" r="172"/><circle cx="300" cy="270" r="224"/>
-    <path d="M300 30v66M176 62l32 60M424 62l-32 60M64 158l60 32M536 158l-60 32M34 270h64M502 270h64"/>
-  </svg>
-  <div class="hero-fade" aria-hidden="true"></div>
   <div class="wrap hero-inner">
-    <span class="eyebrow reveal">Mobilier &amp; décoration d'événements · Amiens</span>
-    <h1 class="reveal d1">Le décor de vos <em>plus beaux</em> moments.</h1>
-    <p class="lede reveal d2">Mobilier, art de la table et décoration en location pour vos mariages, anniversaires et réceptions. On imagine, vous savourez.</p>
-    <div class="hero-cta reveal d3">
-      <a class="btn btn-ink" href="/catalogue">Découvrir le catalogue <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
-      <a class="btn btn-ghost" href="#process">Composer mon événement</a>
+    <div class="hero-copy">
+      <span class="eyebrow reveal">Mobilier &amp; décoration d'événements · Amiens</span>
+      <h1 class="reveal d1">Le décor de vos <em>plus beaux</em> moments.</h1>
+      <p class="lede reveal d2">Mobilier, art de la table et décoration en location pour vos mariages, anniversaires et réceptions. On imagine, vous savourez.</p>
+      <div class="hero-cta reveal d3">
+        <a class="btn btn-ink" href="/catalogue">Découvrir le catalogue <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <a class="btn btn-ghost" href="#process">Composer mon événement</a>
+      </div>
+    </div>
+    <div class="hero-emblem reveal d2">
+      <svg class="emblem" viewBox="0 0 400 400" role="img" aria-label="Emblème Solstice : un été ensoleillé et un hiver étoilé">
+        <defs>
+          <clipPath id="embClip"><circle cx="200" cy="200" r="190"/></clipPath>
+          <linearGradient id="dayG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FCE7BA"/><stop offset=".55" stop-color="#F5C877"/><stop offset="1" stop-color="#E7A44C"/></linearGradient>
+          <linearGradient id="nightG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#35564F"/><stop offset=".55" stop-color="#213A3C"/><stop offset="1" stop-color="#111E28"/></linearGradient>
+          <radialGradient id="sunCore" cx="50%" cy="42%" r="60%"><stop offset="0" stop-color="#FFEFB2"/><stop offset="1" stop-color="#F3B53E"/></radialGradient>
+          <radialGradient id="sunHalo" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FFDE8A" stop-opacity=".8"/><stop offset="1" stop-color="#FFDE8A" stop-opacity="0"/></radialGradient>
+          <radialGradient id="moonHalo" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#DDECEC" stop-opacity=".45"/><stop offset="1" stop-color="#DDECEC" stop-opacity="0"/></radialGradient>
+        </defs>
+        <g clip-path="url(#embClip)">
+          <path d="M0 0 H224 L176 400 H0 Z" fill="url(#dayG)"/>
+          <path d="M224 0 H400 V400 H176 Z" fill="url(#nightG)"/>
+          <circle class="emb-halo" cx="132" cy="150" r="118" fill="url(#sunHalo)"/>
+          <g stroke="#EA9A2E" stroke-width="5" stroke-linecap="round" opacity=".72"><path d="M132 80v-24 M132 220v24 M202 150h24 M62 150h-24 M181 101l17 -17 M181 199l17 17 M83 199l-17 17 M83 101l-17 -17"/></g>
+          <circle cx="132" cy="150" r="62" fill="url(#sunCore)"/>
+          <g stroke="#B4753A" stroke-width="3.4" stroke-linecap="round" fill="none" opacity=".92"><path d="M72 400C72 348 79 312 88 284"/><path d="M88 284c-13 10 -21 22 -25 37M88 284c13 10 21 22 25 37M88 298c-10 8 -16 18 -19 30M88 298c10 8 16 18 19 30"/><path d="M118 400C118 360 123 332 130 310"/><path d="M130 310c-10 8 -16 17 -19 28M130 310c10 8 16 17 19 28"/></g>
+          <circle class="emb-halo" cx="286" cy="128" r="80" fill="url(#moonHalo)"/>
+          <circle cx="286" cy="128" r="44" fill="#EAF0ED"/>
+          <circle cx="305" cy="114" r="38" fill="#223A3C"/>
+          <g fill="#EAF3F1"><circle cx="332" cy="206" r="2.6"/><circle cx="248" cy="88" r="2"/><circle cx="356" cy="150" r="2.2"/><circle cx="300" cy="238" r="2"/><circle cx="346" cy="286" r="2.4"/><circle cx="262" cy="176" r="1.8"/><circle cx="318" cy="96" r="1.8"/></g>
+          <g fill="#FFFFFF" opacity=".85"><circle class="emb-snow" cx="250" cy="0" r="3" style="animation-duration:7s;animation-delay:-1s"/><circle class="emb-snow" cx="300" cy="0" r="2.2" style="animation-duration:9s;animation-delay:-4s"/><circle class="emb-snow" cx="342" cy="0" r="2.6" style="animation-duration:8s;animation-delay:-2.5s"/><circle class="emb-snow" cx="272" cy="0" r="2" style="animation-duration:10s;animation-delay:-6s"/><circle class="emb-snow" cx="360" cy="0" r="2.3" style="animation-duration:8.5s;animation-delay:-3.5s"/></g>
+          <g stroke="#17281F" stroke-width="3.2" stroke-linecap="round" fill="none" opacity=".9"><path d="M322 400V300M322 320l22 -14M322 320l-22 -14M322 344l18 -12M322 344l-18 -12M322 368l14 -9M322 368l-14 -9"/><path d="M356 400V330M356 346l16 -10M356 346l-16 -10M356 368l13 -9M356 368l-13 -9"/></g>
+        </g>
+        <circle cx="200" cy="200" r="190" fill="none" stroke="#B08A54" stroke-width="2.5" opacity=".6"/>
+        <circle cx="200" cy="200" r="181" fill="none" stroke="#B08A54" stroke-width="1" opacity=".3"/>
+      </svg>
     </div>
   </div>
   <div class="scrollcue" aria-hidden="true"><span class="bar"></span>Défiler</div>
