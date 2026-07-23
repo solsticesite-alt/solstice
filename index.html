@@ -321,8 +321,10 @@
   .foot-col a{font-size:.86rem;color:#c6bba7;transition:color .3s;}
   .foot-col a:hover{color:#fff;}
   .foot-col address{font-style:normal;font-size:.86rem;color:#c6bba7;line-height:1.9;}
-  .foot-bottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:.6rem 1rem;padding-top:1.8rem;font-size:.7rem;letter-spacing:.06em;color:#8d836f;}
-  .foot-bottom .made{color:var(--gold-soft);}
+  .foot-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.8rem 1.4rem;padding-top:1.8rem;font-size:.7rem;letter-spacing:.06em;color:#8d836f;}
+  .foot-legal{display:flex;flex-wrap:wrap;gap:.5rem 1.3rem;}
+  .foot-legal a{color:#c6bba7;transition:color .3s;}
+  .foot-legal a:hover{color:#fff;}
 
   /* ============================ MOBILE MENU ============================ */
   .mpanel{position:fixed;inset:0;z-index:60;background:var(--paper);transform:translateY(-100%);transition:transform .5s cubic-bezier(.2,.7,.2,1);display:flex;flex-direction:column;padding:1.2rem var(--gutter) 2rem;overflow-y:auto;}
@@ -720,7 +722,12 @@
     </div>
     <div class="foot-bottom">
       <span>© 2026 Solstice — Tous droits réservés.</span>
-      <span class="made">Maquette · direction visuelle</span>
+      <nav class="foot-legal" aria-label="Liens légaux">
+        <a href="/mentions-legales">Mentions légales</a>
+        <a href="/confidentialite">Confidentialité</a>
+        <a href="/cookies">Cookies</a>
+        <a href="/cgl">Conditions de location</a>
+      </nav>
     </div>
   </div>
 </footer>
