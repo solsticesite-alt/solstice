@@ -22,7 +22,7 @@ function buildDevisPdf(request, settings, reply) {
   return new Promise((resolve, reject) => {
     try {
       const doc = new PDFDocument({ size: 'A4', margin: 50, info: {
-        Title: 'Devis Solstice', Author: settings.companyName || 'Solstice'
+        Title: 'Devis ' + (reply.quoteNumber || request.ref || ''), Author: settings.companyName || 'Solstice'
       } });
       const chunks = [];
       doc.on('data', (c) => chunks.push(c));
@@ -33,6 +33,11 @@ function buildDevisPdf(request, settings, reply) {
       const L = 50, R = 545, W = R - L;
       const client = request.client || {};
       const ev = request.event || {};
+
+      // Saut de page si le contenu qui suit ne tient plus.
+      function ensure(space) {
+        if (y + space > 792) { doc.addPage(); y = 50; }
+      }
 
       // ---------- En-tete ----------
       doc.fillColor(INK).font('Helvetica-Bold').fontSize(22).text(settings.companyName || 'Solstice', L, 52, { width: 300 });
@@ -53,6 +58,7 @@ function buildDevisPdf(request, settings, reply) {
       // ---------- Emetteur / Client ----------
       let y = 148;
       doc.font('Helvetica-Bold').fontSize(8).fillColor(GOLD_DEEP).text('PRESTATAIRE', L, y);
+      doc.font('Helvetica-Bold').fontSize(8).fillColor(GOLD_DEEP).text('CLIENT', 320, y);
       doc.font('Helvetica').fontSize(9).fillColor(INK);
       const emitter = [
         settings.companyName, settings.legalForm,
@@ -60,12 +66,21 @@ function buildDevisPdf(request, settings, reply) {
         settings.siret ? 'SIRET ' + settings.siret : '',
         settings.email, settings.phone
       ].filter(Boolean).join('\n');
-      doc.text(emitter, L, y + 13, { width: 230 });
-
-      doc.font('Helvetica-Bold').fontSize(8).fillColor(GOLD_DEEP).text('CLIENT', 320, y);
-      doc.font('Helvetica').fontSize(9).fillColor(INK);
       const cl = [client.name, client.email, client.phone].filter(Boolean).join('\n');
+      const eH = doc.heightOfString(emitter, { width: 230 });
+      const cH = doc.heightOfString(cl || '—', { width: 225 });
+      doc.text(emitter, L, y + 13, { width: 230 });
       doc.text(cl || '—', 320, y + 13, { width: 225 });
+      y = y + 13 + Math.max(eH, cH) + 20;
+
+      // ---------- Mot d'accompagnement (message au client) ----------
+      // Le message du client (request.message) n'apparait volontairement PAS
+      // ici : c'est le mot de l'atelier (reply.message) qui figure sur le devis.
+      if (reply.message) {
+        doc.font('Helvetica-Bold').fontSize(8).fillColor(GOLD_DEEP).text('MESSAGE', L, y);
+        doc.font('Helvetica').fontSize(9).fillColor(INK).text(reply.message, L, y + 13, { width: W });
+        y = doc.y + 18;
+      }
 
       // ---------- Details evenement ----------
       const evLines = [];
@@ -73,11 +88,11 @@ function buildDevisPdf(request, settings, reply) {
       if (ev.date) evLines.push('Date : ' + dstr(ev.date));
       if (ev.location) evLines.push('Lieu : ' + ev.location);
       if (ev.guests) evLines.push('Invités : ' + ev.guests);
-      y = 250;
       if (evLines.length) {
+        ensure(40);
         doc.font('Helvetica-Bold').fontSize(8).fillColor(GOLD_DEEP).text('ÉVÉNEMENT', L, y);
         doc.font('Helvetica').fontSize(9).fillColor(INK).text(evLines.join('    '), L, y + 13, { width: W });
-        y += 34;
+        y = doc.y + 18;
       }
 
       // ---------- Tableau ----------
@@ -92,6 +107,7 @@ function buildDevisPdf(request, settings, reply) {
         doc.text('TOTAL HT', cTot, yy + 7, { width: R - cTot - 4, align: 'right' });
         return yy + 22;
       }
+      ensure(60);
       y = tableHeader(y);
 
       doc.font('Helvetica').fontSize(9.5).fillColor(INK);
@@ -115,6 +131,7 @@ function buildDevisPdf(request, settings, reply) {
 
       // ---------- Totaux ----------
       y += 12;
+      ensure(80);
       const boxX = 320;
       function totalRow(label, value, bold) {
         doc.font(bold ? 'Helvetica-Bold' : 'Helvetica').fontSize(bold ? 11 : 9.5).fillColor(bold ? INK : SOFT);
@@ -130,28 +147,43 @@ function buildDevisPdf(request, settings, reply) {
       // ---------- Notes ----------
       y += 8;
       if (reply.notes) {
-        if (y > 720) { doc.addPage(); y = 50; }
+        ensure(50);
         doc.font('Helvetica-Bold').fontSize(8).fillColor(GOLD_DEEP).text('NOTE', L, y);
         doc.font('Helvetica').fontSize(9).fillColor(INK).text(reply.notes, L, y + 12, { width: W });
-        y = doc.y + 12;
+        y = doc.y + 14;
       }
 
       // ---------- Conditions ----------
       if (settings.conditions) {
-        if (y > 700) { doc.addPage(); y = 50; }
+        ensure(60);
         doc.font('Helvetica-Bold').fontSize(8).fillColor(GOLD_DEEP).text('CONDITIONS', L, y);
         doc.font('Helvetica').fontSize(8).fillColor(SOFT).text(settings.conditions, L, y + 12, { width: W });
-        y = doc.y;
+        y = doc.y + 6;
       }
 
-      // ---------- Pied de page legal (flux naturel, evite une page fantome) ----------
+      // ---------- Bon pour accord (valeur contractuelle) ----------
+      y += 14;
+      ensure(90);
+      doc.font('Helvetica-Bold').fontSize(8).fillColor(GOLD_DEEP).text('BON POUR ACCORD', L, y);
+      doc.font('Helvetica').fontSize(8).fillColor(SOFT).text(
+        'Pour confirmer votre réservation, retournez ce devis daté et signé, précédé de la mention manuscrite « Bon pour accord ».',
+        L, y + 12, { width: W });
+      y = doc.y + 16;
+      doc.font('Helvetica').fontSize(9).fillColor(INK);
+      doc.text('Date :', L, y);
+      doc.text('Signature :', 320, y);
+      doc.moveTo(L + 36, y + 11).lineTo(270, y + 11).lineWidth(0.6).strokeColor(LINE).stroke();
+      doc.moveTo(320 + 52, y + 11).lineTo(R, y + 11).lineWidth(0.6).strokeColor(LINE).stroke();
+      y += 34;
+
+      // ---------- Pied de page legal ----------
       const foot = [
         settings.companyName, settings.legalForm,
         settings.siret ? 'SIRET ' + settings.siret : '',
         settings.tvaMention
       ].filter(Boolean).join(' · ');
-      if (y > 770) { doc.addPage(); y = 50; }
-      doc.font('Helvetica').fontSize(7).fillColor(SOFT).text(foot, L, Math.max(y + 18, 60), { width: W, align: 'center' });
+      ensure(30);
+      doc.font('Helvetica').fontSize(7).fillColor(SOFT).text(foot, L, Math.max(y + 12, 60), { width: W, align: 'center' });
 
       doc.end();
     } catch (e) {

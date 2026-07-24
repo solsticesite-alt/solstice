@@ -269,7 +269,7 @@
     var first=(req.client&&req.client.name?String(req.client.name).trim().split(' ')[0]:'')||'';
     var ev=(req.event&&req.event.type)?req.event.type.toLowerCase():'événement';
     var d=(req.event&&req.event.date)?' du '+fdate(req.event.date):'';
-    return 'Bonjour'+(first?' '+first:'')+',\n\nMerci pour votre demande. Ravis de pouvoir vous accompagner pour votre '+ev+d+'. Voici notre proposition ci-jointe.\n\nNous restons à votre entière disposition,\nSolstice';
+    return 'Bonjour'+(first?' '+first:'')+',\n\nMerci pour votre demande. Ravis de pouvoir vous accompagner pour votre '+ev+d+'. Vous trouverez notre proposition détaillée ci-dessous.\n\nNous restons à votre entière disposition,\nSolstice';
   }
 
   function renderDetail(){
