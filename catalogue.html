@@ -27,6 +27,21 @@
 .cat-note::before{content:"";display:block;width:34px;height:1px;background:var(--gold);margin:0 auto 1.4rem;}
 .cta-actions{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;margin-top:.6rem;}
 .cta-lede{text-align:center;margin-inline:auto;}
+@media (max-width:560px){
+  .filterbar{padding:16px;}
+  .fb-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem .65rem;align-items:stretch;}
+  .fb-field{min-width:0;}
+  .fb-field label{font-size:.58rem;letter-spacing:.13em;}
+  .fb-field select{font-size:.82rem;padding:.68em 1.8em .68em .65em;background-position:right .55em center;}
+  .fb-chips{gap:.45rem;}
+  .fb-chips .chip{font-size:.66rem;padding:.5em .85em;}
+  .grid.cat-grid{grid-template-columns:1fr 1fr;gap:18px 12px;}
+  .cat-grid .card-info{padding:.75rem .05rem 0;}
+  .cat-grid .card-info h3{font-size:.98rem;line-height:1.22;margin-bottom:.28rem;}
+  .cat-grid .card-add{font-size:.62rem;padding:.8em .4em;letter-spacing:.06em;}
+  .cat-grid .card-price{font-size:.96rem;}
+  .cat-grid .card-caution{font-size:.62rem;}
+}
 </style>
 </head>
 <body>
@@ -203,13 +218,16 @@
 </svg>
 <div class="announce">Location de mobilier &amp; décoration — <b>Amiens &amp; alentours</b></div>
 <header class="site-head" id="head">
-  <div class="wrap nav">
+  <div class="nav">
+    <ul class="nav-links nav-left"><li><a href="/catalogue" aria-current="page">Catalogue</a></li><li><a href="/nos-univers">Nos univers</a></li><li><a href="/inspirations">Inspirations</a></li></ul>
     <a class="brand" href="/" aria-label="Solstice, accueil"><svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13.5" r="4"/><path d="M12 3v3M4.7 6.7l1.6 1.6M19.3 6.7l-1.6 1.6M2.5 13.5h2M19.5 13.5h2M4 20h16"/></svg><span class="word">Solstice</span></a>
-    <ul class="nav-links"><li><a href="/catalogue" aria-current="page">Catalogue</a></li><li><a href="/nos-univers">Nos univers</a></li><li><a href="/inspirations">Inspirations</a></li><li><a href="/a-propos">À propos</a></li><li><a href="/contact">Contact</a></li></ul>
-    <div class="nav-tools">
-      <button class="desktop-only" aria-label="Favoris"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg></button>
-      <button aria-label="Panier"><svg class="icon" aria-hidden="true"><use href="#i-bag"/></svg><span class="count">3</span></button>
-      <button class="burger" id="burger" aria-label="Ouvrir le menu"><svg aria-hidden="true"><use href="#i-menu"/></svg></button>
+    <div class="nav-right">
+      <ul class="nav-links"><li><a href="/a-propos">À propos</a></li><li><a href="/contact">Contact</a></li></ul>
+      <div class="nav-tools">
+        <button class="desktop-only" aria-label="Favoris"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg></button>
+        <button aria-label="Panier"><svg class="icon" aria-hidden="true"><use href="#i-bag"/></svg><span class="count">3</span></button>
+        <button class="burger" id="burger" aria-label="Ouvrir le menu"><svg aria-hidden="true"><use href="#i-menu"/></svg></button>
+      </div>
     </div>
   </div>
 </header>
