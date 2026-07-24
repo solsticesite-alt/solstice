@@ -198,6 +198,9 @@
   @keyframes wed-sway{0%,100%{transform:rotate(-1deg);}50%{transform:rotate(1deg);}}
   @keyframes wed-twinkle{0%,100%{opacity:.5;}50%{opacity:1;}}
   @keyframes wed-flicker{0%,100%{transform:scaleY(1) scaleX(1);opacity:.88;}50%{transform:scaleY(1.14) scaleX(.9);opacity:1;}}
+  /* Sur mobile/tablette étroite, la scène de mariage (calée à droite) serait
+     rognée par le recadrage « cover » : on la masque pour une hero épurée. */
+  @media (max-width:900px){ .wed{display:none;} }
   .hero-inner{padding-block:clamp(12px,2vh,30px);}
   .hero-copy{max-width:36rem;}
   .hero h1{
