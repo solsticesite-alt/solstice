@@ -197,7 +197,7 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opa
 .faq-item.open .faq-a{max-height:600px;}
 
 /* ---------- gallery ---------- */
-.gallery{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:200px;gap:clamp(10px,1.3vw,16px);}
+.gallery{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:200px;gap:clamp(10px,1.3vw,16px);grid-auto-flow:dense;}
 .gtile{position:relative;overflow:hidden;border-radius:clamp(12px,1.3vw,18px);display:grid;place-items:center;background:linear-gradient(150deg,#FBF5EA,#EFE2CC);box-shadow:0 18px 36px -32px rgba(60,40,18,.4);transition:transform .5s cubic-bezier(.2,.7,.2,1),box-shadow .5s;}
 .gtile::before{content:"";position:absolute;width:64%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(251,229,178,.45),transparent 68%);}
 .gtile:hover{transform:translateY(-4px);box-shadow:0 30px 50px -32px rgba(60,40,18,.45);}
@@ -206,6 +206,8 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opa
 .gtile .ref{position:absolute;left:12px;bottom:12px;font-size:.6rem;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-soft);background:rgba(251,248,242,.9);padding:.4em .7em;border-radius:99px;opacity:0;transform:translateY(6px);transition:opacity .4s,transform .4s;}
 .gtile:hover .ref{opacity:1;transform:none;}
 .gtile.wide{grid-column:span 2;} .gtile.tall{grid-row:span 2;}
+/* Sur écran tactile (pas de survol), les légendes restent visibles. */
+@media (hover:none){.gtile .ref{opacity:1;transform:none;}}
 
 /* ---------- footer ---------- */
 .site-foot{position:relative;background:var(--ink);color:#E9DFCB;padding-block:clamp(60px,8vw,96px) 2.2rem;}
@@ -241,8 +243,7 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opa
   .announce{font-size:.58rem;letter-spacing:.14em;}
   .brand .word{font-size:1.12rem;letter-spacing:.32em;}
   .grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}
-  .gallery{grid-template-columns:repeat(2,1fr);grid-auto-rows:130px;}
-  .gtile.tall{grid-row:span 1;}
+  .gallery{grid-template-columns:repeat(2,1fr);grid-auto-rows:148px;gap:12px;}
   .foot-top{grid-template-columns:1fr;gap:1.8rem;}
   .foot-bottom{flex-direction:column;align-items:flex-start;}
   .sec-flex{align-items:flex-start;}
