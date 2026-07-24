@@ -1,74 +1,118 @@
-// Acces a la base de donnees (Upstash Redis / Vercel KV, via API REST HTTP).
-// Compatible avec les variables d'environnement Vercel KV (KV_REST_API_*)
-// ou Upstash directes (UPSTASH_REDIS_REST_*).
+// Accès à la base de données (Supabase / Postgres, via l'API REST PostgREST).
+// Le client @supabase/supabase-js fonctionne en HTTP (fetch), donc sans
+// connexion persistante : idéal pour les fonctions serverless de Vercel.
+//
+// Variables d'environnement attendues :
+//   SUPABASE_URL                 (ex. https://xxxx.supabase.co)
+//   SUPABASE_SERVICE_ROLE_KEY    (clé "service_role" — usage serveur uniquement)
+//
+// Le schéma SQL à créer une fois dans Supabase est fourni dans
+// supabase-schema.sql (à la racine du dépôt).
 
-let _redis = null;
+let _backend = null;
+
+function creds() {
+  const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key =
+    process.env.SUPABASE_SERVICE_ROLE_KEY ||
+    process.env.SUPABASE_SERVICE_KEY ||
+    process.env.SUPABASE_KEY;
+  return { url, key };
+}
 
 function storeReady() {
-  const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
-  const token = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
-  return Boolean(url && token);
+  if (global.__solMockBackend) return true; // injection en test
+  const { url, key } = creds();
+  return Boolean(url && key);
 }
 
-function getRedis() {
-  if (_redis) return _redis;
-  const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
-  const token = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
-  if (!url || !token) throw new Error('store_not_configured');
-  // Permet l'injection d'un client mock en test.
-  if (process.env.__SOL_MOCK_REDIS__ && global.__solMockRedis) {
-    _redis = global.__solMockRedis;
-    return _redis;
-  }
-  const { Redis } = require('@upstash/redis');
-  _redis = new Redis({ url, token });
-  return _redis;
+// Duplique quelques champs en colonnes (pour une jolie vue tableau dans
+// Supabase) tout en conservant l'objet complet dans `payload`.
+function rowFromObj(obj) {
+  const c = obj.client || {};
+  const e = obj.event || {};
+  return {
+    id: obj.id,
+    ref: obj.ref || null,
+    created_at: obj.createdAt || null,
+    status: obj.status || 'new',
+    client_name: c.name || null,
+    client_email: c.email || null,
+    event_type: e.type || null,
+    event_date: e.date || null,
+    event_location: e.location || null,
+    payload: obj
+  };
 }
 
-const K_SEQ = 'sol:seq';
-const K_INDEX = 'sol:index';
-const K_REQ = (id) => `sol:req:${id}`;
-const K_SETTINGS = 'sol:settings';
+// Petit backend interne (6 méthodes) : facile à mocker en test, et
+// implémenté sur Supabase en production.
+function supabaseBackend(sb) {
+  return {
+    async nextId() {
+      const { data, error } = await sb.rpc('next_devis_id');
+      if (error) throw new Error('store_error: ' + error.message);
+      return Number(data);
+    },
+    async putRequest(obj) {
+      const { error } = await sb.from('devis_requests').upsert(rowFromObj(obj), { onConflict: 'id' });
+      if (error) throw new Error('store_error: ' + error.message);
+    },
+    async getRequest(id) {
+      const { data, error } = await sb.from('devis_requests').select('payload').eq('id', id).maybeSingle();
+      if (error) throw new Error('store_error: ' + error.message);
+      return data ? data.payload : null;
+    },
+    async listRequests(limit) {
+      const { data, error } = await sb
+        .from('devis_requests').select('payload')
+        .order('id', { ascending: false }).limit(limit);
+      if (error) throw new Error('store_error: ' + error.message);
+      return (data || []).map((r) => r.payload).filter(Boolean);
+    },
+    async getSettingsRow() {
+      const { data, error } = await sb.from('devis_settings').select('data').eq('id', 1).maybeSingle();
+      if (error) throw new Error('store_error: ' + error.message);
+      return data ? data.data : null;
+    },
+    async putSettingsRow(dataObj) {
+      const { error } = await sb.from('devis_settings').upsert({ id: 1, data: dataObj }, { onConflict: 'id' });
+      if (error) throw new Error('store_error: ' + error.message);
+    }
+  };
+}
 
-// Upstash (de)serialise le JSON automatiquement, mais on securise si une
-// valeur revient sous forme de chaine.
-function asObj(v) {
-  if (v == null) return null;
-  if (typeof v === 'string') { try { return JSON.parse(v); } catch (e) { return null; } }
-  return v;
+function getBackend() {
+  if (_backend) return _backend;
+  if (global.__solMockBackend) { _backend = global.__solMockBackend; return _backend; }
+  const { url, key } = creds();
+  if (!url || !key) throw new Error('store_not_configured');
+  const { createClient } = require('@supabase/supabase-js');
+  const sb = createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
+  _backend = supabaseBackend(sb);
+  return _backend;
 }
 
 async function nextId() {
-  const r = getRedis();
-  const n = await r.incr(K_SEQ);
-  return Number(n);
+  return getBackend().nextId();
 }
 
 async function saveNewRequest(obj) {
-  const r = getRedis();
-  await r.set(K_REQ(obj.id), obj);
-  await r.lpush(K_INDEX, obj.id);
+  await getBackend().putRequest(obj);
   return obj;
 }
 
 async function getRequest(id) {
-  const r = getRedis();
-  return asObj(await r.get(K_REQ(id)));
+  return getBackend().getRequest(id);
 }
 
 async function updateRequest(obj) {
-  const r = getRedis();
-  await r.set(K_REQ(obj.id), obj);
+  await getBackend().putRequest(obj);
   return obj;
 }
 
 async function listRequests(limit = 300) {
-  const r = getRedis();
-  const ids = await r.lrange(K_INDEX, 0, limit - 1);
-  if (!ids || !ids.length) return [];
-  const keys = ids.map((id) => K_REQ(id));
-  const vals = await r.mget(...keys);
-  return (vals || []).map(asObj).filter(Boolean);
+  return getBackend().listRequests(limit);
 }
 
 const DEFAULT_SETTINGS = {
@@ -91,19 +135,17 @@ const DEFAULT_SETTINGS = {
 };
 
 async function getSettings() {
-  const r = getRedis();
-  const s = asObj(await r.get(K_SETTINGS));
+  const s = await getBackend().getSettingsRow();
   return Object.assign({}, DEFAULT_SETTINGS, s || {});
 }
 
 async function saveSettings(obj) {
-  const r = getRedis();
   const merged = Object.assign({}, DEFAULT_SETTINGS, obj || {});
-  await r.set(K_SETTINGS, merged);
+  await getBackend().putSettingsRow(merged);
   return merged;
 }
 
 module.exports = {
-  storeReady, getRedis, nextId, saveNewRequest, getRequest, updateRequest,
+  storeReady, nextId, saveNewRequest, getRequest, updateRequest,
   listRequests, getSettings, saveSettings, DEFAULT_SETTINGS
 };

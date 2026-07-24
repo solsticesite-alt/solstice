@@ -208,7 +208,7 @@
 
   function configBanner(){
     var c=(state.me&&state.me.config)||{}; var miss=[];
-    if(!c.store) miss.push('la base de données (variable KV_REST_API_URL / KV_REST_API_TOKEN)');
+    if(!c.store) miss.push('la base de données (variables SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY)');
     if(!c.mail) miss.push("l'envoi d'e-mail (GMAIL_USER / GMAIL_APP_PASSWORD)");
     if(!c.adminPassword) miss.push('le mot de passe admin (ADMIN_PASSWORD)');
     if(!miss.length) return '';

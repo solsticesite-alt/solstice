@@ -25,29 +25,37 @@ affichera « service non activé ».
 
 ---
 
-## Étape 1 — La base de données (stockage des demandes)
+## Étape 1 — La base de données (Supabase)
 
-Les demandes sont stockées dans une petite base **Redis** (via Upstash, offre
-gratuite largement suffisante). Le plus simple est de l'ajouter depuis Vercel :
+Les demandes sont stockées dans une base **Supabase** (Postgres, offre gratuite
+largement suffisante). Bonus : vous pourrez consulter et exporter toutes vos
+demandes dans un vrai tableau.
 
-1. Ouvrez votre projet sur **vercel.com** → onglet **Storage**.
-2. Cliquez **Create Database** → choisissez **Upstash for Redis** (ou
-   « KV »/« Redis » selon l'affichage) → **Continue**.
-3. Donnez-lui un nom (ex. `solstice-devis`), région **Europe** (Frankfurt ou
-   Paris), puis **Create**.
-4. À l'écran de connexion, cliquez **Connect Project** et reliez-la à votre
-   projet Solstice.
+**a) Créer le projet Supabase**
+1. Allez sur **[supabase.com](https://supabase.com)** → **Sign in** (connexion
+   avec GitHub ou Google) → **New project**.
+2. Nom : `solstice` ; choisissez un mot de passe de base de données (gardez-le
+   de côté, on n'en aura pas besoin ici) ; région **Europe (Frankfurt/Paris)**
+   → **Create new project**. La création prend ~1 minute.
 
-Vercel ajoute alors **automatiquement** les variables suivantes à votre
-projet (vous n'avez rien à copier) :
+**b) Créer les tables** (le script est déjà prêt dans le dépôt)
+1. Dans Supabase : menu de gauche → **SQL Editor** → **New query**.
+2. Ouvrez le fichier **`supabase-schema.sql`** (à la racine du projet), copiez
+   tout son contenu, collez-le dans l'éditeur, puis **Run**.
+3. Vous devez voir « Success ». (Vous pourrez ensuite retrouver vos demandes
+   dans **Table Editor → devis_requests**.)
 
-- `KV_REST_API_URL`
-- `KV_REST_API_TOKEN`
+**c) Récupérer les 2 clés d'accès**
+1. Menu de gauche → **Project Settings** (roue crantée) → **API**.
+2. Notez deux valeurs (elles serviront à l'Étape 3) :
+   - **Project URL** → ira dans `SUPABASE_URL`
+   - **Project API keys → `service_role`** (cliquez « Reveal ») → ira dans
+     `SUPABASE_SERVICE_ROLE_KEY`
 
-> Le code accepte aussi les noms `UPSTASH_REDIS_REST_URL` /
-> `UPSTASH_REDIS_REST_TOKEN` si vous créez la base directement sur
-> [upstash.com](https://upstash.com) puis copiez ces deux valeurs dans les
-> variables d'environnement Vercel (voir Étape 3).
+> ⚠️ La clé **`service_role`** est secrète : elle ne doit **jamais** apparaître
+> côté site public ni sur GitHub. On la met uniquement dans les variables
+> d'environnement Vercel (Étape 3), où elle reste côté serveur. C'est déjà le
+> cas dans ce projet — aucune clé n'est écrite dans le code.
 
 ---
 
@@ -91,8 +99,8 @@ le souhaitez). Celles de l'Étape 1 sont déjà là si vous avez utilisé
 | `GMAIL_USER` | ✅ | votre adresse Gmail | Expéditeur des devis |
 | `GMAIL_APP_PASSWORD` | ✅ | le code à 16 lettres (Étape 2) | Autorise l'envoi |
 | `OWNER_EMAIL` | facultatif | l'adresse où recevoir les notifications | Par défaut = `GMAIL_USER` |
-| `KV_REST_API_URL` | ✅ | (ajoutée par Vercel à l'Étape 1) | Base de données |
-| `KV_REST_API_TOKEN` | ✅ | (ajoutée par Vercel à l'Étape 1) | Base de données |
+| `SUPABASE_URL` | ✅ | la *Project URL* (Étape 1c) | Base de données |
+| `SUPABASE_SERVICE_ROLE_KEY` | ✅ | la clé *service_role* (Étape 1c) | Base de données |
 | `PUBLIC_BASE_URL` | facultatif | ex. `https://solstice.fr` | Liens dans les e-mails de notif |
 
 **Pour générer un `SESSION_SECRET`** : n'importe quelle longue suite de
@@ -134,8 +142,9 @@ mentions `[À COMPLÉTER]`.
 
 ## Dépannage
 
-- **Le formulaire dit « service non activé » / erreur 503** → la base de
-  données (Étape 1) n'est pas connectée, ou il faut redéployer (Étape 4).
+- **Le formulaire dit « service non activé » / erreur 503** → `SUPABASE_URL` /
+  `SUPABASE_SERVICE_ROLE_KEY` manquants ou le script SQL (Étape 1b) n'a pas été
+  exécuté ; ou il faut redéployer (Étape 4).
 - **Le devis ne part pas / erreur d'envoi** → vérifiez `GMAIL_USER` et
   `GMAIL_APP_PASSWORD` (mot de passe **d'application**, pas le mot de passe
   Gmail habituel), et que la validation en deux étapes est active.
@@ -150,7 +159,7 @@ mentions `[À COMPLÉTER]`.
 
 - Les fonctions serveur sont dans `/api` (Vercel Serverless, Node 18+). Les
   fichiers `api/_lib/*` sont des utilitaires internes (non exposés).
-- Dépendances : `@upstash/redis`, `nodemailer`, `pdfkit` (déjà dans
+- Dépendances : `@supabase/supabase-js`, `nodemailer`, `pdfkit` (déjà dans
   `package.json`, installées automatiquement par Vercel).
 - Sécurité : accès admin par cookie de session signé (HMAC), en `HttpOnly` +
   `Secure` + `SameSite=Strict` ; anti-spam par honeypot sur le formulaire ;
