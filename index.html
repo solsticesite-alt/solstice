@@ -169,33 +169,25 @@
     min-height:calc(100vh - 116px);min-height:calc(100svh - 116px);display:flex;align-items:center;
     background:transparent;
   }
-  .hero-glow{display:none;}
-  .hero-sun{display:none;}
-  .hero-fade{display:none;}
-  .hero-inner{display:grid;grid-template-columns:.9fr 1.1fr;align-items:center;gap:clamp(20px,3.4vw,52px);}
-  .hero-copy{min-width:0;}
-  .hero-emblem{position:relative;display:flex;justify-content:center;align-items:center;}
-  .emblem{width:auto;height:min(78vh,580px);max-width:100%;filter:drop-shadow(0 38px 66px rgba(90,60,25,.22));}
+  .hero-scene{position:absolute;inset:0;z-index:-1;pointer-events:none;}
+  .hero-sky{position:absolute;inset:0;width:100%;height:100%;}
   @media (prefers-reduced-motion:no-preference){
-    .emblem{animation:emb-float 12s ease-in-out infinite;}
-    .emb-halo{transform-box:fill-box;transform-origin:center;animation:emb-pulse 6.5s ease-in-out infinite;}
-    .emb-snow{animation:emb-fall linear infinite;}
+    .hero-sun{transform-box:fill-box;transform-origin:center;animation:hero-pulse 8.5s ease-in-out infinite;}
+    .flake{animation-name:hero-snow;animation-timing-function:linear;animation-iteration-count:infinite;}
   }
-  @keyframes emb-float{0%,100%{transform:translateY(0);}50%{transform:translateY(-12px);}}
-  @keyframes emb-pulse{0%,100%{transform:scale(1);opacity:.8;}50%{transform:scale(1.09);opacity:1;}}
-  @keyframes emb-fall{0%{transform:translateY(-20px);opacity:0;}15%{opacity:.85;}100%{transform:translateY(450px);opacity:0;}}
-  @media (max-width:900px){
-    .hero-inner{grid-template-columns:1fr;}
-    .hero-emblem{margin-top:1.4rem;}
-    .emblem{width:min(78%,340px);height:auto;}
-  }
+  @keyframes hero-pulse{0%,100%{transform:scale(1);opacity:.92;}50%{transform:scale(1.045);opacity:1;}}
+  @keyframes hero-snow{0%{transform:translateY(-30px);opacity:0;}12%{opacity:.9;}88%{opacity:.9;}100%{transform:translateY(880px);opacity:0;}}
   .hero-inner{padding-block:clamp(12px,2vh,30px);}
+  .hero-copy{max-width:36rem;}
   .hero h1{
-    font-size:clamp(2.4rem,5.6vw,4.7rem);line-height:1.03;margin:.3em 0 .34em;letter-spacing:-.015em;max-width:15ch;
+    font-size:clamp(2.7rem,6.6vw,5.4rem);line-height:1.02;margin:.32em 0 .36em;letter-spacing:-.018em;max-width:14ch;
   }
   .hero h1 em{font-style:italic;color:var(--gold-deep);}
-  .hero .lede{font-size:clamp(1.02rem,1.5vw,1.2rem);max-width:46ch;color:var(--ink-soft);}
-  .hero-cta{display:flex;flex-wrap:wrap;gap:.9rem;margin-top:1.6rem;}
+  .hero .lede{font-size:clamp(1.02rem,1.5vw,1.22rem);max-width:42ch;color:var(--ink-soft);}
+  .hero-cta{display:flex;flex-wrap:wrap;gap:.9rem;margin-top:1.7rem;}
+  @media (max-width:700px){
+    .hero-copy{max-width:none;}
+  }
   .scrollcue{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);z-index:1;font-size:.6rem;letter-spacing:.28em;text-transform:uppercase;color:var(--stone);display:flex;flex-direction:column;align-items:center;gap:.6rem;}
   .scrollcue .bar{width:1px;height:38px;background:linear-gradient(var(--gold),transparent);animation:cue 2.4s ease-in-out infinite;}
   @keyframes cue{0%,100%{transform:scaleY(.4);transform-origin:top;opacity:.4;}50%{transform:scaleY(1);opacity:1;}}
@@ -711,6 +703,40 @@
 
 <!-- HERO -->
 <section class="hero">
+  <div class="hero-scene" aria-hidden="true">
+    <svg class="hero-sky" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Un grand soleil d'été rayonnant se fondant vers une nuit d'hiver enneigée">
+      <defs>
+        <linearGradient id="hsky" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#FCF6EA"/><stop offset=".26" stop-color="#FAEBC9"/>
+          <stop offset=".47" stop-color="#F2DAA5"/><stop offset=".63" stop-color="#CFC9BC"/>
+          <stop offset=".8" stop-color="#9EB3BC"/><stop offset="1" stop-color="#6C8894"/>
+        </linearGradient>
+        <radialGradient id="hsun" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FFF9E4"/><stop offset=".5" stop-color="#FBDA8E"/><stop offset=".82" stop-color="#F3C468" stop-opacity=".85"/><stop offset="1" stop-color="#EEB94E" stop-opacity=".25"/></radialGradient>
+        <radialGradient id="hhalo" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FFE8A6" stop-opacity=".8"/><stop offset=".4" stop-color="#FBDD90" stop-opacity=".3"/><stop offset="1" stop-color="#FBDD90" stop-opacity="0"/></radialGradient>
+        <radialGradient id="hmoonh" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#E6F0EC" stop-opacity=".5"/><stop offset="1" stop-color="#E6F0EC" stop-opacity="0"/></radialGradient>
+        <mask id="hmask"><circle cx="1210" cy="198" r="46" fill="#fff"/><circle cx="1230" cy="184" r="38" fill="#000"/></mask>
+        <linearGradient id="hlift" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#FBF8F2" stop-opacity=".62"/><stop offset=".42" stop-color="#FBF8F2" stop-opacity="0"/></linearGradient>
+        <linearGradient id="hbase" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#EEE5D3" stop-opacity="0"/><stop offset="1" stop-color="#F1E9DB" stop-opacity=".85"/></linearGradient>
+      </defs>
+
+      <rect width="1440" height="900" fill="url(#hsky)"/>
+
+      <g stroke="#F0C066" stroke-width="3" stroke-linecap="round" opacity=".4"><path d="M990 250L1026 250"/><path d="M972 316L1003 334"/><path d="M924 364L942 395"/><path d="M858 382L858 418"/><path d="M792 364L774 395"/><path d="M744 316L713 334"/><path d="M726 250L690 250"/><path d="M744 184L713 166"/><path d="M792 136L774 105"/><path d="M858 118L858 82"/><path d="M924 136L942 105"/><path d="M972 184L1003 166"/></g>
+      <g class="hero-sun">
+        <circle cx="858" cy="250" r="404" fill="url(#hhalo)"/>
+        <circle cx="858" cy="250" r="112" fill="url(#hsun)"/>
+      </g>
+
+      <circle cx="1210" cy="198" r="84" fill="url(#hmoonh)"/>
+      <circle cx="1210" cy="198" r="46" fill="#EFF6F1" mask="url(#hmask)"/>
+      <g fill="#F3F8F4"><circle cx="1040" cy="120" r="1.7"/><circle cx="1096" cy="232" r="2.0"/><circle cx="1150" cy="96" r="1.6"/><circle cx="1250" cy="150" r="1.9"/><circle cx="1310" cy="250" r="1.7"/><circle cx="1360" cy="130" r="1.5"/><circle cx="1180" cy="300" r="1.6"/><circle cx="1290" cy="330" r="2.0"/><circle cx="1080" cy="300" r="1.5"/><circle cx="1340" cy="330" r="1.7"/><circle cx="1230" cy="80" r="1.6"/></g>
+
+      <rect x="0" y="580" width="1440" height="320" fill="url(#hbase)"/>
+      <g opacity=".92"><circle class="flake" cx="40" cy="-30" r="1.5" fill="#EAF3F6" style="animation-duration:7.0s;animation-delay:-0.0s"/><circle class="flake" cx="237" cy="31" r="2.2" fill="#FFFFFF" style="animation-duration:8.1s;animation-delay:-1.3s"/><circle class="flake" cx="434" cy="92" r="2.9" fill="#FFFFFF" style="animation-duration:9.2s;animation-delay:-5.2s"/><circle class="flake" cx="631" cy="23" r="3.6" fill="#EAF3F6" style="animation-duration:10.3s;animation-delay:-11.7s"/><circle class="flake" cx="828" cy="84" r="4.3" fill="#FFFFFF" style="animation-duration:11.4s;animation-delay:-3.8s"/><circle class="flake" cx="1025" cy="15" r="1.6" fill="#FFFFFF" style="animation-duration:12.5s;animation-delay:-15.5s"/><circle class="flake" cx="1222" cy="76" r="2.3" fill="#EAF3F6" style="animation-duration:13.6s;animation-delay:-12.8s"/><circle class="flake" cx="1419" cy="7" r="3.0" fill="#FFFFFF" style="animation-duration:14.7s;animation-delay:-12.7s"/><circle class="flake" cx="176" cy="68" r="3.7" fill="#FFFFFF" style="animation-duration:15.8s;animation-delay:-15.2s"/><circle class="flake" cx="373" cy="-1" r="4.4" fill="#EAF3F6" style="animation-duration:16.9s;animation-delay:-3.3s"/><circle class="flake" cx="570" cy="60" r="1.7" fill="#FFFFFF" style="animation-duration:8.0s;animation-delay:-11.0s"/><circle class="flake" cx="767" cy="-9" r="2.4" fill="#FFFFFF" style="animation-duration:9.1s;animation-delay:-4.3s"/><circle class="flake" cx="964" cy="52" r="3.1" fill="#EAF3F6" style="animation-duration:10.2s;animation-delay:-0.2s"/><circle class="flake" cx="1161" cy="-17" r="3.8" fill="#FFFFFF" style="animation-duration:11.3s;animation-delay:-15.7s"/><circle class="flake" cx="1358" cy="44" r="4.5" fill="#FFFFFF" style="animation-duration:12.4s;animation-delay:-16.8s"/><circle class="flake" cx="115" cy="-25" r="1.8" fill="#EAF3F6" style="animation-duration:13.5s;animation-delay:-3.5s"/><circle class="flake" cx="312" cy="36" r="2.5" fill="#FFFFFF" style="animation-duration:14.6s;animation-delay:-9.8s"/><circle class="flake" cx="509" cy="97" r="3.2" fill="#FFFFFF" style="animation-duration:15.7s;animation-delay:-1.7s"/><circle class="flake" cx="706" cy="28" r="3.9" fill="#EAF3F6" style="animation-duration:16.8s;animation-delay:-13.2s"/><circle class="flake" cx="903" cy="89" r="4.6" fill="#FFFFFF" style="animation-duration:7.9s;animation-delay:-10.3s"/><circle class="flake" cx="1100" cy="20" r="1.9" fill="#FFFFFF" style="animation-duration:9.0s;animation-delay:-10.0s"/><circle class="flake" cx="1297" cy="81" r="2.6" fill="#EAF3F6" style="animation-duration:10.1s;animation-delay:-12.3s"/><circle class="flake" cx="54" cy="12" r="3.3" fill="#FFFFFF" style="animation-duration:11.2s;animation-delay:-0.2s"/><circle class="flake" cx="251" cy="73" r="4.0" fill="#FFFFFF" style="animation-duration:12.3s;animation-delay:-7.7s"/><circle class="flake" cx="448" cy="4" r="4.7" fill="#EAF3F6" style="animation-duration:13.4s;animation-delay:-0.8s"/><circle class="flake" cx="645" cy="65" r="2.0" fill="#FFFFFF" style="animation-duration:14.5s;animation-delay:-13.5s"/><circle class="flake" cx="842" cy="-4" r="2.7" fill="#FFFFFF" style="animation-duration:15.6s;animation-delay:-11.8s"/><circle class="flake" cx="1039" cy="57" r="3.4" fill="#EAF3F6" style="animation-duration:16.7s;animation-delay:-12.7s"/><circle class="flake" cx="1236" cy="-12" r="4.1" fill="#FFFFFF" style="animation-duration:7.8s;animation-delay:-16.2s"/><circle class="flake" cx="1433" cy="49" r="4.8" fill="#FFFFFF" style="animation-duration:8.9s;animation-delay:-5.3s"/><circle class="flake" cx="190" cy="-20" r="2.1" fill="#EAF3F6" style="animation-duration:10.0s;animation-delay:-14.0s"/><circle class="flake" cx="387" cy="41" r="2.8" fill="#FFFFFF" style="animation-duration:11.1s;animation-delay:-8.3s"/><circle class="flake" cx="584" cy="-28" r="3.5" fill="#FFFFFF" style="animation-duration:12.2s;animation-delay:-5.2s"/><circle class="flake" cx="781" cy="33" r="4.2" fill="#EAF3F6" style="animation-duration:13.3s;animation-delay:-4.7s"/><circle class="flake" cx="978" cy="94" r="1.5" fill="#FFFFFF" style="animation-duration:14.4s;animation-delay:-6.8s"/><circle class="flake" cx="1175" cy="25" r="2.2" fill="#FFFFFF" style="animation-duration:15.5s;animation-delay:-11.5s"/><circle class="flake" cx="1372" cy="86" r="2.9" fill="#EAF3F6" style="animation-duration:16.6s;animation-delay:-1.8s"/><circle class="flake" cx="129" cy="17" r="3.6" fill="#FFFFFF" style="animation-duration:7.7s;animation-delay:-11.7s"/><circle class="flake" cx="326" cy="78" r="4.3" fill="#FFFFFF" style="animation-duration:8.8s;animation-delay:-7.2s"/><circle class="flake" cx="523" cy="9" r="1.6" fill="#EAF3F6" style="animation-duration:9.9s;animation-delay:-5.3s"/><circle class="flake" cx="720" cy="70" r="2.3" fill="#FFFFFF" style="animation-duration:11.0s;animation-delay:-6.0s"/><circle class="flake" cx="917" cy="1" r="3.0" fill="#FFFFFF" style="animation-duration:12.1s;animation-delay:-9.3s"/><circle class="flake" cx="1114" cy="62" r="3.7" fill="#EAF3F6" style="animation-duration:13.2s;animation-delay:-15.2s"/><circle class="flake" cx="1311" cy="-7" r="4.4" fill="#FFFFFF" style="animation-duration:14.3s;animation-delay:-6.7s"/><circle class="flake" cx="68" cy="54" r="1.7" fill="#FFFFFF" style="animation-duration:15.4s;animation-delay:-0.8s"/><circle class="flake" cx="265" cy="-15" r="2.4" fill="#EAF3F6" style="animation-duration:16.5s;animation-delay:-14.5s"/><circle class="flake" cx="462" cy="46" r="3.1" fill="#FFFFFF" style="animation-duration:7.6s;animation-delay:-13.8s"/><circle class="flake" cx="659" cy="-23" r="3.8" fill="#FFFFFF" style="animation-duration:8.7s;animation-delay:-15.7s"/><circle class="flake" cx="856" cy="38" r="4.5" fill="#EAF3F6" style="animation-duration:9.8s;animation-delay:-3.2s"/><circle class="flake" cx="1053" cy="99" r="1.8" fill="#FFFFFF" style="animation-duration:10.9s;animation-delay:-10.3s"/><circle class="flake" cx="1250" cy="30" r="2.5" fill="#FFFFFF" style="animation-duration:12.0s;animation-delay:-3.0s"/><circle class="flake" cx="7" cy="91" r="3.2" fill="#EAF3F6" style="animation-duration:13.1s;animation-delay:-15.3s"/></g>
+
+      <rect width="1440" height="900" fill="url(#hlift)"/>
+    </svg>
+  </div>
   <div class="wrap hero-inner">
     <div class="hero-copy">
       <span class="eyebrow reveal">Mobilier &amp; décoration d'événements · Amiens</span>
@@ -720,98 +746,6 @@
         <a class="btn btn-ink" href="/catalogue">Découvrir le catalogue <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
         <a class="btn btn-ghost" href="#process">Composer mon événement</a>
       </div>
-    </div>
-    <div class="hero-emblem reveal d2">
-      <svg class="emblem" viewBox="0 0 440 560" role="img" aria-label="Grande arche de cérémonie ouvrant sur un ciel de solstice, du soleil d'été à la nuit d'hiver étoilée, ornée de pampa et de compositions florales">
-        <defs>
-          <clipPath id="archClip"><path d="M55 520 L55 232 A165 165 0 0 1 385 232 L385 520 Z"/></clipPath>
-          <linearGradient id="skyG" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0" stop-color="#FBE4AE"/><stop offset=".27" stop-color="#F2C97E"/>
-            <stop offset=".45" stop-color="#CC9E66"/><stop offset=".59" stop-color="#8B9678"/>
-            <stop offset=".76" stop-color="#4C7B84"/><stop offset="1" stop-color="#172E3C"/>
-          </linearGradient>
-          <linearGradient id="floorG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F0E3C6" stop-opacity="0"/><stop offset="1" stop-color="#E3D0AC" stop-opacity=".55"/></linearGradient>
-          <radialGradient id="sunCore" cx="50%" cy="45%" r="60%"><stop offset="0" stop-color="#FFF3CB"/><stop offset="1" stop-color="#EFB23F"/></radialGradient>
-          <radialGradient id="sunHalo" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FFDE8A" stop-opacity=".62"/><stop offset="1" stop-color="#FFDE8A" stop-opacity="0"/></radialGradient>
-          <radialGradient id="moonHalo" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#DCEBE6" stop-opacity=".4"/><stop offset="1" stop-color="#DCEBE6" stop-opacity="0"/></radialGradient>
-          <mask id="mCrescent"><circle cx="312" cy="146" r="30" fill="#fff"/><circle cx="326" cy="136" r="25" fill="#000"/></mask>
-          <linearGradient id="goldG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D8BB86"/><stop offset=".5" stop-color="#B08A54"/><stop offset="1" stop-color="#8C6C3D"/></linearGradient>
-        </defs>
-
-        <g clip-path="url(#archClip)">
-          <rect x="45" y="58" width="355" height="462" fill="url(#skyG)"/>
-
-          <!-- soleil d'été -->
-          <circle class="emb-halo" cx="142" cy="196" r="104" fill="url(#sunHalo)"/>
-          <g stroke="#E79A2C" stroke-width="4" stroke-linecap="round" opacity=".7"><path d="M142 132v-16M142 260v16M206 196h16M78 196H62M188 150l11-11M188 242l11 11M96 242l-11 11M96 150l-11-11"/></g>
-          <circle cx="142" cy="196" r="43" fill="url(#sunCore)"/>
-
-          <!-- lune & etoiles d'hiver -->
-          <circle class="emb-halo" cx="312" cy="146" r="54" fill="url(#moonHalo)"/>
-          <circle cx="312" cy="146" r="30" fill="#EAF2ED" mask="url(#mCrescent)"/>
-          <g fill="#EFF6F1"><circle cx="268" cy="188" r="1.7"/><circle cx="356" cy="196" r="2"/><circle cx="340" cy="100" r="1.6"/><circle cx="286" cy="112" r="1.8"/><circle cx="366" cy="156" r="1.6"/><circle cx="256" cy="150" r="1.4"/><circle cx="352" cy="238" r="1.8"/><circle cx="300" cy="210" r="1.4"/><circle cx="322" cy="86" r="1.5"/></g>
-
-          <!-- neige d'hiver -->
-          <g fill="#FFFFFF" opacity=".9"><circle class="emb-snow" cx="262" cy="66" r="2.6" style="animation-duration:9s;animation-delay:-1s"/><circle class="emb-snow" cx="300" cy="66" r="2.2" style="animation-duration:11s;animation-delay:-4s"/><circle class="emb-snow" cx="336" cy="66" r="2.8" style="animation-duration:8.5s;animation-delay:-2.5s"/><circle class="emb-snow" cx="356" cy="66" r="2.1" style="animation-duration:10.5s;animation-delay:-6s"/><circle class="emb-snow" cx="284" cy="66" r="2" style="animation-duration:9.5s;animation-delay:-5s"/><circle class="emb-snow" cx="320" cy="66" r="2.4" style="animation-duration:8s;animation-delay:-3.2s"/></g>
-
-          <!-- horizon + reflet doux -->
-          <rect x="45" y="446" width="355" height="74" fill="url(#floorG)"/>
-          <path d="M45 446H400" stroke="#D8C398" stroke-width="1" opacity=".45"/>
-
-          <!-- pampa (gauche, chaleur d'ete) -->
-          <g opacity=".96">
-            <path d="M112 520 C106 452 104 400 110 342" fill="none" stroke="#C6A46A" stroke-width="2" stroke-linecap="round"/>
-            <path d="M134 520 C130 468 130 424 136 386" fill="none" stroke="#C6A46A" stroke-width="1.8" stroke-linecap="round"/>
-            <path d="M92 520 C90 478 92 444 98 416" fill="none" stroke="#BFA377" stroke-width="1.5" stroke-linecap="round" opacity=".55"/>
-            <g stroke="#EBD8AA" stroke-width="1.15" stroke-linecap="round" fill="none" opacity=".92">
-              <path d="M110 342C110 316 110 294 110 270"/>
-              <path d="M110 340C106 316 104 300 103 282"/><path d="M110 340C114 316 116 300 117 282"/>
-              <path d="M110 340C102 318 99 304 97 290"/><path d="M110 340C118 318 121 304 123 290"/>
-              <path d="M110 338C99 320 96 310 94 298"/><path d="M110 338C121 320 124 310 126 298"/>
-              <path d="M110 336C97 323 94 315 92 307"/><path d="M110 336C123 323 126 315 128 307"/>
-            </g>
-            <g stroke="#E3CD9A" stroke-width="1.05" stroke-linecap="round" fill="none" opacity=".85">
-              <path d="M136 386C136 364 136 346 136 326"/>
-              <path d="M136 384C132 364 130 350 129 336"/><path d="M136 384C140 364 142 350 143 336"/>
-              <path d="M136 382C129 366 126 356 124 346"/><path d="M136 382C143 366 146 356 148 346"/>
-              <path d="M136 380C127 368 124 360 122 352"/><path d="M136 380C145 368 148 360 150 352"/>
-            </g>
-          </g>
-
-          <!-- eucalyptus (droite, fraicheur d'hiver) -->
-          <g opacity=".95">
-            <path d="M346 520 C352 470 356 420 346 366" fill="none" stroke="#7E9068" stroke-width="2" stroke-linecap="round"/>
-            <g fill="#93A47F"><ellipse cx="352" cy="470" rx="8" ry="4.6" transform="rotate(28 352 470)"/><ellipse cx="341" cy="452" rx="8" ry="4.6" transform="rotate(-30 341 452)"/><ellipse cx="356" cy="432" rx="7.5" ry="4.3" transform="rotate(30 356 432)"/><ellipse cx="344" cy="414" rx="7.5" ry="4.3" transform="rotate(-28 344 414)"/><ellipse cx="356" cy="396" rx="7" ry="4" transform="rotate(30 356 396)"/><ellipse cx="346" cy="380" rx="6.5" ry="3.8" transform="rotate(-26 346 380)"/></g>
-            <g fill="#84956F"><ellipse cx="350" cy="460" rx="8" ry="4.6" transform="rotate(-24 350 460)"/><ellipse cx="349" cy="422" rx="7.5" ry="4.3" transform="rotate(26 349 422)"/></g>
-            <circle cx="346" cy="366" r="3" fill="#B9C6A6"/>
-            <path d="M322 520 C326 480 330 448 324 418" fill="none" stroke="#889A72" stroke-width="1.5" stroke-linecap="round" opacity=".65"/>
-          </g>
-
-          <!-- guirlande florale suspendue (haut-gauche de l'arche) -->
-          <g>
-            <path d="M96 250 C120 268 150 280 182 286" fill="none" stroke="#8DA074" stroke-width="1.6" stroke-linecap="round" opacity=".9"/>
-            <g fill="#9BAC82"><ellipse cx="108" cy="262" rx="7" ry="4" transform="rotate(28 108 262)"/><ellipse cx="126" cy="272" rx="7.5" ry="4.2" transform="rotate(18 126 272)"/><ellipse cx="150" cy="279" rx="7.5" ry="4.2" transform="rotate(8 150 279)"/><ellipse cx="120" cy="258" rx="6.5" ry="3.8" transform="rotate(-16 120 258)"/><ellipse cx="142" cy="268" rx="6.5" ry="3.8" transform="rotate(-10 142 268)"/></g>
-            <g transform="translate(132,286)"><g fill="#E3B7AB"><ellipse rx="7.5" ry="5"/><ellipse rx="7.5" ry="5" transform="rotate(72)"/><ellipse rx="7.5" ry="5" transform="rotate(144)"/><ellipse rx="7.5" ry="5" transform="rotate(216)"/><ellipse rx="7.5" ry="5" transform="rotate(288)"/></g><circle r="4" fill="#D89C8E"/></g>
-            <g transform="translate(166,290)"><g fill="#EFDFC9"><ellipse rx="6.5" ry="4.4"/><ellipse rx="6.5" ry="4.4" transform="rotate(72)"/><ellipse rx="6.5" ry="4.4" transform="rotate(144)"/><ellipse rx="6.5" ry="4.4" transform="rotate(216)"/><ellipse rx="6.5" ry="4.4" transform="rotate(288)"/></g><circle r="3.4" fill="#E0CDA9"/></g>
-            <g transform="translate(150,301)"><g fill="#E3B7AB" opacity=".92"><ellipse rx="5.5" ry="3.6" transform="rotate(30)"/><ellipse rx="5.5" ry="3.6" transform="rotate(102)"/><ellipse rx="5.5" ry="3.6" transform="rotate(174)"/><ellipse rx="5.5" ry="3.6" transform="rotate(246)"/><ellipse rx="5.5" ry="3.6" transform="rotate(318)"/></g><circle r="3" fill="#D89C8E"/></g>
-          </g>
-        </g>
-
-        <!-- cadre de l'arche -->
-        <path d="M55 520 L55 232 A165 165 0 0 1 385 232 L385 520" fill="none" stroke="url(#goldG)" stroke-width="4.2" stroke-linejoin="round"/>
-        <path d="M67 520 L67 238 A153 153 0 0 1 373 238 L373 520" fill="none" stroke="#CBAA76" stroke-width="1.1" opacity=".5"/>
-
-        <!-- cle de voute : medaillon solaire -->
-        <g transform="translate(220,63)">
-          <g stroke="url(#goldG)" stroke-width="2" stroke-linecap="round"><path d="M0 -20v7M0 20v-7M20 0h-7M-20 0h7M14 14l-5-5M-14 14l5-5M14 -14l-5 5M-14 -14l5 5"/></g>
-          <circle r="11" fill="url(#goldG)"/>
-          <circle r="5.5" fill="#FBF8F2"/>
-        </g>
-
-        <!-- socle -->
-        <path d="M36 520H404" stroke="url(#goldG)" stroke-width="4" stroke-linecap="round"/>
-        <path d="M55 531H385" stroke="#CBAA76" stroke-width="1.2" stroke-linecap="round" opacity=".5"/>
-      </svg>
     </div>
   </div>
   <div class="scrollcue" aria-hidden="true"><span class="bar"></span>Défiler</div>
