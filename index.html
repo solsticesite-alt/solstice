@@ -172,10 +172,10 @@
   .hero-glow{display:none;}
   .hero-sun{display:none;}
   .hero-fade{display:none;}
-  .hero-inner{display:grid;grid-template-columns:1.04fr .96fr;align-items:center;gap:clamp(24px,4vw,56px);}
+  .hero-inner{display:grid;grid-template-columns:.9fr 1.1fr;align-items:center;gap:clamp(20px,3.4vw,52px);}
   .hero-copy{min-width:0;}
   .hero-emblem{position:relative;display:flex;justify-content:center;align-items:center;}
-  .emblem{width:auto;height:min(62vh,470px);max-width:100%;filter:drop-shadow(0 30px 54px rgba(90,60,25,.28));}
+  .emblem{width:auto;height:min(78vh,580px);max-width:100%;filter:drop-shadow(0 38px 66px rgba(90,60,25,.22));}
   @media (prefers-reduced-motion:no-preference){
     .emblem{animation:emb-float 12s ease-in-out infinite;}
     .emb-halo{transform-box:fill-box;transform-origin:center;animation:emb-pulse 6.5s ease-in-out infinite;}
@@ -183,11 +183,11 @@
   }
   @keyframes emb-float{0%,100%{transform:translateY(0);}50%{transform:translateY(-12px);}}
   @keyframes emb-pulse{0%,100%{transform:scale(1);opacity:.8;}50%{transform:scale(1.09);opacity:1;}}
-  @keyframes emb-fall{0%{transform:translateY(-20px);opacity:0;}15%{opacity:.85;}100%{transform:translateY(360px);opacity:0;}}
+  @keyframes emb-fall{0%{transform:translateY(-20px);opacity:0;}15%{opacity:.85;}100%{transform:translateY(450px);opacity:0;}}
   @media (max-width:900px){
     .hero-inner{grid-template-columns:1fr;}
     .hero-emblem{margin-top:1.4rem;}
-    .emblem{width:min(64%,260px);height:auto;}
+    .emblem{width:min(78%,340px);height:auto;}
   }
   .hero-inner{padding-block:clamp(12px,2vh,30px);}
   .hero h1{
@@ -722,66 +722,95 @@
       </div>
     </div>
     <div class="hero-emblem reveal d2">
-      <svg class="emblem" viewBox="0 0 380 472" role="img" aria-label="Une arche de cérémonie ouvrant sur un lever de soleil d'été qui se fond dans une nuit d'hiver étoilée">
+      <svg class="emblem" viewBox="0 0 440 560" role="img" aria-label="Grande arche de cérémonie ouvrant sur un ciel de solstice, du soleil d'été à la nuit d'hiver étoilée, ornée de pampa et de compositions florales">
         <defs>
-          <clipPath id="archClip"><path d="M40 446 L40 178 A150 150 0 0 1 340 178 L340 446 Z"/></clipPath>
+          <clipPath id="archClip"><path d="M55 520 L55 232 A165 165 0 0 1 385 232 L385 520 Z"/></clipPath>
           <linearGradient id="skyG" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0" stop-color="#FCE6B2"/><stop offset=".30" stop-color="#F3CB82"/>
-            <stop offset=".46" stop-color="#CFA36A"/><stop offset=".58" stop-color="#8E9578"/>
-            <stop offset=".74" stop-color="#4E7C84"/><stop offset="1" stop-color="#1B3A46"/>
+            <stop offset="0" stop-color="#FBE4AE"/><stop offset=".27" stop-color="#F2C97E"/>
+            <stop offset=".45" stop-color="#CC9E66"/><stop offset=".59" stop-color="#8B9678"/>
+            <stop offset=".76" stop-color="#4C7B84"/><stop offset="1" stop-color="#172E3C"/>
           </linearGradient>
-          <linearGradient id="groundG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1E1910" stop-opacity="0"/><stop offset="1" stop-color="#1E1910" stop-opacity=".2"/></linearGradient>
-          <radialGradient id="sunCore" cx="50%" cy="42%" r="60%"><stop offset="0" stop-color="#FFF1C2"/><stop offset="1" stop-color="#F1B33E"/></radialGradient>
-          <radialGradient id="sunHalo" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FFDE8A" stop-opacity=".72"/><stop offset="1" stop-color="#FFDE8A" stop-opacity="0"/></radialGradient>
+          <linearGradient id="floorG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F0E3C6" stop-opacity="0"/><stop offset="1" stop-color="#E3D0AC" stop-opacity=".55"/></linearGradient>
+          <radialGradient id="sunCore" cx="50%" cy="45%" r="60%"><stop offset="0" stop-color="#FFF3CB"/><stop offset="1" stop-color="#EFB23F"/></radialGradient>
+          <radialGradient id="sunHalo" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FFDE8A" stop-opacity=".62"/><stop offset="1" stop-color="#FFDE8A" stop-opacity="0"/></radialGradient>
           <radialGradient id="moonHalo" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#DCEBE6" stop-opacity=".4"/><stop offset="1" stop-color="#DCEBE6" stop-opacity="0"/></radialGradient>
-          <mask id="mCrescent"><circle cx="276" cy="106" r="33" fill="#fff"/><circle cx="291" cy="95" r="28" fill="#000"/></mask>
+          <mask id="mCrescent"><circle cx="312" cy="146" r="30" fill="#fff"/><circle cx="326" cy="136" r="25" fill="#000"/></mask>
+          <linearGradient id="goldG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D8BB86"/><stop offset=".5" stop-color="#B08A54"/><stop offset="1" stop-color="#8C6C3D"/></linearGradient>
         </defs>
 
         <g clip-path="url(#archClip)">
-          <rect x="30" y="8" width="320" height="440" fill="url(#skyG)"/>
+          <rect x="45" y="58" width="355" height="462" fill="url(#skyG)"/>
+
           <!-- soleil d'été -->
-          <circle class="emb-halo" cx="120" cy="134" r="96" fill="url(#sunHalo)"/>
-          <g stroke="#E79A2C" stroke-width="4.4" stroke-linecap="round" opacity=".8"><path d="M120 86V72 M120 182v14 M168 134h14 M72 134H58 M154 100l10 -10 M154 168l10 10 M86 168l-10 10 M86 100l-10 -10"/></g>
-          <circle cx="120" cy="134" r="40" fill="url(#sunCore)"/>
-          <!-- lune & étoiles d'hiver -->
-          <circle class="emb-halo" cx="276" cy="106" r="56" fill="url(#moonHalo)"/>
-          <circle cx="276" cy="106" r="33" fill="#EAF2ED" mask="url(#mCrescent)"/>
-          <g fill="#EFF6F1"><circle cx="238" cy="150" r="1.8"/><circle cx="322" cy="158" r="2.1"/><circle cx="302" cy="76" r="1.6"/><circle cx="250" cy="92" r="1.9"/><circle cx="330" cy="118" r="1.7"/><circle cx="222" cy="196" r="1.5"/><circle cx="312" cy="206" r="2"/><circle cx="266" cy="172" r="1.5"/><circle cx="346" cy="184" r="1.7"/></g>
-          <!-- flocons cristallins -->
-          <g stroke="#EAF3F1" stroke-width="1.3" stroke-linecap="round" opacity=".85"><path d="M250 131v16 M243 135l14 8 M257 135l-14 8"/><path d="M335 146v12 M330 149l10 6 M340 149l-10 6"/></g>
-          <!-- neige qui tombe -->
-          <g fill="#FFFFFF" opacity=".92"><circle class="emb-snow" cx="238" cy="50" r="3" style="animation-duration:7s;animation-delay:-1s"/><circle class="emb-snow" cx="288" cy="50" r="2.4" style="animation-duration:9s;animation-delay:-4s"/><circle class="emb-snow" cx="322" cy="50" r="2.9" style="animation-duration:8s;animation-delay:-2.5s"/><circle class="emb-snow" cx="262" cy="50" r="2.2" style="animation-duration:10s;animation-delay:-6s"/><circle class="emb-snow" cx="340" cy="50" r="2.5" style="animation-duration:8.5s;animation-delay:-3.5s"/><circle class="emb-snow" cx="212" cy="50" r="2.1" style="animation-duration:11s;animation-delay:-2s"/><circle class="emb-snow" cx="304" cy="50" r="2" style="animation-duration:9.5s;animation-delay:-5.5s"/></g>
-          <!-- sol : terre chaude d'été (gauche) / congère de neige d'hiver (droite) -->
-          <path d="M40 446 L40 434 C92 425 150 427 192 436 L192 446 Z" fill="#E3B978" opacity=".5"/>
-          <path d="M186 446 L186 431 C240 416 296 418 340 429 L340 446 Z" fill="#EAF1F3"/>
-          <path d="M186 431 C240 416 296 418 340 429" fill="none" stroke="#CFE0E3" stroke-width="1.6" opacity=".7"/>
-          <g fill="#FFFFFF" opacity=".9"><circle cx="228" cy="440" r="1.4"/><circle cx="262" cy="436" r="1.5"/><circle cx="300" cy="438" r="1.4"/><circle cx="324" cy="434" r="1.3"/></g>
-          <!-- graminées d'été (gauche) -->
-          <g stroke="#A2662A" stroke-width="3" stroke-linecap="round" fill="none" opacity=".95">
-            <path d="M70 446C70 410 73 388 78 370"/><path d="M78 370c-9 6 -14 14 -16 24M78 370c9 6 14 14 16 24M78 384c-8 5 -12 12 -14 20M78 384c8 5 12 12 14 20"/>
-            <path d="M100 446C100 402 104 374 110 350"/><path d="M110 350c-11 7 -17 16 -20 27M110 350c11 7 17 16 20 27M110 366c-9 6 -14 14 -17 23M110 366c9 6 14 14 17 23"/>
-            <path d="M132 446C132 408 135 386 140 366"/><path d="M140 366c-10 6 -15 15 -18 25M140 366c10 6 15 15 18 25M140 380c-8 5 -12 12 -15 21M140 380c8 5 12 12 15 21"/>
+          <circle class="emb-halo" cx="142" cy="196" r="104" fill="url(#sunHalo)"/>
+          <g stroke="#E79A2C" stroke-width="4" stroke-linecap="round" opacity=".7"><path d="M142 132v-16M142 260v16M206 196h16M78 196H62M188 150l11-11M188 242l11 11M96 242l-11 11M96 150l-11-11"/></g>
+          <circle cx="142" cy="196" r="43" fill="url(#sunCore)"/>
+
+          <!-- lune & etoiles d'hiver -->
+          <circle class="emb-halo" cx="312" cy="146" r="54" fill="url(#moonHalo)"/>
+          <circle cx="312" cy="146" r="30" fill="#EAF2ED" mask="url(#mCrescent)"/>
+          <g fill="#EFF6F1"><circle cx="268" cy="188" r="1.7"/><circle cx="356" cy="196" r="2"/><circle cx="340" cy="100" r="1.6"/><circle cx="286" cy="112" r="1.8"/><circle cx="366" cy="156" r="1.6"/><circle cx="256" cy="150" r="1.4"/><circle cx="352" cy="238" r="1.8"/><circle cx="300" cy="210" r="1.4"/><circle cx="322" cy="86" r="1.5"/></g>
+
+          <!-- neige d'hiver -->
+          <g fill="#FFFFFF" opacity=".9"><circle class="emb-snow" cx="262" cy="66" r="2.6" style="animation-duration:9s;animation-delay:-1s"/><circle class="emb-snow" cx="300" cy="66" r="2.2" style="animation-duration:11s;animation-delay:-4s"/><circle class="emb-snow" cx="336" cy="66" r="2.8" style="animation-duration:8.5s;animation-delay:-2.5s"/><circle class="emb-snow" cx="356" cy="66" r="2.1" style="animation-duration:10.5s;animation-delay:-6s"/><circle class="emb-snow" cx="284" cy="66" r="2" style="animation-duration:9.5s;animation-delay:-5s"/><circle class="emb-snow" cx="320" cy="66" r="2.4" style="animation-duration:8s;animation-delay:-3.2s"/></g>
+
+          <!-- horizon + reflet doux -->
+          <rect x="45" y="446" width="355" height="74" fill="url(#floorG)"/>
+          <path d="M45 446H400" stroke="#D8C398" stroke-width="1" opacity=".45"/>
+
+          <!-- pampa (gauche, chaleur d'ete) -->
+          <g opacity=".96">
+            <path d="M112 520 C106 452 104 400 110 342" fill="none" stroke="#C6A46A" stroke-width="2" stroke-linecap="round"/>
+            <path d="M134 520 C130 468 130 424 136 386" fill="none" stroke="#C6A46A" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M92 520 C90 478 92 444 98 416" fill="none" stroke="#BFA377" stroke-width="1.5" stroke-linecap="round" opacity=".55"/>
+            <g stroke="#EBD8AA" stroke-width="1.15" stroke-linecap="round" fill="none" opacity=".92">
+              <path d="M110 342C110 316 110 294 110 270"/>
+              <path d="M110 340C106 316 104 300 103 282"/><path d="M110 340C114 316 116 300 117 282"/>
+              <path d="M110 340C102 318 99 304 97 290"/><path d="M110 340C118 318 121 304 123 290"/>
+              <path d="M110 338C99 320 96 310 94 298"/><path d="M110 338C121 320 124 310 126 298"/>
+              <path d="M110 336C97 323 94 315 92 307"/><path d="M110 336C123 323 126 315 128 307"/>
+            </g>
+            <g stroke="#E3CD9A" stroke-width="1.05" stroke-linecap="round" fill="none" opacity=".85">
+              <path d="M136 386C136 364 136 346 136 326"/>
+              <path d="M136 384C132 364 130 350 129 336"/><path d="M136 384C140 364 142 350 143 336"/>
+              <path d="M136 382C129 366 126 356 124 346"/><path d="M136 382C143 366 146 356 148 346"/>
+              <path d="M136 380C127 368 124 360 122 352"/><path d="M136 380C145 368 148 360 150 352"/>
+            </g>
           </g>
-          <!-- épi de blé central (le solstice) -->
-          <g stroke="#9A8348" stroke-width="2.4" stroke-linecap="round" fill="none" opacity=".9"><path d="M190 446V356"/><path d="M190 360l-6 -5M190 360l6 -5M190 372l-7 -6M190 372l7 -6M190 384l-7 -6M190 384l7 -6M190 396l-7 -6M190 396l7 -6"/></g>
-          <!-- sapins d'hiver (droite) -->
-          <g stroke="#15301E" stroke-width="3" stroke-linecap="round" fill="none" opacity=".95">
-            <path d="M300 446V350"/><path d="M300 364l22 -14M300 364l-22 -14M300 386l19 -13M300 386l-19 -13M300 408l16 -11M300 408l-16 -11M300 428l12 -9M300 428l-12 -9"/>
-            <path d="M334 446V384"/><path d="M334 396l15 -10M334 396l-15 -10M334 414l12 -9M334 414l-12 -9M334 430l9 -7M334 430l-9 -7"/>
+
+          <!-- eucalyptus (droite, fraicheur d'hiver) -->
+          <g opacity=".95">
+            <path d="M346 520 C352 470 356 420 346 366" fill="none" stroke="#7E9068" stroke-width="2" stroke-linecap="round"/>
+            <g fill="#93A47F"><ellipse cx="352" cy="470" rx="8" ry="4.6" transform="rotate(28 352 470)"/><ellipse cx="341" cy="452" rx="8" ry="4.6" transform="rotate(-30 341 452)"/><ellipse cx="356" cy="432" rx="7.5" ry="4.3" transform="rotate(30 356 432)"/><ellipse cx="344" cy="414" rx="7.5" ry="4.3" transform="rotate(-28 344 414)"/><ellipse cx="356" cy="396" rx="7" ry="4" transform="rotate(30 356 396)"/><ellipse cx="346" cy="380" rx="6.5" ry="3.8" transform="rotate(-26 346 380)"/></g>
+            <g fill="#84956F"><ellipse cx="350" cy="460" rx="8" ry="4.6" transform="rotate(-24 350 460)"/><ellipse cx="349" cy="422" rx="7.5" ry="4.3" transform="rotate(26 349 422)"/></g>
+            <circle cx="346" cy="366" r="3" fill="#B9C6A6"/>
+            <path d="M322 520 C326 480 330 448 324 418" fill="none" stroke="#889A72" stroke-width="1.5" stroke-linecap="round" opacity=".65"/>
           </g>
-          <!-- neige déposée sur les sapins -->
-          <g stroke="#FFFFFF" stroke-width="2.3" stroke-linecap="round" fill="none" opacity=".85"><path d="M300 360l19 -12M300 360l-19 -12M300 382l16 -11M300 382l-16 -11M334 392l13 -9M334 392l-13 -9"/></g>
+
+          <!-- guirlande florale suspendue (haut-gauche de l'arche) -->
+          <g>
+            <path d="M96 250 C120 268 150 280 182 286" fill="none" stroke="#8DA074" stroke-width="1.6" stroke-linecap="round" opacity=".9"/>
+            <g fill="#9BAC82"><ellipse cx="108" cy="262" rx="7" ry="4" transform="rotate(28 108 262)"/><ellipse cx="126" cy="272" rx="7.5" ry="4.2" transform="rotate(18 126 272)"/><ellipse cx="150" cy="279" rx="7.5" ry="4.2" transform="rotate(8 150 279)"/><ellipse cx="120" cy="258" rx="6.5" ry="3.8" transform="rotate(-16 120 258)"/><ellipse cx="142" cy="268" rx="6.5" ry="3.8" transform="rotate(-10 142 268)"/></g>
+            <g transform="translate(132,286)"><g fill="#E3B7AB"><ellipse rx="7.5" ry="5"/><ellipse rx="7.5" ry="5" transform="rotate(72)"/><ellipse rx="7.5" ry="5" transform="rotate(144)"/><ellipse rx="7.5" ry="5" transform="rotate(216)"/><ellipse rx="7.5" ry="5" transform="rotate(288)"/></g><circle r="4" fill="#D89C8E"/></g>
+            <g transform="translate(166,290)"><g fill="#EFDFC9"><ellipse rx="6.5" ry="4.4"/><ellipse rx="6.5" ry="4.4" transform="rotate(72)"/><ellipse rx="6.5" ry="4.4" transform="rotate(144)"/><ellipse rx="6.5" ry="4.4" transform="rotate(216)"/><ellipse rx="6.5" ry="4.4" transform="rotate(288)"/></g><circle r="3.4" fill="#E0CDA9"/></g>
+            <g transform="translate(150,301)"><g fill="#E3B7AB" opacity=".92"><ellipse rx="5.5" ry="3.6" transform="rotate(30)"/><ellipse rx="5.5" ry="3.6" transform="rotate(102)"/><ellipse rx="5.5" ry="3.6" transform="rotate(174)"/><ellipse rx="5.5" ry="3.6" transform="rotate(246)"/><ellipse rx="5.5" ry="3.6" transform="rotate(318)"/></g><circle r="3" fill="#D89C8E"/></g>
+          </g>
         </g>
 
         <!-- cadre de l'arche -->
-        <path d="M40 446 L40 178 A150 150 0 0 1 340 178 L340 446" fill="none" stroke="#B08A54" stroke-width="3.6" stroke-linejoin="round"/>
-        <path d="M51 446 L51 183 A139 139 0 0 1 329 183 L329 446" fill="none" stroke="#CBAA76" stroke-width="1.2" opacity=".55"/>
-        <!-- clé de voûte -->
-        <path d="M190 13l10 15 -10 15 -10 -15 Z" fill="#B08A54"/>
-        <path d="M190 20l4.6 8 -4.6 8 -4.6 -8 Z" fill="#FBF8F2"/>
+        <path d="M55 520 L55 232 A165 165 0 0 1 385 232 L385 520" fill="none" stroke="url(#goldG)" stroke-width="4.2" stroke-linejoin="round"/>
+        <path d="M67 520 L67 238 A153 153 0 0 1 373 238 L373 520" fill="none" stroke="#CBAA76" stroke-width="1.1" opacity=".5"/>
+
+        <!-- cle de voute : medaillon solaire -->
+        <g transform="translate(220,63)">
+          <g stroke="url(#goldG)" stroke-width="2" stroke-linecap="round"><path d="M0 -20v7M0 20v-7M20 0h-7M-20 0h7M14 14l-5-5M-14 14l5-5M14 -14l-5 5M-14 -14l5 5"/></g>
+          <circle r="11" fill="url(#goldG)"/>
+          <circle r="5.5" fill="#FBF8F2"/>
+        </g>
+
         <!-- socle -->
-        <path d="M24 446H356" stroke="#B08A54" stroke-width="3.4" stroke-linecap="round"/>
-        <path d="M40 457H340" stroke="#CBAA76" stroke-width="1.3" stroke-linecap="round" opacity=".55"/>
+        <path d="M36 520H404" stroke="url(#goldG)" stroke-width="4" stroke-linecap="round"/>
+        <path d="M55 531H385" stroke="#CBAA76" stroke-width="1.2" stroke-linecap="round" opacity=".5"/>
       </svg>
     </div>
   </div>
