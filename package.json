@@ -1,0 +1,12 @@
+{
+  "name": "solstice",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Solstice — location de mobilier & décoration d'événements",
+  "engines": { "node": ">=18" },
+  "dependencies": {
+    "@upstash/redis": "^1.34.3",
+    "nodemailer": "^6.9.16",
+    "pdfkit": "^0.15.1"
+  }
+}

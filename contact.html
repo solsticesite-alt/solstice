@@ -291,7 +291,8 @@
         <span class="eyebrow">Demande de devis</span>
         <h2>Racontez-nous votre événement</h2>
         <p class="lede form-intro">Quelques informations suffisent pour démarrer. Cette demande est gratuite et sans engagement.</p>
-        <form class="form-grid" action="#" novalidate>
+        <form class="form-grid" id="devis-form" action="/api/devis" method="post" novalidate>
+          <div class="field full" id="cart-selection"></div>
           <div class="field">
             <label for="c-nom">Nom &amp; prénom</label>
             <input id="c-nom" name="nom" type="text" autocomplete="name" placeholder="Camille Durand">
@@ -326,6 +327,10 @@
             <input id="c-invites" name="invites" type="number" min="1" inputmode="numeric" placeholder="Ex. 60">
           </div>
           <div class="field full">
+            <label for="c-lieu">Lieu de l'événement</label>
+            <input id="c-lieu" name="lieu" type="text" autocomplete="off" placeholder="Ville ou domaine — ex. Amiens, château de Boves…">
+          </div>
+          <div class="field full">
             <label for="c-message">Votre message</label>
             <textarea id="c-message" name="message" placeholder="Dites-nous en quelques mots l'ambiance rêvée, le lieu, les pièces qui vous font envie (mobilier, art de la table, décoration, lumière…) et si vous préférez le retrait ou la livraison."></textarea>
           </div>
@@ -335,8 +340,13 @@
               <span>J'accepte que mes données soient traitées conformément à la <a class="inline" href="/confidentialite">politique de confidentialité</a>. Elles servent uniquement à répondre à ma demande.</span>
             </label>
           </div>
+          <div class="field full sol-hp" aria-hidden="true">
+            <label for="c-website">Ne remplissez pas ce champ</label>
+            <input id="c-website" name="website" type="text" tabindex="-1" autocomplete="off">
+          </div>
           <div class="field full">
             <button class="btn btn-ink btn-submit" type="submit">Envoyer ma demande <svg aria-hidden="true"><use href="#i-send"/></svg></button>
+            <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
             <p class="form-note">Réponse sous 24 à 48 heures. Aucun paiement en ligne : nous revenons vers vous avec un devis sur mesure.</p>
           </div>
         </form>
@@ -393,5 +403,6 @@
   </div>
 </footer>
 <script src="/site.js"></script>
+<script src="/cart.js" defer></script>
 </body>
 </html>

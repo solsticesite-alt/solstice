@@ -152,6 +152,11 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opa
 .fav{position:absolute;top:9px;right:9px;width:36px;height:36px;border-radius:99px;background:rgba(251,248,242,.92);display:grid;place-items:center;transition:transform .3s,background .3s;}
 .fav svg{width:17px;height:17px;stroke:var(--ink);stroke-width:1.5;fill:none;transition:fill .3s,stroke .3s;}
 .fav:hover{transform:scale(1.12);} .fav.on svg{fill:var(--gold);stroke:var(--gold);}
+.card-add{position:absolute;left:12px;right:12px;bottom:12px;background:var(--paper);color:var(--ink);border:1px solid var(--ink);font-size:.7rem;letter-spacing:.13em;text-transform:uppercase;font-weight:600;padding:.9em;border-radius:var(--radius);text-align:center;opacity:0;transform:translateY(10px);transition:opacity .4s ease,transform .4s ease,background .3s,color .3s;}
+.card:hover .card-add{opacity:1;transform:none;}
+.card-add:hover{background:var(--ink);color:var(--paper);}
+@media (hover:none){.card-add{position:static;opacity:1;transform:none;margin-top:.85rem;width:100%;}}
+.sol-hp{position:absolute!important;left:-9999px!important;top:auto;width:1px;height:1px;overflow:hidden;}
 .card-info{padding:1.05rem .1rem 0;}
 .card-info h3{font-size:1.14rem;margin-bottom:.3rem;}
 .card-meta{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;}

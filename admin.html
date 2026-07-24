@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Solstice — Back-office</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+  :root{
+    --paper:#FBF8F2;--paper-2:#F5EEE1;--sand:#EEE4D3;--ink:#221C15;--ink-soft:#5B5142;--stone:#6F6455;
+    --line:#E6DCCB;--gold:#B08A54;--gold-deep:#8C6C3D;--gold-soft:#CBAA76;--ok:#3f7a4f;--warn:#a9762f;--bad:#b0472f;
+    --serif:'Didot','Bodoni MT','Playfair Display',Georgia,serif;--sans:'Helvetica Neue',Helvetica,Arial,system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;}
+  h1,h2,h3{font-family:var(--serif);font-weight:400;margin:0;line-height:1.1;}
+  button{font-family:inherit;cursor:pointer;}
+  a{color:var(--gold-deep);}
+  .hidden{display:none!important;}
+  .wrap{max-width:1200px;margin:0 auto;padding:0 clamp(16px,3vw,32px);}
+
+  .topbar{position:sticky;top:0;z-index:20;background:rgba(251,248,242,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+  .topbar-in{display:flex;align-items:center;justify-content:space-between;height:60px;gap:1rem;}
+  .brand{font-family:var(--serif);letter-spacing:.34em;text-transform:uppercase;font-size:1.05rem;}
+  .brand small{font-family:var(--sans);letter-spacing:.14em;font-size:.6rem;color:var(--stone);display:block;margin-top:2px;}
+  .topbar-tools{display:flex;gap:.5rem;align-items:center;}
+  .btn{border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:8px;padding:.55em 1em;font-size:.82rem;transition:.2s;}
+  .btn:hover{border-color:var(--gold);}
+  .btn-gold{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+  .btn-gold:hover{background:#000;}
+  .btn-sm{padding:.35em .7em;font-size:.76rem;}
+  .btn:disabled{opacity:.5;cursor:not-allowed;}
+
+  /* ----- Bannière config ----- */
+  .banner{background:#FBE7C8;border:1px solid #E7C98A;color:#6b4a1c;border-radius:12px;padding:14px 18px;margin:18px 0;font-size:.86rem;}
+  .banner b{color:#5a3d12;}
+  .banner ul{margin:.4rem 0 0;padding-left:1.1rem;}
+
+  /* ----- Login ----- */
+  .login-screen{min-height:70vh;display:grid;place-items:center;padding:24px;}
+  .login-card{width:100%;max-width:360px;background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:34px 30px;box-shadow:0 30px 60px -44px rgba(34,28,21,.5);}
+  .login-card h1{font-size:1.6rem;margin-bottom:.2rem;}
+  .login-card p{color:var(--stone);font-size:.85rem;margin:.2rem 0 1.4rem;}
+  label{display:block;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);font-weight:600;margin-bottom:.35rem;}
+  input,select,textarea{width:100%;font-family:inherit;font-size:.95rem;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:9px;padding:.7em .85em;}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(176,138,84,.14);}
+  textarea{resize:vertical;min-height:80px;}
+  .err{color:var(--bad);font-size:.82rem;margin-top:.5rem;min-height:1em;}
+
+  /* ----- Dashboard ----- */
+  .dash{display:grid;grid-template-columns:minmax(300px,380px) 1fr;gap:22px;padding:22px 0 60px;align-items:start;}
+  .panel{background:var(--paper);border:1px solid var(--line);border-radius:16px;box-shadow:0 22px 44px -40px rgba(34,28,21,.4);}
+  .list-head{display:flex;gap:.5rem;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap;}
+  .list-head input{flex:1;min-width:120px;}
+  .filters{display:flex;gap:.3rem;padding:10px 16px;border-bottom:1px solid var(--line);}
+  .chip{border:1px solid var(--line);background:transparent;border-radius:99px;padding:.3em .8em;font-size:.74rem;color:var(--ink-soft);}
+  .chip.on{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+  .reqs{list-style:none;margin:0;padding:6px;max-height:72vh;overflow:auto;}
+  .req{display:block;width:100%;text-align:left;background:transparent;border:1px solid transparent;border-radius:11px;padding:12px 12px;margin:2px 0;transition:.15s;}
+  .req:hover{background:var(--paper-2);}
+  .req.sel{background:var(--paper-2);border-color:var(--gold-soft);}
+  .req-top{display:flex;justify-content:space-between;gap:.5rem;align-items:baseline;}
+  .req-name{font-weight:600;font-size:.95rem;}
+  .req-sub{color:var(--stone);font-size:.78rem;margin-top:2px;}
+  .req-ref{color:var(--gold-deep);font-size:.7rem;letter-spacing:.06em;}
+  .badge{font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;padding:.25em .6em;border-radius:99px;white-space:nowrap;}
+  .b-new{background:#e9f0e9;color:var(--ok);}
+  .b-read{background:var(--sand);color:var(--ink-soft);}
+  .b-replied{background:#efe3c8;color:var(--gold-deep);}
+  .empty{padding:40px 20px;text-align:center;color:var(--stone);font-size:.9rem;}
+
+  /* ----- Détail ----- */
+  .detail{padding:22px 24px;}
+  .detail .muted{color:var(--stone);}
+  .d-head{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;}
+  .d-head h2{font-size:1.5rem;}
+  .info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px 20px;background:var(--paper-2);border-radius:12px;padding:14px 16px;margin-bottom:14px;}
+  .info-grid .k{font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--stone);}
+  .info-grid .v{font-weight:600;font-size:.92rem;word-break:break-word;}
+  .info-grid .v a{word-break:break-all;}
+  .blockquote{background:var(--paper-2);border-left:3px solid var(--gold);border-radius:0 10px 10px 0;padding:10px 14px;margin:0 0 16px;font-size:.92rem;white-space:pre-wrap;}
+  .sel-list{list-style:none;margin:0 0 16px;padding:0;}
+  .sel-list li{display:flex;justify-content:space-between;gap:1rem;padding:7px 0;border-bottom:1px solid var(--line);font-size:.9rem;}
+  .sel-list .q{color:var(--stone);white-space:nowrap;}
+  .section-title{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-deep);font-weight:700;margin:18px 0 10px;}
+
+  /* ----- Composeur devis ----- */
+  .devis{background:var(--paper-2);border:1px solid var(--line);border-radius:14px;padding:18px;margin-top:6px;}
+  .lines{width:100%;border-collapse:collapse;}
+  .lines th{font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--stone);text-align:left;padding:0 6px 6px;font-weight:600;}
+  .lines td{padding:3px 6px;vertical-align:middle;}
+  .lines input{padding:.5em .6em;}
+  .lines .num{text-align:right;}
+  .lines input.num{text-align:right;}
+  .cell-label input{width:100%;}
+  .cell-qty{width:74px;} .cell-unit{width:104px;} .cell-tot{width:96px;text-align:right;font-weight:600;white-space:nowrap;} .cell-x{width:30px;}
+  .lx{border:none;background:transparent;color:var(--stone);font-size:1.1rem;line-height:1;padding:2px 6px;border-radius:6px;}
+  .lx:hover{color:var(--bad);background:#f6e3df;}
+  .tots{display:flex;flex-direction:column;align-items:flex-end;gap:3px;margin-top:12px;font-size:.92rem;}
+  .tots .big{font-size:1.15rem;font-weight:700;font-family:var(--serif);}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;}
+  .field{margin-top:12px;}
+  .devis-actions{display:flex;gap:.6rem;align-items:center;margin-top:16px;flex-wrap:wrap;}
+  .sent-note{background:#efe3c8;color:var(--gold-deep);border-radius:10px;padding:10px 14px;font-size:.85rem;margin-bottom:12px;}
+
+  /* ----- Modal ----- */
+  .modal-bg{position:fixed;inset:0;background:rgba(34,28,21,.5);z-index:50;display:grid;place-items:center;padding:20px;}
+  .modal{background:var(--paper);border-radius:18px;width:100%;max-width:640px;max-height:88vh;overflow:auto;padding:26px 28px;}
+  .modal h2{font-size:1.4rem;margin-bottom:.3rem;}
+  .modal .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .modal .field{margin-top:12px;}
+
+  /* ----- Toast ----- */
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--paper);padding:12px 20px;border-radius:10px;font-size:.88rem;opacity:0;transition:.3s;z-index:80;pointer-events:none;}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  .toast.bad{background:var(--bad);}
+
+  @media(max-width:820px){ .dash{grid-template-columns:1fr;} .modal .grid2{grid-template-columns:1fr;} .row2{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+
+<div class="topbar hidden" id="topbar">
+  <div class="wrap topbar-in">
+    <div class="brand">Solstice <small>Back-office · demandes de devis</small></div>
+    <div class="topbar-tools">
+      <button class="btn btn-sm" id="btn-settings">Réglages</button>
+      <button class="btn btn-sm" id="btn-logout">Déconnexion</button>
+    </div>
+  </div>
+</div>
+
+<div class="wrap" id="app">
+  <div class="empty" id="boot">Chargement…</div>
+
+  <!-- Login -->
+  <div class="login-screen hidden" id="login">
+    <form class="login-card" id="login-form">
+      <h1>Back-office</h1>
+      <p>Espace réservé. Entrez le mot de passe administrateur.</p>
+      <label for="pw">Mot de passe</label>
+      <input type="password" id="pw" autocomplete="current-password" required>
+      <div class="err" id="login-err"></div>
+      <button class="btn btn-gold" style="width:100%;margin-top:14px;" type="submit">Entrer</button>
+    </form>
+  </div>
+
+  <!-- Dashboard -->
+  <div class="hidden" id="dash">
+    <div id="banner-slot"></div>
+    <div class="dash">
+      <div class="panel">
+        <div class="list-head">
+          <input type="search" id="search" placeholder="Rechercher (nom, lieu, réf.)…">
+        </div>
+        <div class="filters" id="filters">
+          <button class="chip on" data-f="all">Toutes</button>
+          <button class="chip" data-f="new">Nouvelles</button>
+          <button class="chip" data-f="read">Lues</button>
+          <button class="chip" data-f="replied">Répondues</button>
+        </div>
+        <ul class="reqs" id="reqs"><li class="empty">Chargement…</li></ul>
+      </div>
+      <div class="panel">
+        <div class="detail" id="detail"><div class="empty">Sélectionnez une demande à gauche.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s,r){return (r||document).querySelector(s);};
+  var esc=function(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');};
+  var euros=function(n){return (Number(n)||0).toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})+' €';};
+  var num=function(v){var n=parseFloat(String(v==null?'':v).replace(',','.'));return isFinite(n)?n:0;};
+  function fdate(v){ if(!v) return ''; var d=new Date(v); if(isNaN(d)) return String(v); return d.toLocaleDateString('fr-FR',{day:'2-digit',month:'short',year:'numeric'}); }
+
+  var toastT;
+  function toast(msg,bad){ var t=$('#toast'); t.textContent=msg; t.className='toast show'+(bad?' bad':''); clearTimeout(toastT); toastT=setTimeout(function(){t.className='toast';},3200); }
+
+  function api(path,opts){
+    opts=opts||{};
+    return fetch(path,{method:opts.method||'GET',headers:opts.body?{'Content-Type':'application/json'}:undefined,body:opts.body?JSON.stringify(opts.body):undefined,credentials:'same-origin'})
+      .then(function(r){return r.json().catch(function(){return {ok:false,error:'bad_response',status:r.status};}).then(function(j){j.__status=r.status;return j;});});
+  }
+
+  var state={me:null,settings:null,list:[],filter:'all',q:'',current:null};
+
+  // ---------- Boot ----------
+  function boot(){
+    api('/api/admin/me').then(function(me){
+      state.me=me;
+      $('#boot').classList.add('hidden');
+      if(!me.authed){ showLogin(); return; }
+      showDash();
+    }).catch(function(){ $('#boot').textContent='Erreur de connexion au serveur.'; });
+  }
+
+  function showLogin(){
+    $('#topbar').classList.add('hidden'); $('#dash').classList.add('hidden'); $('#login').classList.remove('hidden');
+    setTimeout(function(){ try{$('#pw').focus();}catch(e){} },50);
+  }
+
+  function configBanner(){
+    var c=(state.me&&state.me.config)||{}; var miss=[];
+    if(!c.store) miss.push('la base de données (variable KV_REST_API_URL / KV_REST_API_TOKEN)');
+    if(!c.mail) miss.push("l'envoi d'e-mail (GMAIL_USER / GMAIL_APP_PASSWORD)");
+    if(!c.adminPassword) miss.push('le mot de passe admin (ADMIN_PASSWORD)');
+    if(!miss.length) return '';
+    return '<div class="banner"><b>Configuration à finir sur Vercel.</b> Il manque : <ul>'+miss.map(function(m){return '<li>'+esc(m)+'</li>';}).join('')+'</ul></div>';
+  }
+
+  function showDash(){
+    $('#login').classList.add('hidden'); $('#topbar').classList.remove('hidden'); $('#dash').classList.remove('hidden');
+    $('#banner-slot').innerHTML=configBanner();
+    loadSettings();
+    loadList();
+  }
+
+  function loadSettings(){ api('/api/admin/settings').then(function(r){ if(r.ok) state.settings=r.settings; }); }
+
+  function loadList(){
+    api('/api/admin/requests').then(function(r){
+      if(r.__status===401){ state.me.authed=false; showLogin(); return; }
+      if(!r.ok){ $('#reqs').innerHTML='<li class="empty">Erreur : '+esc(r.error||'')+'</li>'; return; }
+      state.list=r.items||[]; renderList();
+    });
+  }
+
+  function renderList(){
+    var ul=$('#reqs'); var q=state.q.toLowerCase();
+    var items=state.list.filter(function(it){
+      if(state.filter!=='all' && it.status!==state.filter) return false;
+      if(!q) return true;
+      return ((it.clientName||'')+' '+(it.location||'')+' '+(it.ref||'')+' '+(it.eventType||'')).toLowerCase().indexOf(q)>=0;
+    });
+    if(!items.length){ ul.innerHTML='<li class="empty">Aucune demande.</li>'; return; }
+    ul.innerHTML=items.map(function(it){
+      var b=it.status==='replied'?'<span class="badge b-replied">Répondue</span>':(it.status==='new'?'<span class="badge b-new">Nouvelle</span>':'<span class="badge b-read">Lue</span>');
+      var sub=[it.eventType,fdate(it.date),it.location].filter(Boolean).join(' · ');
+      return '<li><button class="req'+(state.current&&state.current.id===it.id?' sel':'')+'" data-id="'+it.id+'">'+
+        '<div class="req-top"><span class="req-name">'+esc(it.clientName||'—')+'</span>'+b+'</div>'+
+        '<div class="req-sub">'+esc(sub||'—')+'</div>'+
+        '<div class="req-ref">'+esc(it.ref||'')+' · '+it.itemCount+' pièce(s)</div>'+
+      '</button></li>';
+    }).join('');
+    Array.prototype.forEach.call(ul.querySelectorAll('.req'),function(btn){
+      btn.addEventListener('click',function(){ openRequest(parseInt(btn.getAttribute('data-id'),10)); });
+    });
+  }
+
+  function openRequest(id){
+    api('/api/admin/request?id='+id).then(function(r){
+      if(r.__status===401){ showLogin(); return; }
+      if(!r.ok){ toast('Erreur : '+(r.error||''),true); return; }
+      state.current=r.request;
+      // maj du statut dans la liste locale
+      var li=state.list.filter(function(x){return x.id===id;})[0]; if(li&&li.status==='new') li.status='read';
+      renderList(); renderDetail();
+    });
+  }
+
+  function defaultMessage(req){
+    var first=(req.client&&req.client.name?String(req.client.name).trim().split(' ')[0]:'')||'';
+    var ev=(req.event&&req.event.type)?req.event.type.toLowerCase():'événement';
+    var d=(req.event&&req.event.date)?' du '+fdate(req.event.date):'';
+    return 'Bonjour'+(first?' '+first:'')+',\n\nMerci pour votre demande. Ravis de pouvoir vous accompagner pour votre '+ev+d+'. Voici notre proposition ci-jointe.\n\nNous restons à votre entière disposition,\nSolstice';
+  }
+
+  function renderDetail(){
+    var req=state.current; if(!req){ $('#detail').innerHTML='<div class="empty">Sélectionnez une demande.</div>'; return; }
+    var c=req.client||{}, ev=req.event||{};
+    var info=[
+      ['Client',esc(c.name||'—')],
+      ['E-mail',c.email?'<a href="mailto:'+esc(c.email)+'">'+esc(c.email)+'</a>':'—'],
+      ['Téléphone',esc(c.phone||'—')],
+      ['Événement',esc(ev.type||'—')],
+      ['Date',esc(fdate(ev.date)||'—')],
+      ['Lieu',esc(ev.location||'—')],
+      ['Invités',esc(ev.guests||'—')]
+    ].map(function(kv){return '<div><div class="k">'+kv[0]+'</div><div class="v">'+kv[1]+'</div></div>';}).join('');
+
+    var sel = (req.items&&req.items.length) ? '<div class="section-title">Sélection du client</div><ul class="sel-list">'+req.items.map(function(it){
+      return '<li><span>'+esc(it.name)+(it.priceHint?' <span class="muted">('+esc(it.priceHint)+')</span>':'')+'</span><span class="q">× '+esc(it.qty)+'</span></li>';
+    }).join('')+'</ul>' : '';
+
+    var msg = req.message ? '<div class="section-title">Message</div><blockquote class="blockquote">'+esc(req.message)+'</blockquote>' : '';
+
+    var repliedNote = req.reply ? '<div class="sent-note">✓ Devis déjà envoyé le '+esc(fdate(req.reply.sentAt))+' — total '+euros(req.reply.subtotal)+'. Vous pouvez le renvoyer / modifier ci-dessous.</div>' : '';
+
+    $('#detail').innerHTML=
+      '<div class="d-head"><div><h2>'+esc(c.name||'Demande')+'</h2><div class="muted">'+esc(req.ref||'')+' · reçue le '+esc(fdate(req.createdAt))+'</div></div>'+
+        (c.email?'<a class="btn btn-sm" href="mailto:'+esc(c.email)+'">Écrire un e-mail simple</a>':'')+'</div>'+
+      '<div class="info-grid">'+info+'</div>'+ sel + msg +
+      repliedNote +
+      '<div class="section-title">Devis à envoyer</div>'+
+      '<div class="devis" id="devis"></div>';
+
+    renderDevis(req);
+  }
+
+  // ------- Composeur de devis -------
+  function buildInitialLines(req){
+    if(req.reply&&req.reply.lines&&req.reply.lines.length){
+      return req.reply.lines.map(function(l){return {label:l.label,qty:l.qty,unit:l.unit};});
+    }
+    if(req.items&&req.items.length){
+      return req.items.map(function(it){return {label:it.name,qty:it.qty||1,unit:''};});
+    }
+    return [{label:'',qty:1,unit:''}];
+  }
+
+  function renderDevis(req){
+    var lines=buildInitialLines(req);
+    var st=state.settings||{};
+    var deposit = req.reply&&req.reply.depositPct!=null ? req.reply.depositPct : (st.depositPct!=null?st.depositPct:30);
+    var message = req.reply&&req.reply.message ? req.reply.message : defaultMessage(req);
+    var notes = req.reply&&req.reply.notes ? req.reply.notes : '';
+
+    var host=$('#devis');
+    host.innerHTML=
+      '<table class="lines"><thead><tr><th>Désignation</th><th class="num">Qté</th><th class="num">P.U. HT</th><th class="num">Total</th><th></th></tr></thead><tbody id="lines-body"></tbody></table>'+
+      '<button class="btn btn-sm" id="add-line" style="margin-top:8px;">+ Ajouter une ligne</button>'+
+      '<div class="tots" id="tots"></div>'+
+      '<div class="field"><label>Message au client</label><textarea id="d-msg" rows="5"></textarea></div>'+
+      '<div class="row2">'+
+        '<div><label>Note sur le devis (optionnel)</label><input id="d-notes" placeholder="Livraison incluse, etc."></div>'+
+        '<div><label>Acompte (%)</label><input id="d-deposit" class="num" type="number" min="0" max="100" step="1"></div>'+
+      '</div>'+
+      '<div class="devis-actions"><button class="btn btn-gold" id="send-devis">Envoyer le devis (PDF + e-mail)</button>'+
+        '<span class="muted" id="send-hint"></span></div>';
+
+    $('#d-msg').value=message; $('#d-notes').value=notes; $('#d-deposit').value=deposit;
+
+    var body=$('#lines-body');
+    function rowHtml(l,i){
+      return '<tr data-i="'+i+'">'+
+        '<td class="cell-label"><input class="l-label" value="'+esc(l.label)+'" placeholder="Désignation"></td>'+
+        '<td class="cell-qty"><input class="l-qty num" type="number" min="0" step="1" value="'+esc(l.qty)+'"></td>'+
+        '<td class="cell-unit"><input class="l-unit num" type="number" min="0" step="0.5" value="'+esc(l.unit)+'" placeholder="0"></td>'+
+        '<td class="cell-tot" data-tot>—</td>'+
+        '<td class="cell-x"><button class="lx" title="Retirer">×</button></td>'+
+      '</tr>';
+    }
+    function draw(){ body.innerHTML=lines.map(rowHtml).join(''); wire(); recalc(); }
+    function readLines(){
+      lines=Array.prototype.map.call(body.querySelectorAll('tr'),function(tr){
+        return {label:$('.l-label',tr).value,qty:num($('.l-qty',tr).value),unit:num($('.l-unit',tr).value)};
+      });
+    }
+    function recalc(){
+      var sub=0;
+      Array.prototype.forEach.call(body.querySelectorAll('tr'),function(tr){
+        var q=num($('.l-qty',tr).value), u=num($('.l-unit',tr).value), t=Math.round(q*u*100)/100;
+        $('[data-tot]',tr).textContent=euros(t); sub+=t;
+      });
+      sub=Math.round(sub*100)/100;
+      var dp=Math.max(0,Math.min(100,num($('#d-deposit').value)));
+      var dep=Math.round(sub*dp/100*100)/100;
+      $('#tots').innerHTML='<div>Sous-total HT : <b>'+euros(sub)+'</b></div>'+
+        '<div class="muted">TVA : non applicable</div>'+
+        '<div class="big">Total : '+euros(sub)+'</div>'+
+        (dp>0?'<div class="muted">Acompte ('+dp+'%) : '+euros(dep)+'</div>':'');
+    }
+    function wire(){
+      Array.prototype.forEach.call(body.querySelectorAll('input'),function(inp){ inp.addEventListener('input',recalc); });
+      Array.prototype.forEach.call(body.querySelectorAll('.lx'),function(b){ b.addEventListener('click',function(){ readLines(); var i=parseInt(b.closest('tr').getAttribute('data-i'),10); lines.splice(i,1); if(!lines.length) lines=[{label:'',qty:1,unit:''}]; draw(); }); });
+    }
+    $('#add-line').addEventListener('click',function(){ readLines(); lines.push({label:'',qty:1,unit:''}); draw(); });
+    $('#d-deposit').addEventListener('input',recalc);
+    $('#send-devis').addEventListener('click',function(){ readLines(); sendDevis(req,lines); });
+    draw();
+  }
+
+  function sendDevis(req,lines){
+    var valid=lines.filter(function(l){return String(l.label).trim();});
+    if(!valid.length){ toast('Ajoutez au moins une ligne au devis.',true); return; }
+    var btn=$('#send-devis'); btn.disabled=true; $('#send-hint').textContent='Envoi en cours…';
+    api('/api/admin/reply',{method:'POST',body:{
+      id:req.id, message:$('#d-msg').value, notes:$('#d-notes').value,
+      depositPct:num($('#d-deposit').value), lines:valid
+    }}).then(function(r){
+      btn.disabled=false; $('#send-hint').textContent='';
+      if(r.__status===401){ showLogin(); return; }
+      if(!r.ok){ toast('Échec de l\'envoi : '+(r.detail||r.error||''),true); return; }
+      toast('Devis envoyé à '+(req.client&&req.client.email||'')+' ✓');
+      openRequest(req.id); loadList();
+    }).catch(function(){ btn.disabled=false; $('#send-hint').textContent=''; toast('Erreur réseau.',true); });
+  }
+
+  // ---------- Réglages (settings) ----------
+  function openSettings(){
+    var s=state.settings||{};
+    var f=function(k){return esc(s[k]!=null?s[k]:'');};
+    var bg=document.createElement('div'); bg.className='modal-bg';
+    bg.innerHTML='<div class="modal"><h2>Réglages du devis</h2><p class="muted" style="margin:.2rem 0 1rem;">Ces informations pré-remplissent l\'en-tête et le bas de vos devis. À compléter dès la création de votre entreprise.</p>'+
+      '<div class="grid2">'+
+        fld('companyName','Nom / dénomination',f('companyName'))+
+        fld('legalForm','Statut juridique',f('legalForm'))+
+        fld('siret','SIRET',f('siret'))+
+        fld('tvaMention','Mention TVA',f('tvaMention'))+
+        fld('address','Adresse',f('address'))+
+        fld('postcode','Code postal',f('postcode'))+
+        fld('city','Ville',f('city'))+
+        fld('email','E-mail (contact devis)',f('email'))+
+        fld('phone','Téléphone',f('phone'))+
+        fld('quotePrefix','Préfixe des devis',f('quotePrefix'))+
+        fld('depositPct','Acompte par défaut (%)',f('depositPct'),'number')+
+        fld('validityDays','Validité (jours)',f('validityDays'),'number')+
+      '</div>'+
+      '<div class="field"><label>Conditions (bas de devis)</label><textarea id="s-conditions" rows="4">'+f('conditions')+'</textarea></div>'+
+      '<div class="devis-actions"><button class="btn btn-gold" id="s-save">Enregistrer</button><button class="btn" id="s-cancel">Annuler</button></div>'+
+    '</div>';
+    document.body.appendChild(bg);
+    function fldGet(k){ var el=bg.querySelector('#s-'+k); return el?el.value:''; }
+    bg.querySelector('#s-cancel').addEventListener('click',function(){ document.body.removeChild(bg); });
+    bg.addEventListener('click',function(e){ if(e.target===bg) document.body.removeChild(bg); });
+    bg.querySelector('#s-save').addEventListener('click',function(){
+      var payload={};['companyName','legalForm','siret','tvaMention','address','postcode','city','email','phone','quotePrefix','depositPct','validityDays'].forEach(function(k){payload[k]=fldGet(k);});
+      payload.conditions=bg.querySelector('#s-conditions').value;
+      api('/api/admin/settings',{method:'POST',body:payload}).then(function(r){
+        if(r.ok){ state.settings=r.settings; toast('Réglages enregistrés ✓'); document.body.removeChild(bg); }
+        else toast('Erreur : '+(r.error||''),true);
+      });
+    });
+  }
+  function fld(id,label,val,type){ return '<div class="field"><label>'+esc(label)+'</label><input id="s-'+id+'" type="'+(type||'text')+'" value="'+val+'"></div>'; }
+
+  // ---------- Events ----------
+  $('#login-form').addEventListener('submit',function(e){
+    e.preventDefault(); var err=$('#login-err'); err.textContent='';
+    api('/api/admin/login',{method:'POST',body:{password:$('#pw').value}}).then(function(r){
+      if(r.ok){ boot(); }
+      else if(r.error==='admin_password_not_set'){ err.textContent="Le mot de passe admin n'est pas encore configuré sur le serveur."; }
+      else { err.textContent='Mot de passe incorrect.'; }
+    }).catch(function(){ err.textContent='Erreur réseau.'; });
+  });
+  $('#btn-logout').addEventListener('click',function(){ api('/api/admin/logout',{method:'POST'}).then(function(){ location.reload(); }); });
+  $('#btn-settings').addEventListener('click',openSettings);
+  $('#search').addEventListener('input',function(e){ state.q=e.target.value; renderList(); });
+  Array.prototype.forEach.call(document.querySelectorAll('#filters .chip'),function(ch){
+    ch.addEventListener('click',function(){ Array.prototype.forEach.call(document.querySelectorAll('#filters .chip'),function(x){x.classList.remove('on');}); ch.classList.add('on'); state.filter=ch.getAttribute('data-f'); renderList(); });
+  });
+
+  boot();
+})();
+</script>
+</body>
+</html>
