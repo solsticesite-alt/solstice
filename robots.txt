@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /api/
 
-# Sitemap : à ajouter une fois le domaine définitif en place
-# Sitemap: https://ton-domaine.fr/sitemap.xml
+Sitemap: https://solstice-solstice1.vercel.app/sitemap.xml
