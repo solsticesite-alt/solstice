@@ -1,4 +1,4 @@
-# Back-office Solstice — guide d'installation
+# Back-office Maison Solstice — guide d'installation
 
 Ce guide explique les **3 réglages** à faire une seule fois pour rendre le
 back-office (demandes de devis + réponse par e-mail) pleinement fonctionnel.
@@ -78,7 +78,7 @@ Vous aurez besoin de deux valeurs à l'Étape 3 :
 - `GMAIL_APP_PASSWORD` = le code à 16 lettres
 
 > **Astuce présentation :** les e-mails partiront de votre adresse Gmail. Le
-> nom affiché (« Solstice ») se règle dans le back-office (Réglages →
+> nom affiché (« Maison Solstice ») se règle dans le back-office (Réglages →
 > « Nom de l'entreprise »). Pour une adresse plus professionnelle du type
 > `contact@solstice.fr`, il faudra un nom de domaine + une boîte pro (étape
 > ultérieure, non nécessaire pour démarrer).

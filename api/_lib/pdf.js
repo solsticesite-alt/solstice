@@ -22,7 +22,7 @@ function buildDevisPdf(request, settings, reply) {
   return new Promise((resolve, reject) => {
     try {
       const doc = new PDFDocument({ size: 'A4', margin: 50, info: {
-        Title: 'Devis ' + (reply.quoteNumber || request.ref || ''), Author: settings.companyName || 'Solstice'
+        Title: 'Devis ' + (reply.quoteNumber || request.ref || ''), Author: settings.companyName || 'Maison Solstice'
       } });
       const chunks = [];
       doc.on('data', (c) => chunks.push(c));
@@ -40,7 +40,7 @@ function buildDevisPdf(request, settings, reply) {
       }
 
       // ---------- En-tete ----------
-      doc.fillColor(INK).font('Helvetica-Bold').fontSize(22).text(settings.companyName || 'Solstice', L, 52, { width: 300 });
+      doc.fillColor(INK).font('Helvetica-Bold').fontSize(22).text(settings.companyName || 'Maison Solstice', L, 52, { width: 300 });
       doc.font('Helvetica').fontSize(8.5).fillColor(SOFT)
         .text('Location de mobilier & décoration d\'événements', L, 80, { width: 300 });
 

@@ -1,4 +1,4 @@
-/* Solstice — sélection (panier) + demande de devis.
+/* Maison Solstice — sélection (panier) + demande de devis.
    Autonome : injecte son propre style, se branche sur toutes les pages
    (y compris index.html qui n'utilise pas site.js). */
 (function () {

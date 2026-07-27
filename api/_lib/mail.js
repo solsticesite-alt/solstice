@@ -26,19 +26,19 @@ function getTransport() {
 }
 
 function fromHeader(settings) {
-  const name = (settings && settings.companyName && !/COMPLÉTER/.test(settings.companyName)) ? settings.companyName : 'Solstice';
+  const name = (settings && settings.companyName && !/COMPLÉTER/.test(settings.companyName)) ? settings.companyName : 'Maison Solstice';
   return `"${name.replace(/"/g, '')}" <${process.env.GMAIL_USER}>`;
 }
 
 function wrap(title, bodyHtml) {
   return `<!doctype html><html><body style="margin:0;background:#F5EEE1;padding:24px;font-family:Helvetica,Arial,sans-serif;color:#221C15;">
   <div style="max-width:560px;margin:0 auto;background:#FBF8F2;border:1px solid #E6DCCB;border-radius:16px;overflow:hidden;">
-    <div style="background:#221C15;color:#E9DFCB;padding:16px 24px;font-size:13px;letter-spacing:.28em;text-transform:uppercase;">Solstice</div>
+    <div style="background:#221C15;color:#E9DFCB;padding:16px 24px;font-size:13px;letter-spacing:.28em;text-transform:uppercase;">Maison Solstice</div>
     <div style="padding:24px 26px;">
       <h1 style="font-family:Georgia,'Times New Roman',serif;font-size:22px;margin:0 0 14px;color:#221C15;">${escapeHtml(title)}</h1>
       ${bodyHtml}
     </div>
-    <div style="padding:14px 26px;border-top:1px solid #E6DCCB;color:#8d836f;font-size:11px;">Solstice — Location de mobilier &amp; décoration, Amiens et ses alentours.</div>
+    <div style="padding:14px 26px;border-top:1px solid #E6DCCB;color:#8d836f;font-size:11px;">Maison Solstice — Location de mobilier &amp; décoration, Amiens et ses alentours.</div>
   </div></body></html>`;
 }
 
@@ -99,9 +99,9 @@ async function sendDevisEmail(request, settings, reply, pdfBuffer) {
     to: c.email,
     bcc: ownerAddress() || undefined,
     replyTo: (settings && settings.email) || ownerAddress() || undefined,
-    subject: `Votre devis Solstice — ${reply.quoteNumber || request.ref || ''}`,
+    subject: `Votre devis Maison Solstice — ${reply.quoteNumber || request.ref || ''}`,
     html: wrap('Votre devis', body),
-    attachments: [{ filename: `Devis-Solstice-${reply.quoteNumber || request.ref || 'devis'}.pdf`, content: pdfBuffer, contentType: 'application/pdf' }]
+    attachments: [{ filename: `Devis-Maison-Solstice-${reply.quoteNumber || request.ref || 'devis'}.pdf`, content: pdfBuffer, contentType: 'application/pdf' }]
   });
 }
 

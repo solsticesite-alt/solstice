@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Solstice — Back-office</title>
+<title>Maison Solstice — Back-office</title>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <style>
   :root{
@@ -123,7 +123,7 @@
 
 <div class="topbar hidden" id="topbar">
   <div class="wrap topbar-in">
-    <div class="brand">Solstice <small>Back-office · demandes de devis</small></div>
+    <div class="brand">Maison Solstice <small>Back-office · demandes de devis</small></div>
     <div class="topbar-tools">
       <button class="btn btn-sm" id="btn-settings">Réglages</button>
       <button class="btn btn-sm" id="btn-logout">Déconnexion</button>
@@ -269,7 +269,7 @@
     var first=(req.client&&req.client.name?String(req.client.name).trim().split(' ')[0]:'')||'';
     var ev=(req.event&&req.event.type)?req.event.type.toLowerCase():'événement';
     var d=(req.event&&req.event.date)?' du '+fdate(req.event.date):'';
-    return 'Bonjour'+(first?' '+first:'')+',\n\nMerci pour votre demande. Ravis de pouvoir vous accompagner pour votre '+ev+d+'. Vous trouverez notre proposition détaillée ci-dessous.\n\nNous restons à votre entière disposition,\nSolstice';
+    return 'Bonjour'+(first?' '+first:'')+',\n\nMerci pour votre demande. Ravis de pouvoir vous accompagner pour votre '+ev+d+'. Vous trouverez notre proposition détaillée ci-dessous.\n\nNous restons à votre entière disposition,\nMaison Solstice';
   }
 
   function renderDetail(){

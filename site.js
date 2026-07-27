@@ -1,4 +1,4 @@
-/* Solstice — comportements partagés */
+/* Maison Solstice — comportements partagés */
 (function () {
   document.documentElement.classList.add('js');
 
