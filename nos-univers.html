@@ -79,18 +79,6 @@
 .coll-white h3{color:var(--ink);}
 .coll-white p{color:var(--ink-soft);opacity:1;}
 
-/* Articulation univers / collections / catégories */
-.artic{display:flex;flex-wrap:wrap;align-items:stretch;gap:clamp(14px,1.8vw,22px);}
-.node{flex:1 1 230px;border:1px solid var(--line);border-radius:var(--radius);background:var(--paper);padding:clamp(24px,2.8vw,34px);display:flex;flex-direction:column;gap:.65rem;}
-.node .ic{width:56px;height:56px;padding:11px;border-radius:15px;background:linear-gradient(160deg,#FBEFD6,#F0DFBD);box-shadow:0 10px 20px -14px rgba(120,80,30,.5);}
-.node .step{font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-deep);}
-.node h3{font-size:1.3rem;}
-.node p{font-size:.9rem;color:var(--ink-soft);}
-.artic .arrow{align-self:center;color:var(--gold);flex:0 0 auto;}
-.artic .arrow svg{width:26px;height:26px;stroke:currentColor;stroke-width:1.4;fill:none;stroke-linecap:round;stroke-linejoin:round;}
-.artic-ex{margin-top:clamp(24px,3vw,34px);max-width:72ch;color:var(--ink-soft);font-size:1rem;border-left:2px solid var(--gold);padding-left:1.1rem;}
-.artic-ex strong{color:var(--ink);}
-
 /* CTA final */
 .cta{background:linear-gradient(150deg,var(--ete-1),var(--ete-2) 72%,var(--ete-3));border-radius:var(--radius);padding:clamp(42px,6vw,82px) clamp(24px,5vw,60px);text-align:center;color:var(--ink);}
 .cta .eyebrow{color:var(--hiver-1);}
@@ -107,7 +95,6 @@
   .uni-grid{grid-template-columns:1fr;}
   .uni-visual{order:-1;aspect-ratio:16/10;}
   .colls{grid-template-columns:repeat(2,1fr);}
-  .artic .arrow{display:none;}
 }
 @media (max-width:560px){
   .sband{grid-template-columns:1fr;}
@@ -448,40 +435,6 @@
         <p>Noir profond, dorures et éclat des grands soirs. L'élégance des fêtes.</p>
       </a>
     </div>
-  </div>
-</section>
-
-<!-- ARTICULATION univers / collections / catégories -->
-<section class="section sand">
-  <div class="wrap">
-    <div class="sec-head center">
-      <span class="eyebrow center reveal">Comment ça s'articule</span>
-      <h2 class="reveal d1">Univers, collections, catégories</h2>
-      <p class="lede reveal d2" style="text-align:center;">Trois niveaux de lecture, du plus large au plus concret. Vous descendez l'un après l'autre, jusqu'aux pièces à ajouter à votre sélection.</p>
-    </div>
-    <div class="artic reveal d1">
-      <div class="node">
-        <svg class="ic" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-sun"/></svg>
-        <span class="step">Niveau 1 · Le climat</span>
-        <h3>Les univers</h3>
-        <p>Solstice d'Été ou Solstice d'Hiver. L'atmosphère générale : la lumière, la palette, l'esprit de la saison.</p>
-      </div>
-      <div class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-arrow"/></svg></div>
-      <div class="node">
-        <svg class="ic" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-vase"/></svg>
-        <span class="step">Niveau 2 · Le style</span>
-        <h3>Les collections</h3>
-        <p>Dolce Vita, Garden Party, White Party, Black &amp; Gold. Une direction esthétique précise à l'intérieur d'un univers.</p>
-      </div>
-      <div class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-arrow"/></svg></div>
-      <div class="node">
-        <svg class="ic" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-chair"/></svg>
-        <span class="step">Niveau 3 · Les pièces</span>
-        <h3>Les catégories</h3>
-        <p>Mobilier, art de la table, décoration, ambiance &amp; lumière, animations, cérémonie, confort extérieur — les objets que vous ajoutez à votre sélection.</p>
-      </div>
-    </div>
-    <p class="artic-ex reveal d2">Un exemple : <strong>Solstice d'Été</strong> → collection <strong>Garden Party</strong> → une grande table en bois brut, des chaises bistrot, de la vaisselle champêtre, des photophores et des guirlandes guinguette. Le même mobilier, décliné en <strong>Black &amp; Gold</strong>, prendra tout de suite des airs de réception d'hiver.</p>
   </div>
 </section>
 
