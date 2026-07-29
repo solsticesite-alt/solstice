@@ -20,6 +20,8 @@ Sur Vercel → **Settings → Deployment Protection** : doit être sur **Disable
 (public). Si « Vercel Authentication » est activé, le site demande une
 connexion et personne d'autre que vous ne peut le voir.
 
+> ✅ Vérifié : `https://maison-solstice.fr` s'ouvre sans mur de connexion.
+
 ---
 
 ## 3. Référencer le site sur Google (Google Search Console)
@@ -32,7 +34,7 @@ plusieurs semaines) :
    et connectez-vous avec votre compte Google.
 2. **Ajouter une propriété** → type **« Préfixe de l'URL »** → entrez l'adresse
    exacte du site :
-   `https://solstice-solstice1.vercel.app`
+   `https://maison-solstice.fr`
 3. **Validation** : choisissez la méthode **« Balise HTML »**. Google affiche
    une balise du type `<meta name="google-site-verification" content="…">`.
    → **Copiez-la et envoyez-la moi** : je l'ajoute dans le `<head>` du site, on
@@ -45,8 +47,8 @@ plusieurs semaines) :
    qui amènent des visiteurs, et forcer l'indexation d'une page précise via
    « Inspection de l'URL ».
 
-> Si vous prenez un nom de domaine (étape 5), refaites l'ajout de propriété
-> avec le nouveau domaine : c'est lui qui devra être référencé.
+> Le domaine `maison-solstice.fr` est déjà en place : c'est bien lui qu'on
+> référence (et non l'ancienne adresse en `.vercel.app`).
 
 ---
 
@@ -60,9 +62,13 @@ Quelques éléments à personnaliser dans les pages :
 
 ---
 
-## 5. (Optionnel) Nom de domaine
+## 5. Nom de domaine — ✅ fait
 
-Pour une adresse du type `maisonsolstice.fr` au lieu de
-`solstice-solstice1.vercel.app` : achetez le domaine (~10–15 €/an), puis
-ajoutez-le dans Vercel → **Settings → Domains**. Dites-le moi : je vous guide
-et je mets à jour le sitemap, le robots.txt et les e-mails en conséquence.
+Le domaine **`maison-solstice.fr`** (acheté chez OVHcloud) est connecté à
+Vercel : enregistrement **A** de la racine + **CNAME** `www`. Le site répond sur
+`https://maison-solstice.fr` (et `www` redirige dessus). Le `sitemap.xml` et le
+`robots.txt` pointent désormais sur ce domaine.
+
+> À penser quand le back-office sera activé : régler la variable Vercel
+> `PUBLIC_BASE_URL` = `https://maison-solstice.fr` (pour les liens dans les
+> e-mails de devis).

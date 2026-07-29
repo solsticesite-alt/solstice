@@ -3,4 +3,4 @@ Allow: /
 Disallow: /admin
 Disallow: /api/
 
-Sitemap: https://solstice-solstice1.vercel.app/sitemap.xml
+Sitemap: https://maison-solstice.fr/sitemap.xml
