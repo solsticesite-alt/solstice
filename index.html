@@ -665,7 +665,7 @@
         <li><a href="/contact">Contact</a></li>
       </ul>
       <div class="nav-tools">
-        <button class="desktop-only" aria-label="Favoris"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg></button>
+        <a class="desktop-only" href="/favoris" aria-label="Mes coups de cœur"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg></a>
         <a href="/panier" aria-label="Panier"><svg class="icon" aria-hidden="true"><use href="#i-bag"/></svg></a>
         <button class="burger" id="burger" aria-label="Ouvrir le menu"><svg aria-hidden="true"><use href="#i-menu"/></svg></button>
       </div>
@@ -1290,6 +1290,7 @@
 </footer>
 
 <script src="/cart.js" defer></script>
+<script src="/fav.js" defer></script>
 <script>
   document.documentElement.classList.add('js');
   var head=document.getElementById('head');

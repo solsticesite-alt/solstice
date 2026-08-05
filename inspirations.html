@@ -219,7 +219,7 @@
     <div class="nav-right">
       <ul class="nav-links"><li><a href="/a-propos">À propos</a></li><li><a href="/contact">Contact</a></li></ul>
       <div class="nav-tools">
-        <button class="desktop-only" aria-label="Favoris"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg></button>
+        <a class="desktop-only" href="/favoris" aria-label="Mes coups de cœur"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg></a>
         <a href="/panier" aria-label="Panier"><svg class="icon" aria-hidden="true"><use href="#i-bag"/></svg></a>
         <button class="burger" id="burger" aria-label="Ouvrir le menu"><svg aria-hidden="true"><use href="#i-menu"/></svg></button>
       </div>
@@ -228,7 +228,7 @@
 </header>
 <div class="mpanel" id="mpanel">
   <div class="mpanel-top"><span class="word">Maison Solstice</span><button class="close" id="mclose" aria-label="Fermer le menu"><svg aria-hidden="true"><use href="#i-close"/></svg></button></div>
-  <nav><a href="/catalogue">Catalogue</a><a href="/nos-univers">Nos univers</a><a href="/inspirations">Inspirations</a><a href="/a-propos">À propos</a><a href="/contact">Contact</a></nav>
+  <nav><a href="/catalogue">Catalogue</a><a href="/nos-univers">Nos univers</a><a href="/inspirations">Inspirations</a><a href="/a-propos">À propos</a><a href="/contact">Contact</a><a href="/favoris">Mes coups de cœur</a></nav>
   <div class="m-cta"><a class="btn btn-ink" href="/catalogue">Découvrir le catalogue <svg aria-hidden="true"><use href="#i-arrow"/></svg></a></div>
 </div>
 <main>
@@ -326,5 +326,6 @@
 </footer>
 <script src="/site.js"></script>
 <script src="/cart.js" defer></script>
+<script src="/fav.js" defer></script>
 </body>
 </html>

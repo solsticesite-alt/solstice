@@ -123,7 +123,7 @@
     '</div></div></div>';
 
   function init() {
-    if (!document.querySelector('.offer-btn')) return;
+    if (!document.querySelector('.offer-btn, [data-offer-host]')) return;
 
     var host = document.createElement('div');
     host.innerHTML = MODAL_HTML + OPTIONS_HTML;

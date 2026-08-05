@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Garden Party — Maison Solstice</title>
-<meta name="description" content="Collection Garden Party (Solstice d&#x27;Été) : Verdure douce, guinguette chic et vaisselle champêtre. Recevoir au jardin. En pack complet ou en décoration de table seule, quantités ajustées au nombre d&#x27;invités.">
-<meta name="robots" content="index, follow">
+<title>Mes coups de cœur — Maison Solstice</title>
+<meta name="description" content="Retrouvez les pièces et les collections Maison Solstice que vous avez mises de côté, et ajoutez-les à votre sélection quand vous êtes prêt.">
+<meta name="robots" content="noindex, follow">
 <meta name="theme-color" content="#FBF8F2">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/site.css">
@@ -203,70 +203,37 @@
   <div class="m-cta"><a class="btn btn-ink" href="/catalogue">Découvrir le catalogue <svg aria-hidden="true"><use href="#i-arrow"/></svg></a></div>
 </div>
 <main>
-<section class="page-hero">
+<section class="page-hero" style="padding-bottom:0;">
   <div class="wrap">
-    <nav class="crumbs"><a href="/">Accueil</a><span class="sep">/</span><a href="/collections">Nos collections</a><span class="sep">/</span><span>Garden Party</span></nav>
-    <span class="eyebrow">Solstice d'Été</span>
-    <h1>Garden Party</h1>
-    <p class="lede">Verdure douce, guinguette chic et vaisselle champêtre. Recevoir au jardin.</p>
+    <nav class="crumbs"><a href="/">Accueil</a><span class="sep">/</span><span>Mes coups de cœur</span></nav>
+    <h1>Mes <em>coups de cœur</em></h1>
+    <p class="lede">Les pièces et les collections que vous avez mises de côté. Elles restent là, sur cet appareil, aussi longtemps que vous le souhaitez — sans créer de compte.</p>
   </div>
 </section>
 
-<section class="section" style="padding-top:0;">
+<section class="section" style="padding-top:clamp(24px,3vw,38px);">
   <div class="wrap">
-    <div class="coll-hero reveal">
-      <div class="coll-hero-copy">
-        <p class="lead">Des guirlandes au-dessus des têtes, des tables en bois brut et des bouquets cueillis du matin. Garden Party, c'est la fête au jardin, élégante sans être guindée.</p>
-        <div class="pal" aria-hidden="true"><span style="background:#8F9D66"></span><span style="background:#EEE4D3"></span><span style="background:#C9A05A"></span></div>
+
+    <div class="fav-tools" id="favTools" hidden>
+      <span class="hint" id="favCount"></span>
+      <button type="button" class="fav-share" id="favShare">Copier le lien de ma liste</button>
+      <a class="fav-share" href="/catalogue">Continuer à explorer</a>
+    </div>
+
+    <p class="p-status" id="favStatus" style="margin:-.6rem 0 1rem;font-size:.8rem;color:var(--stone);min-height:1.2em;"></p>
+
+    <div class="fav-grid" id="favGrid" data-offer-host></div>
+
+    <div class="fav-empty" id="favEmpty" hidden>
+      <svg viewBox="0 0 24 24" aria-hidden="true" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.5C7 16.6 3.5 13.4 3.5 9.6 3.5 7.2 5.4 5.4 7.7 5.4c1.7 0 3.2 1 4.3 2.6 1.1-1.6 2.6-2.6 4.3-2.6 2.3 0 4.2 1.8 4.2 4.2 0 3.8-3.5 7-8.5 10.9z"/></svg>
+      <h2>Aucun coup de cœur pour l'instant</h2>
+      <p>Touchez le petit cœur sur une pièce du catalogue ou sur une collection : elle vous attendra sagement ici.</p>
+      <div style="display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;">
+        <a class="btn btn-ink" href="/catalogue">Parcourir le catalogue <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <a class="btn btn-ghost" href="/collections">Voir les collections</a>
       </div>
-      <div class="coll-hero-art ct-garden">
-        <svg class="glyph" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-foliage"/></svg>
-      </div>
     </div>
 
-    <div class="sec-head center">
-      <span class="eyebrow center reveal">Deux façons de la choisir</span>
-      <h2 class="reveal d1">Le pack complet, ou les tables</h2>
-      <p class="lede reveal d2" style="text-align:center;">Indiquez votre nombre d'invités : nous ajustons les quantités pièce par pièce.</p>
-    </div>
-
-    <div class="formulas reveal">
-      <article class="formula">
-        <button class="fav" data-fav-type="formule" data-fav-col="garden" data-fav-kind="pack" data-fav-name="Pack complet &middot; Garden Party" data-fav-glyph="g3-foliage" data-fav-hint="Garden Party"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
-        <span class="fk">Le pack complet</span>
-        <h3>Tout le décor</h3>
-        <p>Le décor entier, prêt à installer. Rien à choisir pièce par pièce dans le catalogue.</p>
-        <ul>
-          <li>Mobilier : tables, chaises, mange-debout</li>
-          <li>Art de la table : vaisselle, verrerie, couverts</li>
-          <li>Linge : nappes, chemins de table, serviettes</li>
-          <li>Décoration &amp; lumière : centres de table, bougies, guirlandes</li>
-          <li>Coin lounge et arche décor photo</li>
-        </ul>
-        <button type="button" class="btn btn-ink offer-btn" data-col="garden" data-kind="pack">Je veux ce pack</button>
-      </article>
-      <article class="formula is-table">
-        <button class="fav" data-fav-type="formule" data-fav-col="garden" data-fav-kind="table" data-fav-name="Les tables &middot; Garden Party" data-fav-glyph="g3-foliage" data-fav-hint="Garden Party"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
-        <span class="fk">Les tables</span>
-        <h3>La table seule</h3>
-        <p>Uniquement la décoration de table, si vous avez déjà le mobilier et le lieu.</p>
-        <ul>
-          <li>Linge : nappe, chemin de table, serviettes</li>
-          <li>Vaisselle, verrerie et couverts</li>
-          <li>Centre de table et fleurs de saison</li>
-          <li>Photophores, bougies et marque-places</li>
-          <li>La touche signature de la collection</li>
-        </ul>
-        <button type="button" class="btn btn-ghost offer-btn" data-col="garden" data-kind="table">Je veux cette table</button>
-      </article>
-    </div>
-
-    <div class="coll-nav">
-      <a href="/collections?u=ete">Les collections d’Été</a>
-      <a href="/collection-dolce-vita">Dolce Vita</a>
-      <a href="/collections">Les quatre collections</a>
-      <a href="/catalogue">Voir le catalogue</a>
-    </div>
   </div>
 </section>
 </main>
@@ -288,5 +255,6 @@
 <script src="/cart.js" defer></script>
 <script src="/fav.js" defer></script>
 <script src="/collections.js" defer></script>
+<script src="/favoris.js" defer></script>
 </body>
 </html>

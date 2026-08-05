@@ -1,6 +1,6 @@
 {
   "framework": null,
-  "buildCommand": "mkdir -p public/.well-known && cp *.html public/ && cp favicon.svg robots.txt sitemap.xml site.css site.js cart.js collections.js panier.js public/ && cp .well-known/security.txt public/.well-known/",
+  "buildCommand": "mkdir -p public/.well-known && cp *.html public/ && cp favicon.svg robots.txt sitemap.xml site.css site.js cart.js collections.js panier.js fav.js favoris.js public/ && cp .well-known/security.txt public/.well-known/",
   "outputDirectory": "public",
   "cleanUrls": true,
   "trailingSlash": false,

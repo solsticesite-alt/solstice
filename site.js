@@ -26,10 +26,7 @@
     els.forEach(function (el) { io.observe(el); });
   }
 
-  // Favoris (démo)
-  document.querySelectorAll('.fav').forEach(function (b) {
-    b.addEventListener('click', function (e) { e.preventDefault(); b.classList.toggle('on'); });
-  });
+  // Coups de cœur : géré par fav.js (persistant)
 
   // Menu mobile
   var panel = document.getElementById('mpanel');
