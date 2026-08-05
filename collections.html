@@ -10,9 +10,9 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/site.css">
 <style>
-/* ===== Les deux univers, sous la grille des collections ===== */
-/* Les deux univers reprennent la meme carte encadree : l'ete en dore,
-   l'hiver en sombre (classe .dark deja fournie par site.css). */
+/* ===== Les deux univers, sous la grille des collections =====
+   Meme carte encadree des deux cotes : l'ete en dore, l'hiver en sombre
+   (classe .dark deja fournie par site.css). */
 #collections{padding-bottom:clamp(22px,3vw,42px);}
 .uni-ete-sec,.uni-hiver-sec{padding-block:clamp(18px,2.4vw,34px);}
 .uni-ete-sec > .wrap{background:linear-gradient(160deg,var(--ete-1),var(--ete-2) 62%,var(--ete-3));border-radius:clamp(20px,2.6vw,34px);padding-block:clamp(30px,4vw,54px);padding-inline:clamp(26px,4vw,58px);box-shadow:0 44px 84px -58px rgba(60,40,18,.55);}
@@ -42,8 +42,8 @@
 .uni-visual:hover{transform:translateY(-5px);box-shadow:0 36px 58px -34px rgba(60,40,18,.45);}
 .uni-ete-sec .uni-visual{background:rgba(255,255,255,.2);}
 .uni-hiver-sec .uni-visual{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);}
-.uni-visual .art{width:62%;height:62%;transition:transform .6s cubic-bezier(.2,.7,.2,1);}
-.uni-visual:hover .art{transform:scale(1.07);}
+.uni-scene{width:100%;height:100%;display:block;transition:transform .6s cubic-bezier(.2,.7,.2,1);}
+.uni-visual:hover .uni-scene{transform:scale(1.04);}
 .uni-visual .cap{position:absolute;left:14px;bottom:14px;font-size:.56rem;letter-spacing:.13em;text-transform:uppercase;background:rgba(251,248,242,.9);color:var(--ink-soft);padding:.4em .7em;border-radius:99px;}
 
 @media (max-width:860px){
@@ -75,6 +75,7 @@
   <symbol id="i-sprig" viewBox="0 0 24 24"><path d="M12 22V5"/><path d="M12 13c.3-3 2.4-4.7 5-4.6-.2 3-2.3 4.8-5 4.6z"/><path d="M12 10c-.3-3-2.4-4.7-5-4.6.2 3 2.3 4.8 5 4.6z"/><path d="M12 8c.2-2.2 1.7-3.5 3.8-3.4-.2 2.2-1.7 3.6-3.8 3.4z"/></symbol>
   <symbol id="i-arch" viewBox="0 0 24 24"><path d="M5 22V11a7 7 0 0 1 14 0v11"/><path d="M3 22h18"/></symbol>
   <symbol id="i-coupe" viewBox="0 0 24 24"><path d="M7 3h10v2.5a5 5 0 0 1-10 0z"/><path d="M12 10.5V19"/><path d="M8 20h8"/></symbol>
+  <symbol id="i-snow" viewBox="0 0 24 24"><path d="M12 3v18M4.2 7.5l15.6 9M19.8 7.5l-15.6 9"/><path d="M12 6l1.8-1.4M12 6l-1.8-1.4M12 18l1.8 1.4M12 18l-1.8 1.4M6 9l-2.1.2M6 9l.2-2.1M18 15l2.1-.2M18 15l-.2 2.1M18 9l2.1.2M18 9l-.2-2.1M6 15l-2.1-.2M6 15l.2 2.1"/></symbol>
   <symbol id="i-candle" viewBox="0 0 24 24"><path d="M12 3c1.9 2.3 2.8 3.8 2.8 5.4a2.8 2.8 0 0 1-5.6 0c0-1 .5-1.9 1.4-3"/><rect x="9.2" y="11" width="5.6" height="10" rx="1"/></symbol>
   <symbol id="i-camera" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="12" cy="13.5" r="3.2"/><path d="M8.5 7l1.4-2.2h4.2L15.5 7"/></symbol>
   <symbol id="i-chair" viewBox="0 0 24 24"><path d="M7 4v8M17 4v8M6.5 12h11M8 12l-1 8M16 12l1 8M9 20h6"/></symbol>
@@ -259,6 +260,7 @@
     <p class="coll-allback" id="collAll" hidden><a class="link-more" href="/collections">Voir les quatre collections <svg aria-hidden="true"><use href="#i-arrow"/></svg></a></p>
     <div class="uni-block reveal" data-univers="ete">
       <div class="uni-band ete">
+        <svg class="ub-ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sun"/></svg>
         <span class="ub-tag">Solstice d'Été</span>
         <p>La saison des célébrations en plein air.</p>
       </div>
@@ -295,6 +297,7 @@
     </div>
     <div class="uni-block reveal" data-univers="hiver">
       <div class="uni-band hiver">
+        <svg class="ub-ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-snow"/></svg>
         <span class="ub-tag">Solstice d'Hiver</span>
         <p>La saison des réceptions au chaud.</p>
       </div>
@@ -356,8 +359,32 @@
         </div>
       </div>
       <div class="uni-visual reveal d1">
-        <svg class="art" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-sun"/></svg>
-        <span class="cap">Garden party au soleil couchant</span>
+        <!-- Plein été : le soleil haut, la chaleur qui monte du sol, les herbes sèches. -->
+        <svg class="uni-scene" viewBox="0 0 240 192" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <defs>
+            <radialGradient id="usGlow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FFF6DE" stop-opacity=".95"/><stop offset=".55" stop-color="#FFEBB8" stop-opacity=".4"/><stop offset="1" stop-color="#FFEBB8" stop-opacity="0"/></radialGradient>
+            <linearGradient id="usField" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF" stop-opacity=".34"/><stop offset="1" stop-color="#FFFFFF" stop-opacity=".08"/></linearGradient>
+          </defs>
+          <circle cx="150" cy="58" r="110" fill="url(#usGlow)"/>
+          <!-- soleil au zénith -->
+          <g stroke="#FFF8E6" stroke-width="4.5" stroke-linecap="round" opacity=".85">
+            <path d="M192 58h16M108 58H92M150 16V0M150 100v16M180 28l11-11M120 88l-11 11M180 88l11 11M120 28l-11-11"/>
+          </g>
+          <circle cx="150" cy="58" r="32" fill="#FFF8E6"/>
+          <!-- champs sous la chaleur -->
+          <path d="M0 138q54-16 116-6t124-12v72H0z" fill="url(#usField)"/>
+          <path d="M0 158q60-14 122-4t118-8v46H0z" fill="#FFFFFF" opacity=".3"/>
+          <!-- pampa -->
+          <g stroke="#8A6A33" stroke-width="2.4" stroke-linecap="round" fill="none" opacity=".42">
+            <path d="M34 192v-56M58 192v-40M82 192v-48"/>
+          </g>
+          <g fill="#FFF8E6" opacity=".85">
+            <ellipse cx="34" cy="128" rx="8" ry="15"/>
+            <ellipse cx="58" cy="146" rx="6" ry="11"/>
+            <ellipse cx="82" cy="138" rx="7" ry="13"/>
+          </g>
+        </svg>
+        <span class="cap">Solstice d'Été · le plein soleil</span>
       </div>
     </div>
   </div>
@@ -368,8 +395,28 @@
   <div class="wrap">
     <div class="uni-grid">
       <div class="uni-visual reveal d1">
-        <svg class="art" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-candles"/></svg>
-        <span class="cap">Réception aux chandelles</span>
+        <!-- Plein hiver : nuit claire, neige qui tombe, congère au sol. -->
+        <svg class="uni-scene" viewBox="0 0 240 192" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <defs>
+            <radialGradient id="usMoon" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#E9F2F4" stop-opacity=".5"/><stop offset="1" stop-color="#E9F2F4" stop-opacity="0"/></radialGradient>
+            <linearGradient id="usSnow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF" stop-opacity=".92"/><stop offset="1" stop-color="#DCE9EC" stop-opacity=".6"/></linearGradient>
+            <mask id="usCrescent"><circle cx="176" cy="54" r="26" fill="#fff"/><circle cx="189" cy="43" r="22" fill="#000"/></mask>
+          </defs>
+          <circle cx="176" cy="54" r="72" fill="url(#usMoon)"/>
+          <circle cx="176" cy="54" r="26" fill="#EFF6F6" mask="url(#usCrescent)"/>
+          <!-- étoiles -->
+          <g fill="#E9F2F4" opacity=".7"><circle cx="42" cy="36" r="1.8"/><circle cx="94" cy="22" r="1.5"/><circle cx="66" cy="74" r="1.6"/><circle cx="120" cy="58" r="1.4"/><circle cx="28" cy="92" r="1.5"/></g>
+          <!-- flocons -->
+          <g fill="none" stroke="#FFFFFF" stroke-linecap="round" opacity=".85">
+            <use href="#i-snow" width="30" height="30" transform="translate(46 44)" stroke-width="1.35"/>
+            <use href="#i-snow" width="20" height="20" transform="translate(112 92)" stroke-width="1.6"/>
+            <use href="#i-snow" width="16" height="16" transform="translate(196 108)" stroke-width="1.8"/>
+          </g>
+          <!-- congère -->
+          <path d="M0 152q56-20 116-6 60 14 124-8v54H0z" fill="url(#usSnow)"/>
+          <path d="M0 152q56-20 116-6 60 14 124-8" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round"/>
+        </svg>
+        <span class="cap">Solstice d'Hiver · la nuit claire</span>
       </div>
       <div class="uni-copy">
         <span class="eyebrow reveal">Solstice d'Hiver</span>

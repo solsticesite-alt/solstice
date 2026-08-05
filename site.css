@@ -281,11 +281,22 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opa
    ============================================================ */
 /* Collections : bandeau d'univers + cartes */
 .uni-block{margin-bottom:clamp(34px,5vw,62px);}
-.uni-band{display:flex;align-items:baseline;gap:1rem;flex-wrap:wrap;padding-bottom:.9rem;margin-bottom:clamp(18px,2.4vw,28px);border-bottom:1px solid var(--line);}
-.uni-band .ub-tag{font-family:var(--serif);font-size:clamp(1.25rem,2.2vw,1.7rem);}
-.uni-band p{color:var(--ink-soft);font-size:.9rem;}
+/* Chaque bandeau porte sa saison : soleil et doré pour l'ete, flocon et
+   bleu givre pour l'hiver, pour qu'on la reconnaisse sans lire. */
+.uni-band{display:flex;align-items:center;gap:.7rem 1rem;flex-wrap:wrap;padding:.6rem 1.1rem;margin-bottom:clamp(16px,2.2vw,26px);border-radius:99px;}
+.uni-band .ub-ic{flex:none;width:22px;height:22px;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
+.uni-band .ub-tag{font-family:var(--serif);font-size:clamp(1.2rem,2.1vw,1.6rem);line-height:1.1;}
+.uni-band p{color:var(--ink-soft);font-size:.88rem;margin:0;}
+.uni-band.ete{background:linear-gradient(96deg,rgba(242,221,172,.85),rgba(247,232,198,.5) 62%,rgba(247,232,198,0));}
 .uni-band.ete .ub-tag{color:var(--gold-deep);}
-.uni-band.hiver .ub-tag{color:var(--hiver-1);}
+.uni-band.ete .ub-ic{stroke:var(--gold-deep);}
+.uni-band.hiver{background:linear-gradient(96deg,rgba(206,225,232,.85),rgba(226,238,242,.5) 62%,rgba(226,238,242,0));}
+.uni-band.hiver .ub-tag{color:#3E5C68;}
+.uni-band.hiver .ub-ic{stroke:#5B7E8B;}
+.uni-band.hiver p{color:#4E6470;}
+@media (max-width:560px){
+  .uni-band{border-radius:clamp(14px,3vw,20px);padding:.7rem .9rem;gap:.35rem .7rem;}
+}
 .col-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(16px,2.2vw,28px);}
 .col-card{position:relative;display:flex;flex-direction:column;border:1px solid var(--line);border-radius:clamp(16px,1.8vw,22px);overflow:hidden;background:var(--paper);box-shadow:0 26px 54px -40px rgba(60,40,18,.45);transition:transform .5s cubic-bezier(.2,.7,.2,1),box-shadow .5s,border-color .5s;}
 .col-card:hover{transform:translateY(-6px);box-shadow:0 46px 80px -44px rgba(60,40,18,.5);border-color:var(--gold-soft);}
