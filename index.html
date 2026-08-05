@@ -194,13 +194,15 @@
   @keyframes hero-pulse{0%,100%{transform:scale(1);opacity:.92;}50%{transform:scale(1.045);opacity:1;}}
   @keyframes hero-snow{0%{transform:translateY(-30px);opacity:0;}12%{opacity:.9;}88%{opacity:.9;}100%{transform:translateY(880px);opacity:0;}}
   .hero-inner{padding-block:clamp(12px,2vh,30px);}
-  .hero-copy{max-width:36rem;}
+  .hero-copy{max-width:40rem;}
   .hero h1{
     font-size:clamp(2.7rem,6.6vw,5.4rem);line-height:1.02;margin:.32em 0 .36em;letter-spacing:-.018em;max-width:14ch;
   }
   .hero h1 em{font-style:italic;color:var(--gold-deep);}
   .hero .lede{font-size:clamp(1.02rem,1.5vw,1.22rem);max-width:42ch;color:var(--ink-soft);}
   .hero-cta{display:flex;flex-wrap:wrap;gap:.9rem;margin-top:1.7rem;}
+  /* Les deux appels à l'action restent côte à côte dès qu'il y a la place. */
+  @media (min-width:700px){.hero-cta{flex-wrap:nowrap;}.hero-cta .btn{white-space:nowrap;}}
   @media (max-width:700px){
     .hero-copy{max-width:none;}
   }
@@ -712,16 +714,73 @@
       <g fill="#F3F8F4"><circle cx="1040" cy="120" r="1.7"/><circle cx="1096" cy="232" r="2.0"/><circle cx="1150" cy="96" r="1.6"/><circle cx="1250" cy="150" r="1.9"/><circle cx="1310" cy="250" r="1.7"/><circle cx="1360" cy="130" r="1.5"/><circle cx="1180" cy="300" r="1.6"/><circle cx="1290" cy="330" r="2.0"/><circle cx="1080" cy="300" r="1.5"/><circle cx="1340" cy="330" r="1.7"/><circle cx="1230" cy="80" r="1.6"/></g>
 
       <rect x="0" y="420" width="1440" height="480" fill="url(#hbase)"/>
-      <!-- couche de neige au sol (accumulation) -->
-      <g class="hero-snowground">
-        <linearGradient id="hsnow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".55" stop-color="#F2F7F8"/><stop offset="1" stop-color="#E3EDEF"/></linearGradient>
-        <path d="M0 760 Q380 724 760 746 Q1090 766 1440 710 L1440 900 L0 900 Z" fill="url(#hsnow)" opacity=".72"/>
-        <path d="M0 800 Q340 772 700 790 Q1070 808 1440 756 L1440 900 L0 900 Z" fill="url(#hsnow)"/>
-        <path d="M0 802 Q340 774 700 792 Q1070 810 1440 758" fill="none" stroke="#6E8790" stroke-width="2" opacity=".16"/>
-        <path d="M0 800 Q340 772 700 790 Q1070 808 1440 756" fill="none" stroke="#FFFFFF" stroke-width="2.8" opacity=".9"/>
-        <ellipse cx="1180" cy="790" rx="185" ry="26" fill="#FFFFFF" opacity=".55"/>
-        <ellipse cx="470" cy="818" rx="205" ry="20" fill="#FFFFFF" opacity=".42"/>
-        <g fill="#FFFFFF" opacity=".9"><circle cx="980" cy="778" r="2"/><circle cx="1250" cy="766" r="1.8"/><circle cx="640" cy="786" r="1.6"/><circle cx="1360" cy="740" r="2"/><circle cx="820" cy="784" r="1.5"/></g>
+      <!-- Scène de neige — occupe la largeur de l'ancienne scène de mariage (côté hiver). -->
+      <g class="hero-snowscene">
+        <defs>
+          <linearGradient id="snBack" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F7FBFC"/><stop offset="1" stop-color="#DCE9EC"/></linearGradient>
+          <linearGradient id="snMid" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FDFEFE"/><stop offset="1" stop-color="#E4EFF1"/></linearGradient>
+          <linearGradient id="snFront" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#EDF5F6"/></linearGradient>
+          <linearGradient id="snTree" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3E6157"/><stop offset="1" stop-color="#2B4740"/></linearGradient>
+          <linearGradient id="snFade" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000000"/><stop offset=".22" stop-color="#FFFFFF"/></linearGradient>
+          <mask id="snMask"><rect x="866" y="560" width="574" height="340" fill="url(#snFade)"/></mask>
+        </defs>
+
+        <g mask="url(#snMask)">
+          <!-- congère arrière -->
+          <path d="M866 712 Q952 686 1042 704 Q1140 726 1236 698 Q1340 668 1440 690 L1440 900 L866 900 Z" fill="url(#snBack)" opacity=".85"/>
+
+          <!-- sapins enneigés -->
+          <g>
+            <rect x="936" y="700" width="7" height="26" rx="2" fill="#6B5741"/>
+            <path d="M902 706 L939 652 L976 706 Z" fill="url(#snTree)"/>
+            <path d="M909 672 L939 624 L969 672 Z" fill="url(#snTree)"/>
+            <path d="M916 642 L939 602 L962 642 Z" fill="url(#snTree)"/>
+            <path d="M902 706 Q920 694 939 700 Q958 694 976 706 Q948 698 902 706 Z" fill="#FFFFFF" opacity=".92"/>
+            <path d="M909 672 Q925 661 939 667 Q953 661 969 672 Q944 665 909 672 Z" fill="#FFFFFF" opacity=".92"/>
+            <path d="M916 642 Q928 632 939 637 Q950 632 962 642 Q940 636 916 642 Z" fill="#FFFFFF" opacity=".92"/>
+            <circle cx="939" cy="600" r="3" fill="#FFFFFF"/>
+          </g>
+          <g>
+            <rect x="1176" y="686" width="9" height="30" rx="2" fill="#6B5741"/>
+            <path d="M1132 692 L1180 622 L1228 692 Z" fill="url(#snTree)"/>
+            <path d="M1141 648 L1180 586 L1219 648 Z" fill="url(#snTree)"/>
+            <path d="M1150 608 L1180 558 L1210 608 Z" fill="url(#snTree)"/>
+            <path d="M1132 692 Q1156 678 1180 685 Q1204 678 1228 692 Q1192 682 1132 692 Z" fill="#FFFFFF" opacity=".94"/>
+            <path d="M1141 648 Q1161 634 1180 641 Q1199 634 1219 648 Q1186 638 1141 648 Z" fill="#FFFFFF" opacity=".94"/>
+            <path d="M1150 608 Q1165 596 1180 602 Q1195 596 1210 608 Q1184 599 1150 608 Z" fill="#FFFFFF" opacity=".94"/>
+            <circle cx="1180" cy="556" r="3.4" fill="#FFFFFF"/>
+          </g>
+          <g>
+            <rect x="1362" y="698" width="7" height="24" rx="2" fill="#6B5741"/>
+            <path d="M1332 704 L1365 656 L1398 704 Z" fill="url(#snTree)"/>
+            <path d="M1339 674 L1365 632 L1391 674 Z" fill="url(#snTree)"/>
+            <path d="M1346 646 L1365 614 L1384 646 Z" fill="url(#snTree)"/>
+            <path d="M1332 704 Q1348 693 1365 699 Q1382 693 1398 704 Q1370 696 1332 704 Z" fill="#FFFFFF" opacity=".92"/>
+            <path d="M1339 674 Q1352 664 1365 669 Q1378 664 1391 674 Q1367 667 1339 674 Z" fill="#FFFFFF" opacity=".92"/>
+            <path d="M1346 646 Q1356 638 1365 642 Q1374 638 1384 646 Q1366 640 1346 646 Z" fill="#FFFFFF" opacity=".92"/>
+            <circle cx="1365" cy="612" r="2.6" fill="#FFFFFF"/>
+          </g>
+
+          <!-- congère médiane -->
+          <path d="M866 752 Q972 724 1076 744 Q1192 768 1298 738 Q1378 716 1440 730 L1440 900 L866 900 Z" fill="url(#snMid)"/>
+          <path d="M866 752 Q972 724 1076 744 Q1192 768 1298 738 Q1378 716 1440 730" fill="none" stroke="#FFFFFF" stroke-width="2.6" opacity=".85"/>
+          <!-- creux d'ombre -->
+          <ellipse cx="1120" cy="784" rx="120" ry="15" fill="#BFD4DA" opacity=".26"/>
+          <ellipse cx="1350" cy="768" rx="80" ry="11" fill="#BFD4DA" opacity=".2"/>
+
+          <!-- congère avant -->
+          <path d="M866 800 Q994 774 1116 794 Q1244 816 1348 786 Q1404 770 1440 778 L1440 900 L866 900 Z" fill="url(#snFront)"/>
+          <path d="M866 800 Q994 774 1116 794 Q1244 816 1348 786 Q1404 770 1440 778" fill="none" stroke="#FFFFFF" stroke-width="3" opacity=".95"/>
+          <path d="M866 803 Q994 777 1116 797 Q1244 819 1348 789 Q1404 773 1440 781" fill="none" stroke="#7C949C" stroke-width="1.6" opacity=".14"/>
+
+          <!-- flocons posés & éclats -->
+          <g stroke="#FFFFFF" stroke-linecap="round" opacity=".95">
+            <g stroke-width="1.5" transform="translate(1042 716)"><path d="M0 -9V9M-7.8 -4.5L7.8 4.5M-7.8 4.5L7.8 -4.5"/><path d="M0 -6l-2.6 2.6M0 -6l2.6 2.6M0 6l-2.6 -2.6M0 6l2.6 -2.6"/></g>
+            <g stroke-width="1.2" transform="translate(1290 700)"><path d="M0 -7V7M-6 -3.5L6 3.5M-6 3.5L6 -3.5"/><path d="M0 -4.6l-2 2M0 -4.6l2 2"/></g>
+            <g stroke-width="1.1" transform="translate(1004 662)"><path d="M0 -6V6M-5.2 -3L5.2 3M-5.2 3L5.2 -3"/></g>
+          </g>
+          <g fill="#FFFFFF"><circle cx="960" cy="768" r="2.1"/><circle cx="1206" cy="782" r="1.9"/><circle cx="1400" cy="756" r="2"/><circle cx="1088" cy="762" r="1.6"/><circle cx="1318" cy="800" r="1.7"/></g>
+        </g>
       </g>
       <g opacity=".92"><circle class="flake" cx="40" cy="-30" r="1.5" fill="#EAF3F6" style="animation-duration:7.0s;animation-delay:-0.0s"/><circle class="flake" cx="237" cy="31" r="2.2" fill="#FFFFFF" style="animation-duration:8.1s;animation-delay:-1.3s"/><circle class="flake" cx="434" cy="92" r="2.9" fill="#FFFFFF" style="animation-duration:9.2s;animation-delay:-5.2s"/><circle class="flake" cx="631" cy="23" r="3.6" fill="#EAF3F6" style="animation-duration:10.3s;animation-delay:-11.7s"/><circle class="flake" cx="828" cy="84" r="4.3" fill="#FFFFFF" style="animation-duration:11.4s;animation-delay:-3.8s"/><circle class="flake" cx="1025" cy="15" r="1.6" fill="#FFFFFF" style="animation-duration:12.5s;animation-delay:-15.5s"/><circle class="flake" cx="1222" cy="76" r="2.3" fill="#EAF3F6" style="animation-duration:13.6s;animation-delay:-12.8s"/><circle class="flake" cx="1419" cy="7" r="3.0" fill="#FFFFFF" style="animation-duration:14.7s;animation-delay:-12.7s"/><circle class="flake" cx="176" cy="68" r="3.7" fill="#FFFFFF" style="animation-duration:15.8s;animation-delay:-15.2s"/><circle class="flake" cx="373" cy="-1" r="4.4" fill="#EAF3F6" style="animation-duration:16.9s;animation-delay:-3.3s"/><circle class="flake" cx="570" cy="60" r="1.7" fill="#FFFFFF" style="animation-duration:8.0s;animation-delay:-11.0s"/><circle class="flake" cx="767" cy="-9" r="2.4" fill="#FFFFFF" style="animation-duration:9.1s;animation-delay:-4.3s"/><circle class="flake" cx="964" cy="52" r="3.1" fill="#EAF3F6" style="animation-duration:10.2s;animation-delay:-0.2s"/><circle class="flake" cx="1161" cy="-17" r="3.8" fill="#FFFFFF" style="animation-duration:11.3s;animation-delay:-15.7s"/><circle class="flake" cx="1358" cy="44" r="4.5" fill="#FFFFFF" style="animation-duration:12.4s;animation-delay:-16.8s"/><circle class="flake" cx="115" cy="-25" r="1.8" fill="#EAF3F6" style="animation-duration:13.5s;animation-delay:-3.5s"/><circle class="flake" cx="312" cy="36" r="2.5" fill="#FFFFFF" style="animation-duration:14.6s;animation-delay:-9.8s"/><circle class="flake" cx="509" cy="97" r="3.2" fill="#FFFFFF" style="animation-duration:15.7s;animation-delay:-1.7s"/><circle class="flake" cx="706" cy="28" r="3.9" fill="#EAF3F6" style="animation-duration:16.8s;animation-delay:-13.2s"/><circle class="flake" cx="903" cy="89" r="4.6" fill="#FFFFFF" style="animation-duration:7.9s;animation-delay:-10.3s"/><circle class="flake" cx="1100" cy="20" r="1.9" fill="#FFFFFF" style="animation-duration:9.0s;animation-delay:-10.0s"/><circle class="flake" cx="1297" cy="81" r="2.6" fill="#EAF3F6" style="animation-duration:10.1s;animation-delay:-12.3s"/><circle class="flake" cx="54" cy="12" r="3.3" fill="#FFFFFF" style="animation-duration:11.2s;animation-delay:-0.2s"/><circle class="flake" cx="251" cy="73" r="4.0" fill="#FFFFFF" style="animation-duration:12.3s;animation-delay:-7.7s"/><circle class="flake" cx="448" cy="4" r="4.7" fill="#EAF3F6" style="animation-duration:13.4s;animation-delay:-0.8s"/><circle class="flake" cx="645" cy="65" r="2.0" fill="#FFFFFF" style="animation-duration:14.5s;animation-delay:-13.5s"/><circle class="flake" cx="842" cy="-4" r="2.7" fill="#FFFFFF" style="animation-duration:15.6s;animation-delay:-11.8s"/><circle class="flake" cx="1039" cy="57" r="3.4" fill="#EAF3F6" style="animation-duration:16.7s;animation-delay:-12.7s"/><circle class="flake" cx="1236" cy="-12" r="4.1" fill="#FFFFFF" style="animation-duration:7.8s;animation-delay:-16.2s"/><circle class="flake" cx="1433" cy="49" r="4.8" fill="#FFFFFF" style="animation-duration:8.9s;animation-delay:-5.3s"/><circle class="flake" cx="190" cy="-20" r="2.1" fill="#EAF3F6" style="animation-duration:10.0s;animation-delay:-14.0s"/><circle class="flake" cx="387" cy="41" r="2.8" fill="#FFFFFF" style="animation-duration:11.1s;animation-delay:-8.3s"/><circle class="flake" cx="584" cy="-28" r="3.5" fill="#FFFFFF" style="animation-duration:12.2s;animation-delay:-5.2s"/><circle class="flake" cx="781" cy="33" r="4.2" fill="#EAF3F6" style="animation-duration:13.3s;animation-delay:-4.7s"/><circle class="flake" cx="978" cy="94" r="1.5" fill="#FFFFFF" style="animation-duration:14.4s;animation-delay:-6.8s"/><circle class="flake" cx="1175" cy="25" r="2.2" fill="#FFFFFF" style="animation-duration:15.5s;animation-delay:-11.5s"/><circle class="flake" cx="1372" cy="86" r="2.9" fill="#EAF3F6" style="animation-duration:16.6s;animation-delay:-1.8s"/><circle class="flake" cx="129" cy="17" r="3.6" fill="#FFFFFF" style="animation-duration:7.7s;animation-delay:-11.7s"/><circle class="flake" cx="326" cy="78" r="4.3" fill="#FFFFFF" style="animation-duration:8.8s;animation-delay:-7.2s"/><circle class="flake" cx="523" cy="9" r="1.6" fill="#EAF3F6" style="animation-duration:9.9s;animation-delay:-5.3s"/><circle class="flake" cx="720" cy="70" r="2.3" fill="#FFFFFF" style="animation-duration:11.0s;animation-delay:-6.0s"/><circle class="flake" cx="917" cy="1" r="3.0" fill="#FFFFFF" style="animation-duration:12.1s;animation-delay:-9.3s"/><circle class="flake" cx="1114" cy="62" r="3.7" fill="#EAF3F6" style="animation-duration:13.2s;animation-delay:-15.2s"/><circle class="flake" cx="1311" cy="-7" r="4.4" fill="#FFFFFF" style="animation-duration:14.3s;animation-delay:-6.7s"/><circle class="flake" cx="68" cy="54" r="1.7" fill="#FFFFFF" style="animation-duration:15.4s;animation-delay:-0.8s"/><circle class="flake" cx="265" cy="-15" r="2.4" fill="#EAF3F6" style="animation-duration:16.5s;animation-delay:-14.5s"/><circle class="flake" cx="462" cy="46" r="3.1" fill="#FFFFFF" style="animation-duration:7.6s;animation-delay:-13.8s"/><circle class="flake" cx="659" cy="-23" r="3.8" fill="#FFFFFF" style="animation-duration:8.7s;animation-delay:-15.7s"/><circle class="flake" cx="856" cy="38" r="4.5" fill="#EAF3F6" style="animation-duration:9.8s;animation-delay:-3.2s"/><circle class="flake" cx="1053" cy="99" r="1.8" fill="#FFFFFF" style="animation-duration:10.9s;animation-delay:-10.3s"/><circle class="flake" cx="1250" cy="30" r="2.5" fill="#FFFFFF" style="animation-duration:12.0s;animation-delay:-3.0s"/><circle class="flake" cx="7" cy="91" r="3.2" fill="#EAF3F6" style="animation-duration:13.1s;animation-delay:-15.3s"/><circle class="flake" cx="204" cy="22" r="3.9" fill="#FFFFFF" style="animation-duration:14.2s;animation-delay:-13.2s"/><circle class="flake" cx="401" cy="83" r="4.6" fill="#FFFFFF" style="animation-duration:15.3s;animation-delay:-13.7s"/><circle class="flake" cx="598" cy="14" r="1.9" fill="#EAF3F6" style="animation-duration:16.4s;animation-delay:-16.8s"/><circle class="flake" cx="795" cy="75" r="2.6" fill="#FFFFFF" style="animation-duration:7.5s;animation-delay:-5.5s"/><circle class="flake" cx="992" cy="6" r="3.3" fill="#FFFFFF" style="animation-duration:8.6s;animation-delay:-13.8s"/><circle class="flake" cx="1189" cy="67" r="4.0" fill="#EAF3F6" style="animation-duration:9.7s;animation-delay:-7.7s"/><circle class="flake" cx="1386" cy="-2" r="4.7" fill="#FFFFFF" style="animation-duration:10.8s;animation-delay:-4.2s"/><circle class="flake" cx="143" cy="59" r="2.0" fill="#FFFFFF" style="animation-duration:11.9s;animation-delay:-3.3s"/><circle class="flake" cx="340" cy="-10" r="2.7" fill="#EAF3F6" style="animation-duration:13.0s;animation-delay:-5.0s"/><circle class="flake" cx="537" cy="51" r="3.4" fill="#FFFFFF" style="animation-duration:14.1s;animation-delay:-9.3s"/><circle class="flake" cx="734" cy="-18" r="4.1" fill="#FFFFFF" style="animation-duration:15.2s;animation-delay:-16.2s"/><circle class="flake" cx="931" cy="43" r="4.8" fill="#EAF3F6" style="animation-duration:16.3s;animation-delay:-8.7s"/><circle class="flake" cx="1128" cy="-26" r="2.1" fill="#FFFFFF" style="animation-duration:7.4s;animation-delay:-3.8s"/><circle class="flake" cx="1325" cy="35" r="2.8" fill="#FFFFFF" style="animation-duration:8.5s;animation-delay:-1.5s"/><circle class="flake" cx="82" cy="96" r="3.5" fill="#EAF3F6" style="animation-duration:9.6s;animation-delay:-1.8s"/><circle class="flake" cx="279" cy="27" r="4.2" fill="#FFFFFF" style="animation-duration:10.7s;animation-delay:-4.7s"/><circle class="flake" cx="476" cy="88" r="1.5" fill="#FFFFFF" style="animation-duration:11.8s;animation-delay:-10.2s"/><circle class="flake" cx="673" cy="19" r="2.2" fill="#EAF3F6" style="animation-duration:12.9s;animation-delay:-1.3s"/><circle class="flake" cx="870" cy="80" r="2.9" fill="#FFFFFF" style="animation-duration:14.0s;animation-delay:-12.0s"/><circle class="flake" cx="1067" cy="11" r="3.6" fill="#FFFFFF" style="animation-duration:15.1s;animation-delay:-8.3s"/><circle class="flake" cx="1264" cy="72" r="4.3" fill="#EAF3F6" style="animation-duration:16.2s;animation-delay:-7.2s"/><circle class="flake" cx="21" cy="3" r="1.6" fill="#FFFFFF" style="animation-duration:7.3s;animation-delay:-8.7s"/><circle class="flake" cx="218" cy="64" r="2.3" fill="#FFFFFF" style="animation-duration:8.4s;animation-delay:-12.8s"/><circle class="flake" cx="415" cy="-5" r="3.0" fill="#EAF3F6" style="animation-duration:9.5s;animation-delay:-2.5s"/><circle class="flake" cx="612" cy="56" r="3.7" fill="#FFFFFF" style="animation-duration:10.6s;animation-delay:-11.8s"/><circle class="flake" cx="809" cy="-13" r="4.4" fill="#FFFFFF" style="animation-duration:11.7s;animation-delay:-6.7s"/><circle class="flake" cx="1006" cy="48" r="1.7" fill="#EAF3F6" style="animation-duration:12.8s;animation-delay:-4.2s"/><circle class="flake" cx="1203" cy="-21" r="2.4" fill="#FFFFFF" style="animation-duration:13.9s;animation-delay:-4.3s"/><circle class="flake" cx="1400" cy="40" r="3.1" fill="#FFFFFF" style="animation-duration:15.0s;animation-delay:-7.0s"/><circle class="flake" cx="157" cy="-29" r="3.8" fill="#EAF3F6" style="animation-duration:16.1s;animation-delay:-12.3s"/><circle class="flake" cx="354" cy="32" r="4.5" fill="#FFFFFF" style="animation-duration:7.2s;animation-delay:-3.2s"/><circle class="flake" cx="551" cy="93" r="1.8" fill="#FFFFFF" style="animation-duration:8.3s;animation-delay:-13.7s"/></g>
 
@@ -773,7 +832,7 @@
       <p class="lede reveal d2">Mobilier, art de la table et décoration en location pour vos mariages, anniversaires et réceptions. On imagine, vous savourez.</p>
       <div class="hero-cta reveal d3">
         <a class="btn btn-ink" href="/catalogue">Découvrir le catalogue <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
-        <a class="btn btn-ghost" href="/nos-univers">Découvrir les collections</a>
+        <a class="btn btn-ghost" href="/collections">Découvrir les collections</a>
       </div>
     </div>
   </div>
@@ -788,7 +847,7 @@
     <p>Chaque événement a sa lumière. Un été flamboyant en plein air, ou un hiver aux chandelles&nbsp;: votre décor commence par une saison.</p>
   </div>
   <div class="univers">
-    <a class="uni uni-ete reveal" href="/nos-univers" aria-label="Explorer le Solstice d'Été">
+    <a class="uni uni-ete reveal" href="/collections?u=ete" aria-label="Découvrir les collections du Solstice d'Été">
       <svg class="scene" viewBox="0 0 400 600" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
         <defs>
           <radialGradient id="sunGlowE" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#FFF4D6" stop-opacity=".95"/><stop offset="42%" stop-color="#FBD98A" stop-opacity=".42"/><stop offset="100%" stop-color="#FBD98A" stop-opacity="0"/></radialGradient>
@@ -832,10 +891,10 @@
         <h3>Lumière &amp;<br><em>grands airs</em></h3>
         <p>Lin froissé, pampa, tables sous la treille et éclats dorés — la saison des célébrations en plein air.</p>
         <div class="uni-kw"><span>Garden party</span><span>Doré</span><span>Plein air</span><span>Pampa</span></div>
-        <span class="uni-link">Explorer l'été <svg aria-hidden="true"><use href="#i-arrow"/></svg></span>
+        <span class="uni-link">Voir les collections d'été <svg aria-hidden="true"><use href="#i-arrow"/></svg></span>
       </div>
     </a>
-    <a class="uni uni-hiver reveal d1" href="/nos-univers" aria-label="Explorer le Solstice d'Hiver">
+    <a class="uni uni-hiver reveal d1" href="/collections?u=hiver" aria-label="Découvrir les collections du Solstice d'Hiver">
       <svg class="scene" viewBox="0 0 400 600" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
         <defs>
           <radialGradient id="moonGlowW" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#EAF1F2" stop-opacity=".5"/><stop offset="55%" stop-color="#9fb0ad" stop-opacity=".1"/><stop offset="100%" stop-color="#9fb0ad" stop-opacity="0"/></radialGradient>
@@ -880,7 +939,7 @@
         <h3>Velours &amp;<br><em>bougies</em></h3>
         <p>Ambiances cocon, verrerie fumée et lueurs dorées — pour des réceptions chaleureuses et feutrées.</p>
         <div class="uni-kw"><span>Cocon</span><span>Chandelles</span><span>Velours</span><span>Feutré</span></div>
-        <span class="uni-link">Explorer l'hiver <svg aria-hidden="true"><use href="#i-arrow"/></svg></span>
+        <span class="uni-link">Voir les collections d'hiver <svg aria-hidden="true"><use href="#i-arrow"/></svg></span>
       </div>
     </a>
   </div>

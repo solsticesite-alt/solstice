@@ -3,81 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Nos univers — Maison Solstice</title>
-<meta name="description" content="Maison Solstice s&#x27;organise autour de deux univers : Solstice d&#x27;Été, lumineux et doré, et Solstice d&#x27;Hiver, velours et bougies, déclinés en collections.">
+<title>Dolce Vita — Maison Solstice</title>
+<meta name="description" content="Collection Dolce Vita (Solstice d&#x27;Été) : Un dîner d&#x27;été sous les citronniers : lin naturel, citrons et lumière dorée qui descend doucement. En pack complet ou en décoration de table seule, quantités ajustées au nombre d&#x27;invités.">
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#FBF8F2">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/site.css">
-<style>
-/* ===== Nos univers — styles de page ===== */
-
-/* Bandeau des deux pôles (intro) */
-.sband{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin-top:clamp(34px,5vw,56px);}
-.sband > div{position:relative;overflow:hidden;padding:clamp(26px,4vw,44px);min-height:clamp(190px,24vw,270px);display:flex;flex-direction:column;justify-content:flex-end;gap:.28rem;}
-.sband .s-ete{background:linear-gradient(150deg,var(--ete-1),var(--ete-2) 68%,var(--ete-3));color:var(--ink);}
-.sband .s-hiver{background:linear-gradient(150deg,var(--hiver-1),var(--hiver-2) 58%,var(--hiver-3));color:var(--paper);}
-.sband .s-glyph{position:absolute;top:9%;right:8%;width:clamp(70px,12vw,120px);height:auto;stroke-width:.7;fill:none;stroke-linecap:round;stroke-linejoin:round;opacity:.3;}
-.sband .s-ete .s-glyph{stroke:var(--hiver-2);}
-.sband .s-hiver .s-glyph{stroke:var(--gold-soft);opacity:.35;}
-.sband .s-tag{font-size:.62rem;letter-spacing:.24em;text-transform:uppercase;opacity:.82;}
-.sband strong{font-family:var(--serif);font-weight:400;font-size:clamp(1.5rem,3vw,2.1rem);line-height:1.05;}
-.sband .s-sub{font-size:.8rem;letter-spacing:.02em;opacity:.85;}
-
-/* Sections univers */
-.uni-ete-sec{background:linear-gradient(160deg,var(--ete-1),var(--ete-2) 62%,var(--ete-3));color:var(--ink);}
-.uni-ete-sec .eyebrow{color:var(--hiver-1);}
-.uni-ete-sec .eyebrow::before{background:var(--hiver-1);opacity:.6;}
-.uni-ete-sec h2{color:var(--ink);}
-.uni-ete-sec .lead{color:var(--ink);}
-.uni-hiver-sec{background:linear-gradient(160deg,var(--hiver-1),var(--hiver-2) 58%,var(--hiver-3));}
-.uni-hiver-sec .lead{color:var(--paper);}
-
-.uni-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(30px,5vw,64px);align-items:center;}
-.uni-copy{display:flex;flex-direction:column;gap:1.15rem;}
-.uni-copy .lead{margin:0;}
-
-.kw-list{display:flex;flex-wrap:wrap;gap:.5rem;list-style:none;padding:0;margin:.1rem 0 0;}
-.kw-list li{font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;padding:.5em .9em;border-radius:99px;}
-.uni-ete-sec .kw-list li{border:1px solid rgba(34,28,21,.26);background:rgba(255,255,255,.16);color:var(--ink);}
-.uni-hiver-sec .kw-list li{border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.05);color:var(--paper);}
-
-.assoc{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem 1rem;margin-top:.3rem;}
-.assoc-label{font-size:.64rem;letter-spacing:.2em;text-transform:uppercase;opacity:.7;}
-.assoc-list{display:flex;flex-wrap:wrap;gap:.5rem .8rem;list-style:none;padding:0;margin:0;}
-.assoc-list a{display:inline-flex;align-items:center;font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;font-weight:600;border-bottom:1px solid currentColor;padding-bottom:.25em;transition:opacity .3s;}
-.assoc-list a:hover{opacity:.65;}
-
-.uni-visual{position:relative;aspect-ratio:4/5;border-radius:clamp(16px,1.8vw,22px);display:grid;place-items:center;overflow:hidden;box-shadow:0 22px 44px -34px rgba(60,40,18,.4);transition:transform .5s cubic-bezier(.2,.7,.2,1),box-shadow .5s;}
-.uni-visual:hover{transform:translateY(-5px);box-shadow:0 36px 58px -34px rgba(60,40,18,.45);}
-.uni-ete-sec .uni-visual{background:rgba(255,255,255,.2);}
-.uni-hiver-sec .uni-visual{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);}
-.uni-visual .art{width:74%;height:74%;transition:transform .6s cubic-bezier(.2,.7,.2,1);}
-.uni-ete-sec .uni-visual .art{}
-.uni-hiver-sec .uni-visual .art{}
-.uni-visual:hover .art{transform:scale(1.07);}
-.uni-visual .cap{position:absolute;left:14px;bottom:14px;font-size:.58rem;letter-spacing:.13em;text-transform:uppercase;background:rgba(251,248,242,.9);color:var(--ink-soft);padding:.4em .7em;border-radius:99px;}
-
-/* CTA final */
-.cta{background:linear-gradient(150deg,var(--ete-1),var(--ete-2) 72%,var(--ete-3));border-radius:var(--radius);padding:clamp(42px,6vw,82px) clamp(24px,5vw,60px);text-align:center;color:var(--ink);}
-.cta .eyebrow{color:var(--hiver-1);}
-.cta .eyebrow::before,.cta .eyebrow::after{background:var(--hiver-1);opacity:.6;}
-.cta h2{color:var(--ink);font-size:clamp(1.9rem,4vw,3rem);margin:.6rem auto 0;max-width:20ch;}
-.cta p{color:var(--ink);max-width:56ch;margin:1.1rem auto 0;opacity:.92;}
-.cta-btns{display:flex;flex-wrap:wrap;gap:.9rem;justify-content:center;margin-top:2.1rem;}
-.cta .btn-ink{background:var(--ink);}
-.cta .btn-ghost{border-color:rgba(34,28,21,.4);color:var(--ink);}
-.cta .btn-ghost:hover{background:var(--ink);color:var(--ete-1);border-color:var(--ink);}
-
-/* Responsive */
-@media (max-width:860px){
-  .uni-grid{grid-template-columns:1fr;}
-  .uni-visual{order:-1;aspect-ratio:16/10;}
-}
-@media (max-width:560px){
-  .sband{grid-template-columns:1fr;}
-}
-</style>
 </head>
 <body>
 <div class="page-bg" aria-hidden="true">
@@ -274,176 +205,69 @@
 <main>
 <section class="page-hero">
   <div class="wrap">
-    <nav class="crumbs"><a href="/">Accueil</a><span class="sep">/</span><span>Nos univers</span></nav>
-    <span class="eyebrow">Le concept Maison Solstice</span>
-    <h1>Deux solstices, <em>mille</em> façons de célébrer.</h1>
-    <p class="lede">Été lumineux ou hiver feutré : chez Maison Solstice, chaque événement puise dans l'un de nos deux grands univers, puis se précise au fil d'une collection et des pièces que vous choisissez.</p>
+    <nav class="crumbs"><a href="/">Accueil</a><span class="sep">/</span><a href="/collections">Nos collections</a><span class="sep">/</span><span>Dolce Vita</span></nav>
+    <span class="eyebrow">Solstice d'Été</span>
+    <h1>Dolce Vita</h1>
+    <p class="lede">Un dîner d'été sous les citronniers : lin naturel, citrons et lumière dorée qui descend doucement.</p>
   </div>
 </section>
 
-<!-- INTRO — l'idée des deux solstices -->
-<section class="section tint">
+<section class="section" style="padding-top:0;">
   <div class="wrap">
+    <div class="coll-hero reveal">
+      <div class="coll-hero-copy">
+        <p class="lead">Une grande table dressée dehors, des verres qui tintent, l'huile d'olive et les agrumes. Dolce Vita, c'est l'art de recevoir à l'italienne : simple, généreux, lumineux.</p>
+        <div class="pal" aria-hidden="true"><span style="background:#E4C862"></span><span style="background:#7C8B5A"></span><span style="background:#E5D8C1"></span></div>
+      </div>
+      <div class="coll-hero-art ct-dolce">
+        <svg class="glyph" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-glass"/></svg>
+      </div>
+    </div>
+
     <div class="sec-head center">
-      <span class="eyebrow center reveal">L'idée directrice</span>
-      <h2 class="reveal d1">Une maison rythmée par la lumière</h2>
-      <p class="lede reveal d2" style="text-align:center;">Comme l'année, Maison Solstice tourne autour de deux pôles. Deux atmosphères opposées et complémentaires, entre lesquelles vous composez le décor qui vous ressemble.</p>
+      <span class="eyebrow center reveal">Deux façons de la choisir</span>
+      <h2 class="reveal d1">Le pack complet, ou les tables</h2>
+      <p class="lede reveal d2" style="text-align:center;">Indiquez votre nombre d'invités : nous ajustons les quantités pièce par pièce.</p>
     </div>
-    <div class="prose reveal d1" style="margin-inline:auto;text-align:center;">
-      <p>On ne loue pas du matériel : on aide à préparer l'un des plus beaux jours d'une vie. C'est pourquoi tout commence par une intention, une lumière, une saison — avant même de parler de tables ou de chaises.</p>
-      <p>Le <strong>Solstice d'Été</strong> célèbre le grand air, le doré et la clarté ; le <strong>Solstice d'Hiver</strong> installe le velours, les bougies et la chaleur d'un cocon. Choisissez votre pôle, puis laissez-vous guider vers la collection qui donnera le ton.</p>
-    </div>
-    <div class="sband reveal d2">
-      <div class="s-ete">
-        <svg class="s-glyph" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sun"/></svg>
-        <span class="s-tag">Le pôle chaud</span>
-        <strong>Solstice d'Été</strong>
-        <span class="s-sub">Lumineux · doré · plein air</span>
-      </div>
-      <div class="s-hiver">
-        <svg class="s-glyph" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-candle"/></svg>
-        <span class="s-tag">Le pôle feutré</span>
-        <strong>Solstice d'Hiver</strong>
-        <span class="s-sub">Velours · bougies · cocon</span>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- SOLSTICE D'ÉTÉ -->
-<section class="section uni-ete-sec" id="ete">
-  <div class="wrap">
-    <div class="uni-grid">
-      <div class="uni-copy">
-        <span class="eyebrow reveal">Solstice d'Été</span>
-        <h2 class="reveal d1">Lumière, doré &amp; grands airs</h2>
-        <p class="lead reveal d1">La saison des célébrations à ciel ouvert. Lin froissé, pampa et olivier, tables dressées sous la treille et éclats de laiton au soleil couchant. Un décor solaire, généreux et raffiné, pour recevoir dehors comme dans un jardin d'été.</p>
-        <ul class="kw-list reveal d2">
-          <li>Lin naturel</li>
-          <li>Pampa &amp; olivier</li>
-          <li>Vaisselle claire</li>
-          <li>Guirlandes guinguette</li>
-          <li>Éclats dorés</li>
-          <li>Terrasses ombragées</li>
+    <div class="formulas reveal">
+      <article class="formula">
+        <span class="fk">Le pack complet</span>
+        <h3>Tout le décor</h3>
+        <p>Le décor entier, prêt à installer. Rien à choisir pièce par pièce dans le catalogue.</p>
+        <ul>
+          <li>Mobilier : tables, chaises, mange-debout</li>
+          <li>Art de la table : vaisselle, verrerie, couverts</li>
+          <li>Linge : nappes, chemins de table, serviettes</li>
+          <li>Décoration &amp; lumière : centres de table, bougies, guirlandes</li>
+          <li>Coin lounge et arche décor photo</li>
         </ul>
-        <div class="assoc reveal d2">
-          <span class="assoc-label">Collections associées</span>
-          <ul class="assoc-list">
-            <li><a href="/catalogue">Dolce Vita</a></li>
-            <li><a href="/catalogue">Garden Party</a></li>
-            <li><a href="/catalogue">White Party</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="uni-visual reveal d1">
-        <svg class="art" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-sun"/></svg>
-        <span class="cap">Garden party au soleil couchant</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- SOLSTICE D'HIVER -->
-<section class="section dark uni-hiver-sec" id="hiver">
-  <div class="wrap">
-    <div class="uni-grid">
-      <div class="uni-visual reveal d1">
-        <svg class="art" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-candles"/></svg>
-        <span class="cap">Réception aux chandelles</span>
-      </div>
-      <div class="uni-copy">
-        <span class="eyebrow reveal">Solstice d'Hiver</span>
-        <h2 class="reveal d1">Velours, bougies &amp; brun chaud</h2>
-        <p class="lead reveal d1">Quand les jours raccourcissent, on resserre les tables et l'on tamise la lumière. Velours côtelé, verrerie fumée, forêts de bougies et dorures profondes : une ambiance cocon, feutrée et enveloppante, pour des réceptions d'hiver pleines de chaleur.</p>
-        <ul class="kw-list reveal d2">
-          <li>Velours côtelé</li>
-          <li>Verrerie fumée</li>
-          <li>Bougies &amp; chandeliers</li>
-          <li>Dorures</li>
-          <li>Bruns profonds</li>
-          <li>Esprit cocon</li>
+        <button type="button" class="btn btn-ink offer-btn" data-col="dolce" data-kind="pack">Je veux ce pack</button>
+      </article>
+      <article class="formula is-table">
+        <span class="fk">Les tables</span>
+        <h3>La table seule</h3>
+        <p>Uniquement la décoration de table, si vous avez déjà le mobilier et le lieu.</p>
+        <ul>
+          <li>Linge : nappe, chemin de table, serviettes</li>
+          <li>Vaisselle, verrerie et couverts</li>
+          <li>Centre de table et fleurs de saison</li>
+          <li>Photophores, bougies et marque-places</li>
+          <li>La touche signature de la collection</li>
         </ul>
-        <div class="assoc reveal d2">
-          <span class="assoc-label">Collections associées</span>
-          <ul class="assoc-list">
-            <li><a href="/catalogue">Black &amp; Gold</a></li>
-            <li><a href="/catalogue">White Party</a></li>
-          </ul>
-        </div>
-      </div>
+        <button type="button" class="btn btn-ghost offer-btn" data-col="dolce" data-kind="table">Je veux cette table</button>
+      </article>
+    </div>
+
+    <div class="coll-nav">
+      <a href="/collections?u=ete">Les collections d’Été</a>
+      <a href="/collection-garden-party">Garden Party</a>
+      <a href="/collections">Les quatre collections</a>
+      <a href="/catalogue">Voir le catalogue</a>
     </div>
   </div>
 </section>
-
-<!-- GRILLE DES COLLECTIONS -->
-<section class="section" id="collections">
-  <div class="wrap">
-    <div class="sec-head center">
-      <span class="eyebrow center reveal">Nos collections</span>
-      <h2 class="reveal d1">Deux collections par solstice</h2>
-      <p class="lede reveal d2" style="text-align:center;">Au sein de chaque univers, une collection resserre le style. Chacune se prend en <strong>pack complet</strong> ou en <strong>décoration de table seule</strong>, avec les quantités ajustées à votre nombre d'invités.</p>
-    </div>
-
-    <div class="uni-block reveal">
-      <div class="uni-band ete">
-        <span class="ub-tag">Solstice d'Été</span>
-        <p>Lumière, grands airs et dorures : la saison des célébrations en plein air.</p>
-      </div>
-      <div class="col-grid">
-        <a class="col-card" href="/collection-dolce-vita">
-          <div class="col-top ct-dolce"><svg class="glyph" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-glass"/></svg></div>
-          <div class="col-body">
-            <span class="n">Solstice d'Été</span>
-            <h3>Dolce Vita</h3>
-            <p>Un dîner d'été sous les citronniers : lin naturel, citrons et lumière dorée.</p>
-            <div class="pal" aria-hidden="true"><span style="background:#E4C862"></span><span style="background:#7C8B5A"></span><span style="background:#E5D8C1"></span></div>
-            <span class="uni-link" style="margin-top:auto;padding-top:.8rem;">Voir la collection <svg aria-hidden="true"><use href="#i-arrow"/></svg></span>
-          </div>
-        </a>
-        <a class="col-card" href="/collection-garden-party">
-          <div class="col-top ct-garden"><svg class="glyph" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-foliage"/></svg></div>
-          <div class="col-body">
-            <span class="n">Solstice d'Été</span>
-            <h3>Garden Party</h3>
-            <p>Verdure douce, guinguette chic et vaisselle champêtre. Recevoir au jardin.</p>
-            <div class="pal" aria-hidden="true"><span style="background:#8F9D66"></span><span style="background:#EEE4D3"></span><span style="background:#C9A05A"></span></div>
-            <span class="uni-link" style="margin-top:auto;padding-top:.8rem;">Voir la collection <svg aria-hidden="true"><use href="#i-arrow"/></svg></span>
-          </div>
-        </a>
-      </div>
-    </div>
-
-    <div class="uni-block reveal">
-      <div class="uni-band hiver">
-        <span class="ub-tag">Solstice d'Hiver</span>
-        <p>Velours, chandelles et éclat feutré : la saison des réceptions au chaud.</p>
-      </div>
-      <div class="col-grid">
-        <a class="col-card" href="/collection-black-gold">
-          <div class="col-top ct-black"><svg class="glyph" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-candles"/></svg></div>
-          <div class="col-body">
-            <span class="n">Solstice d'Hiver</span>
-            <h3>Black &amp; Gold</h3>
-            <p>Noir profond, dorures et éclat des grands soirs. L'élégance des fêtes.</p>
-            <div class="pal" aria-hidden="true"><span style="background:#1B140D"></span><span style="background:#B08A54"></span><span style="background:#5A1F2B"></span></div>
-            <span class="uni-link" style="margin-top:auto;padding-top:.8rem;">Voir la collection <svg aria-hidden="true"><use href="#i-arrow"/></svg></span>
-          </div>
-        </a>
-        <a class="col-card" href="/collection-white-party">
-          <div class="col-top ct-white"><svg class="glyph" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-lantern"/></svg></div>
-          <div class="col-body">
-            <span class="n">Solstice d'Hiver</span>
-            <h3>White Party</h3>
-            <p>Total look immaculé, épuré et givré. La clarté d'un hiver lumineux.</p>
-            <div class="pal" aria-hidden="true"><span style="background:#FBF8F2"></span><span style="background:#E5D8C1"></span><span style="background:#AEC0C6"></span></div>
-            <span class="uni-link" style="margin-top:auto;padding-top:.8rem;">Voir la collection <svg aria-hidden="true"><use href="#i-arrow"/></svg></span>
-          </div>
-        </a>
-      </div>
-    </div>
-  </div>
-</section>
-
+</main>
 <footer class="site-foot">
   <div class="wrap">
     <div class="foot-top">
@@ -460,5 +284,6 @@
 </footer>
 <script src="/site.js"></script>
 <script src="/cart.js" defer></script>
+<script src="/collections.js" defer></script>
 </body>
 </html>
