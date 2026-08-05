@@ -107,17 +107,21 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opa
 .mpanel .m-cta{margin-top:auto;padding-top:2rem;display:flex;flex-direction:column;gap:.8rem;}
 
 /* ---------- page hero (pages intérieures) ---------- */
-.page-hero{position:relative;overflow:hidden;background:transparent;padding-block:clamp(40px,7vw,84px) clamp(40px,7vw,76px);}
+.page-hero{position:relative;overflow:hidden;background:transparent;padding-block:clamp(24px,3.6vw,48px) clamp(18px,2.4vw,30px);}
 .page-hero .wrap{position:relative;z-index:1;}
-.crumbs{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--stone);margin-bottom:1.4rem;display:flex;gap:.5em;flex-wrap:wrap;}
+.crumbs{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--stone);margin-bottom:.85rem;display:flex;gap:.5em;flex-wrap:wrap;}
 .crumbs a{color:var(--ink-soft);} .crumbs a:hover{color:var(--gold-deep);}
 .crumbs .sep{color:var(--gold);}
-.page-hero h1{font-size:clamp(2.4rem,6vw,4.2rem);letter-spacing:-.01em;margin:.3em 0 .4em;max-width:16ch;}
+.page-hero h1{font-size:clamp(2.05rem,4.4vw,3.3rem);letter-spacing:-.01em;margin:.2em 0 .28em;max-width:24ch;}
 .page-hero h1 em{font-style:italic;color:var(--gold-deep);}
-.page-hero .lede{font-size:clamp(1.02rem,1.6vw,1.2rem);}
+.page-hero .lede{font-size:clamp(.97rem,1.35vw,1.08rem);max-width:62ch;}
 
 /* ---------- section scaffold ---------- */
 .section{padding-block:var(--sect);position:relative;}
+/* Juste sous le bandeau de titre, on resserre pour que le contenu
+   apparaisse sans avoir a faire defiler. */
+.page-hero + .section{padding-top:clamp(16px,2.4vw,30px);}
+.page-hero + .section .sec-head{margin-bottom:clamp(20px,3vw,34px);}
 .section.tint{background:transparent;}
 .section.sand{background:transparent;}
 .section.dark{background:transparent;color:var(--paper);}
