@@ -21,10 +21,11 @@
         duration: p.duration === 'weekend' ? 'weekend' : 'jour',
         delivery: p.delivery === 'livraison' ? 'livraison' : 'retrait',
         date: String(p.date || ''), guests: String(p.guests || ''),
-        place: String(p.place || '')
+        place: String(p.place || ''),
+        payment: p.payment === 'full' ? 'full' : 'deposit'
       };
     } catch (e) {
-      return { duration: 'jour', delivery: 'retrait', date: '', guests: '', place: '' };
+      return { duration: 'jour', delivery: 'retrait', date: '', guests: '', place: '', payment: 'deposit' };
     }
   }
   function savePrefs() {
@@ -167,16 +168,22 @@
 
     var items = window.SolCart.items();
     var t = totals();
+    var s = split();
+    var reglement = prefs.payment === 'full'
+      ? 'paiement intégral à la commande' + (t.sub > 0 ? ' (' + eur(s.sub) + ')' : '')
+      : 'acompte 50 % à la commande' + (t.sub > 0 ? ' (' + eur(s.acompte) + ') puis ' + eur(s.solde) + ' à la livraison' : '');
     var recap = 'Formule : ' + (prefs.duration === 'weekend' ? 'week-end (2 jours)' : '1 journée') +
       ' · ' + (prefs.delivery === 'retrait' ? 'retrait à l’atelier' : 'livraison souhaitée') +
       (t.sub > 0 ? ' · estimation location ' + eur(t.sub) : '') +
-      (t.caution > 0 ? ' · caution ' + eur(t.caution) : '');
+      (t.caution > 0 ? ' · caution ' + eur(t.caution) : '') +
+      ' · Règlement : ' + reglement;
 
     var payload = {
       name: name, email: email, phone: $('f-tel').value.trim(),
       eventType: $('f-type').value, date: prefs.date, location: prefs.place,
       guests: prefs.guests,
       message: ($('f-message').value.trim() + '\n\n' + recap).trim(),
+      payment: prefs.payment,
       items: items.map(function (i) { return { name: i.name, ref: i.ref, qty: i.qty, priceHint: i.priceHint }; }),
       website: $('f-website').value
     };
@@ -290,14 +297,43 @@
       $('rcDate').textContent = prefs.date ? new Date(prefs.date + 'T00:00:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : 'à préciser';
       $('rcSub').textContent = t.sub > 0 ? eur(t.sub) : 'Au devis';
       $('rcCaution').textContent = t.caution > 0 ? eur(t.caution) : '—';
-      /* Règlement en deux temps : 50 % à la commande, 50 % à la livraison. */
-      var moitie = Math.round((t.sub / 2) * 100) / 100;
-      $('rcAcompte').textContent = t.sub > 0 ? eur(moitie) : 'Au devis';
-      $('rcSolde').textContent = t.sub > 0 ? eur(Math.round((t.sub - moitie) * 100) / 100) : 'Au devis';
+      renderPayment();
     }
+
+    /* ---------- choix du règlement (acompte ou paiement complet) ---------- */
+    document.querySelectorAll('[name="payment"]').forEach(function (r) {
+      r.checked = r.value === prefs.payment;
+      r.addEventListener('change', function () { prefs.payment = r.value; savePrefs(); renderPayment(); });
+    });
 
     if (window.SolCart) window.SolCart.onChange(renderAll);
     renderAll();
+  }
+
+  /* L'acompte est la moitié du total ; le solde se déduit du total pour que la
+     somme des deux tombe toujours juste. */
+  function split() {
+    var sub = totals().sub;
+    var acompte = Math.round((sub / 2) * 100) / 100;
+    return { sub: sub, acompte: acompte, solde: Math.round((sub - acompte) * 100) / 100 };
+  }
+  function renderPayment() {
+    var s = split(), known = s.sub > 0;
+    var elD = $('payAmtDeposit'), elF = $('payAmtFull'), rec = $('payRecap');
+    if (!elD || !rec) return;
+    elD.textContent = known ? eur(s.acompte) + ' maintenant' : 'Montant à confirmer';
+    elF.textContent = known ? eur(s.sub) + ' maintenant' : 'Montant à confirmer';
+    var t = totals();
+    var caution = t.caution > 0 ? '<div class="r"><span>Caution (restituée au retour)</span><span>' + eur(t.caution) + '</span></div>' : '';
+    if (!known) {
+      rec.innerHTML = '<div class="r"><span>Montant définitif</span><span>confirmé sur votre facture</span></div>' + caution;
+      return;
+    }
+    rec.innerHTML = prefs.payment === 'full'
+      ? '<div class="r"><span>À régler à la commande</span><b>' + eur(s.sub) + '</b></div>' +
+        '<div class="r"><span>À la livraison</span><span>rien à payer</span></div>' + caution
+      : '<div class="r"><span>À régler à la commande</span><b>' + eur(s.acompte) + '</b></div>' +
+        '<div class="r"><span>Solde à la livraison</span><b>' + eur(s.solde) + '</b></div>' + caution;
   }
 
   function removeWithUndo(item) {

@@ -159,6 +159,10 @@
   .opts{grid-template-columns:1fr;}
   .f-grid{grid-template-columns:1fr;}
 }
+.pay-amt{display:block;margin-top:.45rem;font-family:var(--serif);font-size:1.28rem;color:var(--ink);font-variant-numeric:tabular-nums;}
+.pay-recap{margin-top:1rem;background:var(--paper-2);border:1px solid var(--line);border-radius:var(--radius);padding:.85rem 1rem;font-size:.84rem;color:var(--ink-soft);line-height:1.6;}
+.pay-recap b{color:var(--ink);font-weight:600;}
+.pay-recap .r{display:flex;justify-content:space-between;gap:1rem;padding:.2rem 0;}
 </style>
 </head>
 <body>
@@ -548,15 +552,37 @@
             <div class="rc-r"><span>Date</span><b id="rcDate"></b></div>
             <div class="rc-r"><span>Location estimée</span><b id="rcSub"></b></div>
             <div class="rc-r"><span>Caution (restituée)</span><b id="rcCaution"></b></div>
-            <div class="rc-r"><span>Acompte à la commande (50&nbsp;%)</span><b id="rcAcompte"></b></div>
-            <div class="rc-r"><span>Solde à la livraison (50&nbsp;%)</span><b id="rcSolde"></b></div>
+          </div>
+
+          <div class="p-block" style="margin-top:0;">
+            <h3>Comment souhaitez-vous régler&nbsp;?</h3>
+            <p class="hint">Le montant total est le même dans les deux cas. Vous choisissez simplement quand vous le réglez.</p>
+            <div class="opts">
+              <div class="opt-r">
+                <input type="radio" name="payment" id="pay-deposit" value="deposit">
+                <label for="pay-deposit">
+                  <span class="t">Acompte de 50&nbsp;%</span>
+                  <span class="d">Le reste à la livraison</span>
+                  <span class="pay-amt" id="payAmtDeposit"></span>
+                </label>
+              </div>
+              <div class="opt-r">
+                <input type="radio" name="payment" id="pay-full" value="full">
+                <label for="pay-full">
+                  <span class="t">Tout régler maintenant</span>
+                  <span class="d">Plus rien à payer le jour J</span>
+                  <span class="pay-amt" id="payAmtFull"></span>
+                </label>
+              </div>
+            </div>
+            <div class="pay-recap" id="payRecap"></div>
           </div>
 
           <div class="pay-soon">
             <span class="ic"><svg viewBox="0 0 24 24"><rect x="2.5" y="5.5" width="19" height="13" rx="2"/><path d="M2.5 10h19"/></svg></span>
             <div>
               <h3>Paiement en ligne — bientôt disponible</h3>
-              <p>Le règlement se fait en deux temps&nbsp;: <strong>50&nbsp;% à la commande</strong>, puis <strong>50&nbsp;% à la livraison</strong>. Le paiement par carte arrive prochainement&nbsp;; en attendant, validez votre demande : l'atelier vérifie la disponibilité de chaque pièce et vous envoie votre facture sous 24 à 48&nbsp;h.</p>
+              <p>Le paiement par carte arrive prochainement. En attendant, validez votre demande&nbsp;: l'atelier vérifie la disponibilité de chaque pièce et vous envoie votre facture sous 24 à 48&nbsp;h, avec le règlement que vous avez choisi ci-dessus.</p>
             </div>
           </div>
 

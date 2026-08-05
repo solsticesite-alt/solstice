@@ -33,6 +33,8 @@ module.exports = async (req, res) => {
   const location = clean(body.location, 160);
   const guests = clean(body.guests, 20);
   const message = cleanMultiline(body.message, 4000);
+  // Reglement choisi par le client : acompte de 50 % ou paiement integral.
+  const payment = body.payment === 'full' ? 'full' : 'deposit';
 
   const rawItems = Array.isArray(body.items) ? body.items.slice(0, 80) : [];
   const items = rawItems.map((it) => ({
@@ -59,7 +61,7 @@ module.exports = async (req, res) => {
       id, ref: makeRef(settings, id, createdAt), createdAt, status: 'new',
       client: { name, email, phone },
       event: { type: eventType, date, location, guests },
-      message, items, reply: null
+      message, items, payment, reply: null
     };
     await store.saveNewRequest(request);
   } catch (e) {

@@ -298,6 +298,7 @@
         (c.email?'<a class="btn btn-sm" href="mailto:'+esc(c.email)+'">Écrire un e-mail simple</a>':'')+'</div>'+
       '<div class="info-grid">'+info+'</div>'+ sel + msg +
       repliedNote +
+      (req.payment ? '<div class="sent-note">Règlement choisi par le client : <b>'+(req.payment==='full'?'paiement intégral à la commande':'acompte de 50 %, solde à la livraison')+'</b></div>' : '')+
       '<div class="section-title">Facture à envoyer</div>'+
       '<div class="devis" id="devis"></div>';
 
@@ -318,7 +319,9 @@
   function renderDevis(req){
     var lines=buildInitialLines(req);
     var st=state.settings||{};
-    var deposit = req.reply&&req.reply.depositPct!=null ? req.reply.depositPct : (st.depositPct!=null?st.depositPct:50);
+    var choixClient = req.payment==='full' ? 100 : null;
+    var deposit = req.reply&&req.reply.depositPct!=null ? req.reply.depositPct
+      : (choixClient!=null ? choixClient : (st.depositPct!=null?st.depositPct:50));
     var message = req.reply&&req.reply.message ? req.reply.message : defaultMessage(req);
     var notes = req.reply&&req.reply.notes ? req.reply.notes : '';
 
