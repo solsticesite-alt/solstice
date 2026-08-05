@@ -179,8 +179,8 @@
     background:transparent;
   }
   .hero-scene{position:absolute;left:0;right:0;top:calc(-1 * (var(--nav-h) + 64px));bottom:0;z-index:-1;pointer-events:none;overflow:hidden;
-    -webkit-mask-image:linear-gradient(to bottom,#000 0,#000 82%,rgba(0,0,0,.42) 93%,rgba(0,0,0,0) 100%);
-    mask-image:linear-gradient(to bottom,#000 0,#000 82%,rgba(0,0,0,.42) 93%,rgba(0,0,0,0) 100%);}
+    -webkit-mask-image:linear-gradient(to bottom,#000 0,#000 95%,rgba(0,0,0,0) 100%);
+    mask-image:linear-gradient(to bottom,#000 0,#000 95%,rgba(0,0,0,0) 100%);}
   .hero-sky{position:absolute;inset:0;width:100%;height:100%;}
   .hero-sky-m{display:none;position:absolute;inset:0;width:100%;height:100%;}
   @media (max-width:700px){
@@ -709,6 +709,7 @@
         <mask id="hmask"><circle cx="1210" cy="198" r="46" fill="#fff"/><circle cx="1230" cy="184" r="38" fill="#000"/></mask>
         <linearGradient id="hlift" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#FBF8F2" stop-opacity=".62"/><stop offset=".42" stop-color="#FBF8F2" stop-opacity="0"/></linearGradient>
         <radialGradient id="hwFlame" cx="50%" cy="32%" r="62%"><stop offset="0" stop-color="#FFF0C0"/><stop offset=".55" stop-color="#F6C463"/><stop offset="1" stop-color="#E1912F" stop-opacity=".7"/></radialGradient>
+        <linearGradient id="hland" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FBF8F2" stop-opacity="0"/><stop offset=".4" stop-color="#FBF8F2" stop-opacity=".6"/><stop offset=".78" stop-color="#FBF8F2" stop-opacity="1"/><stop offset="1" stop-color="#FBF8F2" stop-opacity="1"/></linearGradient>
         <linearGradient id="hbase" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ECE3D1" stop-opacity="0"/><stop offset=".5" stop-color="#EDE5D4" stop-opacity=".42"/><stop offset="1" stop-color="#EFE7D7" stop-opacity=".92"/></linearGradient>
       </defs>
 
@@ -726,31 +727,62 @@
       <g fill="#F3F8F4"><circle cx="1040" cy="120" r="1.7"/><circle cx="1096" cy="232" r="2.0"/><circle cx="1150" cy="96" r="1.6"/><circle cx="1250" cy="150" r="1.9"/><circle cx="1310" cy="250" r="1.7"/><circle cx="1360" cy="130" r="1.5"/><circle cx="1180" cy="300" r="1.6"/><circle cx="1290" cy="330" r="2.0"/><circle cx="1080" cy="300" r="1.5"/><circle cx="1340" cy="330" r="1.7"/><circle cx="1230" cy="80" r="1.6"/></g>
 
       <rect x="0" y="420" width="1440" height="480" fill="url(#hbase)"/>
-      <!-- Scène de neige — occupe la largeur de l'ancienne scène de mariage (côté hiver). -->
-      <!-- Congere de neige — meme largeur que l'ancienne scene de mariage, cote hiver.
-           Deux courbes franches, rien de plus : la neige doit se lire d'un coup d'oeil. -->
+      <!-- le ciel vient mourir dans la couleur de la page : sans ca, le bas
+           du degrade laisse une bande grise au raccord avec la section suivante -->
+      <rect x="0" y="796" width="1440" height="104" fill="url(#hland)"/>
+      <!-- Couche de neige au sol — quelques centimetres de neige tassee, sur la
+           largeur de l'ancienne illustration (cote hiver). La neige est blanche
+           et plate : tout le relief vient de l'ombre bleue qui suit le contour,
+           comme sur une vraie couche que la lumiere effleure. -->
       <g class="hero-snowscene">
         <defs>
-          <linearGradient id="snBack" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#EAF3F6"/><stop offset="1" stop-color="#D8E8ED"/></linearGradient>
-          <linearGradient id="snFront" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#F1F8F9"/></linearGradient>
-          <linearGradient id="snFade" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000000"/><stop offset=".24" stop-color="#FFFFFF"/></linearGradient>
-          <mask id="snMask"><rect x="866" y="540" width="574" height="360" fill="url(#snFade)"/></mask>
+          <linearGradient id="snFade" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000000"/><stop offset=".26" stop-color="#FFFFFF"/></linearGradient>
+          <mask id="snMask"><rect x="866" y="715" width="574" height="185" fill="url(#snFade)"/></mask>
+          <filter id="snBlur" x="-25%" y="-200%" width="150%" height="500%"><feGaussianBlur stdDeviation="11"/></filter>
+          <filter id="snBlurS" x="-25%" y="-200%" width="150%" height="500%"><feGaussianBlur stdDeviation="5"/></filter>
+          <filter id="snGrain" x="-2%" y="-20%" width="104%" height="140%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.3" numOctaves="2" seed="11"/>
+            <feColorMatrix type="saturate" values="0"/>
+            <feComponentTransfer><feFuncA type="table" tableValues="0 0.1"/></feComponentTransfer>
+            <feComposite operator="in" in2="SourceAlpha" result="grain"/>
+            <feBlend in="SourceGraphic" in2="grain" mode="multiply"/>
+          </filter>
+          <path id="snEdge" d="M866 774.6Q899 773.6 908.5 773.2Q918 772.8 930 774.5Q942 776.1 951.5 778Q961 779.9 973.5 782.8Q986 785.7 998 785.6Q1010 785.5 1019.5 784.6Q1029 783.7 1041 778.9Q1053 774.1 1067.5 769.8Q1082 765.5 1091 766Q1100 766.5 1113.5 768.5Q1127 770.5 1141 773.6Q1155 776.8 1166.5 777Q1178 777.1 1189.5 776.2Q1201 775.2 1215.5 774.2Q1230 773.2 1239 773.9Q1248 774.6 1262.5 775.6Q1277 776.6 1289.5 776Q1302 775.5 1312 773.1Q1322 770.7 1333 770.2Q1344 769.8 1354.5 768.6Q1365 767.5 1374 769.2Q1383 771 1394 775.5Q1405 780.1 1420.5 783.7Q1436 787.2 1438 787.7Q1440 788.2 1440 788.2"/>
+          <clipPath id="snClip"><path d="M866 774.6Q899 773.6 908.5 773.2Q918 772.8 930 774.5Q942 776.1 951.5 778Q961 779.9 973.5 782.8Q986 785.7 998 785.6Q1010 785.5 1019.5 784.6Q1029 783.7 1041 778.9Q1053 774.1 1067.5 769.8Q1082 765.5 1091 766Q1100 766.5 1113.5 768.5Q1127 770.5 1141 773.6Q1155 776.8 1166.5 777Q1178 777.1 1189.5 776.2Q1201 775.2 1215.5 774.2Q1230 773.2 1239 773.9Q1248 774.6 1262.5 775.6Q1277 776.6 1289.5 776Q1302 775.5 1312 773.1Q1322 770.7 1333 770.2Q1344 769.8 1354.5 768.6Q1365 767.5 1374 769.2Q1383 771 1394 775.5Q1405 780.1 1420.5 783.7Q1436 787.2 1438 787.7Q1440 788.2 1440 788.2L1440 900L866 900Z"/></clipPath>
         </defs>
 
         <g mask="url(#snMask)">
-          <!-- congere arriere -->
-          <path d="M866 742 C1006 700 1148 700 1268 728 C1352 747 1402 738 1440 722 L1440 900 L866 900 Z" fill="url(#snBack)"/>
-          <!-- congere avant -->
-          <path d="M866 806 C1024 766 1170 772 1292 798 C1368 814 1410 806 1440 794 L1440 900 L866 900 Z" fill="url(#snFront)"/>
-          <path d="M866 806 C1024 766 1170 772 1292 798 C1368 814 1410 806 1440 794" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
-          <!-- un filet d'ombre sous la crete, juste pour le volume -->
-          <path d="M866 813 C1024 773 1170 779 1292 805 C1368 821 1410 813 1440 801" fill="none" stroke="#8FAEB9" stroke-width="2" opacity=".16"/>
+          <!-- le ciel se pose un peu plus sombre au ras de la neige -->
+          <path d="M866 774.6Q899 773.6 908.5 773.2Q918 772.8 930 774.5Q942 776.1 951.5 778Q961 779.9 973.5 782.8Q986 785.7 998 785.6Q1010 785.5 1019.5 784.6Q1029 783.7 1041 778.9Q1053 774.1 1067.5 769.8Q1082 765.5 1091 766Q1100 766.5 1113.5 768.5Q1127 770.5 1141 773.6Q1155 776.8 1166.5 777Q1178 777.1 1189.5 776.2Q1201 775.2 1215.5 774.2Q1230 773.2 1239 773.9Q1248 774.6 1262.5 775.6Q1277 776.6 1289.5 776Q1302 775.5 1312 773.1Q1322 770.7 1333 770.2Q1344 769.8 1354.5 768.6Q1365 767.5 1374 769.2Q1383 771 1394 775.5Q1405 780.1 1420.5 783.7Q1436 787.2 1438 787.7Q1440 788.2 1440 788.2L1440 723L866 723Z" fill="#B7C8CE" opacity=".26" filter="url(#snBlur)"/>
 
-          <!-- trois flocons dessines, poses au-dessus de la congere -->
-          <g fill="none" stroke="#FFFFFF" stroke-linecap="round" opacity=".9">
-            <use href="#i-snow" x="0" y="0" width="44" height="44" transform="translate(1046 638)" stroke-width="1.15"/>
-            <use href="#i-snow" x="0" y="0" width="30" height="30" transform="translate(1288 684)" stroke-width="1.3"/>
-            <use href="#i-snow" x="0" y="0" width="22" height="22" transform="translate(958 700)" stroke-width="1.5"/>
+          <!-- la couche elle-meme : blanche, franche -->
+          <path d="M866 774.6Q899 773.6 908.5 773.2Q918 772.8 930 774.5Q942 776.1 951.5 778Q961 779.9 973.5 782.8Q986 785.7 998 785.6Q1010 785.5 1019.5 784.6Q1029 783.7 1041 778.9Q1053 774.1 1067.5 769.8Q1082 765.5 1091 766Q1100 766.5 1113.5 768.5Q1127 770.5 1141 773.6Q1155 776.8 1166.5 777Q1178 777.1 1189.5 776.2Q1201 775.2 1215.5 774.2Q1230 773.2 1239 773.9Q1248 774.6 1262.5 775.6Q1277 776.6 1289.5 776Q1302 775.5 1312 773.1Q1322 770.7 1333 770.2Q1344 769.8 1354.5 768.6Q1365 767.5 1374 769.2Q1383 771 1394 775.5Q1405 780.1 1420.5 783.7Q1436 787.2 1438 787.7Q1440 788.2 1440 788.2L1440 900L866 900Z" fill="#FFFFFF" filter="url(#snGrain)"/>
+
+          <g clip-path="url(#snClip)">
+            <!-- fin liseré d'ombre sous la crete : la surface s'incurve, la lumiere
+                 rase glisse dessus. Etroit, sinon toute la couche vire au gris. -->
+            <use href="#snEdge" fill="none" stroke="#B2C8D6" stroke-width="15" opacity=".34" filter="url(#snBlurS)" transform="translate(3 18)"/>
+            <!-- l'ombre s'accumule dans les creux du contour -->
+            <g fill="#A2BCCC" opacity=".3" filter="url(#snBlur)">
+              <ellipse cx="986" cy="801" rx="42" ry="14"/>
+              <ellipse cx="1178" cy="793" rx="36" ry="12"/>
+              <ellipse cx="1277" cy="792" rx="38" ry="12"/>
+            </g>
+            <!-- les bosses restent en pleine lumiere -->
+            <g fill="#FFFFFF" opacity=".9" filter="url(#snBlurS)">
+              <ellipse cx="918" cy="785" rx="30" ry="9"/><ellipse cx="1082" cy="778" rx="34" ry="10"/>
+              <ellipse cx="1230" cy="786" rx="30" ry="9"/><ellipse cx="1365" cy="780" rx="32" ry="10"/>
+            </g>
+          </g>
+
+          <!-- fil de lumiere sur la crete, cote soleil -->
+          <use href="#snEdge" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" opacity=".95" transform="translate(0 -0.8)"/>
+
+          <!-- eclats de givre -->
+          <g fill="#FFFFFF">
+            <circle cx="1008" cy="801" r="1.6"/><circle cx="1074" cy="791" r="1.2"/><circle cx="1152" cy="803" r="1.5"/>
+            <circle cx="1224" cy="793" r="1.2"/><circle cx="1296" cy="805" r="1.6"/><circle cx="1364" cy="795" r="1.3"/>
+            <circle cx="1424" cy="803" r="1.4"/><circle cx="940" cy="797" r="1.2"/>
           </g>
         </g>
       </g>
@@ -767,20 +799,35 @@
         </linearGradient>
         <radialGradient id="hmsun" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FFF9E4"/><stop offset=".5" stop-color="#FBDA8E"/><stop offset=".82" stop-color="#F3C468" stop-opacity=".85"/><stop offset="1" stop-color="#EEB94E" stop-opacity=".22"/></radialGradient>
         <radialGradient id="hmhalo" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FFE8A6" stop-opacity=".82"/><stop offset=".42" stop-color="#FBDD90" stop-opacity=".3"/><stop offset="1" stop-color="#FBDD90" stop-opacity="0"/></radialGradient>
-        <radialGradient id="hmmoonh" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#E6F0EC" stop-opacity=".55"/><stop offset="1" stop-color="#E6F0EC" stop-opacity="0"/></radialGradient>
-        <mask id="hmmask"><circle cx="110" cy="648" r="40" fill="#fff"/><circle cx="128" cy="634" r="33" fill="#000"/></mask>
-        <linearGradient id="hmdrift" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F3F7F6" stop-opacity=".9"/><stop offset="1" stop-color="#DDE8E8" stop-opacity=".5"/></linearGradient>
+        <linearGradient id="hmland" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FBF8F2" stop-opacity="0"/><stop offset=".55" stop-color="#FBF8F2" stop-opacity=".55"/><stop offset="1" stop-color="#FBF8F2" stop-opacity=".97"/></linearGradient>
       </defs>
 
       <rect width="440" height="900" fill="url(#hmsky)"/>
+      <rect x="0" y="748" width="440" height="52" fill="url(#hmland)"/>
 
-      <!-- congere, tout en bas : une seule courbe nette -->
-      <path d="M0 826 C110 792 232 800 330 822 C388 835 414 830 440 820 L440 900 L0 900 Z" fill="url(#hmdrift)"/>
-      <path d="M0 826 C110 792 232 800 330 822 C388 835 414 830 440 820" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" opacity=".9"/>
-      <g fill="none" stroke="#FFFFFF" stroke-linecap="round" opacity=".8">
-        <use href="#i-snow" x="0" y="0" width="34" height="34" transform="translate(300 726)" stroke-width="1.3"/>
-        <use href="#i-snow" x="0" y="0" width="22" height="22" transform="translate(64 770)" stroke-width="1.6"/>
+      <!-- Couche de neige au sol : meme principe que la version large — un corps
+           blanc, l'ombre bleue qui suit le contour, un grain fin. -->
+      <path id="snEdgeM" d="M-6 734.5Q8 740.3 18.5 740.1Q29 740 38 737.8Q47 735.5 54.5 735.2Q62 734.9 71 733.7Q80 732.5 89 730.6Q98 728.8 106 729.1Q114 729.5 120.5 733.1Q127 736.7 133 738.5Q139 740.2 148 737Q157 733.8 167 729.9Q177 726 187 729.9Q197 733.7 204 736.7Q211 739.7 220.5 739.5Q230 739.2 239 737.1Q248 735 258.5 734.7Q269 734.4 280 731Q291 727.7 298 726.9Q305 726 314 727.5Q323 729.1 333.5 735.6Q344 742.1 351 741.2Q358 740.4 367.5 736.5Q377 732.6 386 731.2Q395 729.7 402.5 731.3Q410 732.9 416.5 735.1Q423 737.4 432.5 736.8Q442 736.1 444 735.9Q446 735.6 446 735.6" fill="none"/>
+      <clipPath id="snClipM"><path d="M-6 734.5Q8 740.3 18.5 740.1Q29 740 38 737.8Q47 735.5 54.5 735.2Q62 734.9 71 733.7Q80 732.5 89 730.6Q98 728.8 106 729.1Q114 729.5 120.5 733.1Q127 736.7 133 738.5Q139 740.2 148 737Q157 733.8 167 729.9Q177 726 187 729.9Q197 733.7 204 736.7Q211 739.7 220.5 739.5Q230 739.2 239 737.1Q248 735 258.5 734.7Q269 734.4 280 731Q291 727.7 298 726.9Q305 726 314 727.5Q323 729.1 333.5 735.6Q344 742.1 351 741.2Q358 740.4 367.5 736.5Q377 732.6 386 731.2Q395 729.7 402.5 731.3Q410 732.9 416.5 735.1Q423 737.4 432.5 736.8Q442 736.1 444 735.9Q446 735.6 446 735.6L446 900L-6 900Z"/></clipPath>
+      <path d="M-6 734.5Q8 740.3 18.5 740.1Q29 740 38 737.8Q47 735.5 54.5 735.2Q62 734.9 71 733.7Q80 732.5 89 730.6Q98 728.8 106 729.1Q114 729.5 120.5 733.1Q127 736.7 133 738.5Q139 740.2 148 737Q157 733.8 167 729.9Q177 726 187 729.9Q197 733.7 204 736.7Q211 739.7 220.5 739.5Q230 739.2 239 737.1Q248 735 258.5 734.7Q269 734.4 280 731Q291 727.7 298 726.9Q305 726 314 727.5Q323 729.1 333.5 735.6Q344 742.1 351 741.2Q358 740.4 367.5 736.5Q377 732.6 386 731.2Q395 729.7 402.5 731.3Q410 732.9 416.5 735.1Q423 737.4 432.5 736.8Q442 736.1 444 735.9Q446 735.6 446 735.6L446 744L-6 744Z" fill="#B7C8CE" opacity=".24" filter="url(#snBlur)"/>
+      <path d="M-6 734.5Q8 740.3 18.5 740.1Q29 740 38 737.8Q47 735.5 54.5 735.2Q62 734.9 71 733.7Q80 732.5 89 730.6Q98 728.8 106 729.1Q114 729.5 120.5 733.1Q127 736.7 133 738.5Q139 740.2 148 737Q157 733.8 167 729.9Q177 726 187 729.9Q197 733.7 204 736.7Q211 739.7 220.5 739.5Q230 739.2 239 737.1Q248 735 258.5 734.7Q269 734.4 280 731Q291 727.7 298 726.9Q305 726 314 727.5Q323 729.1 333.5 735.6Q344 742.1 351 741.2Q358 740.4 367.5 736.5Q377 732.6 386 731.2Q395 729.7 402.5 731.3Q410 732.9 416.5 735.1Q423 737.4 432.5 736.8Q442 736.1 444 735.9Q446 735.6 446 735.6L446 900L-6 900Z" fill="#FFFFFF" filter="url(#snGrain)"/>
+      <g clip-path="url(#snClipM)">
+        <use href="#snEdgeM" stroke="#B2C8D6" stroke-width="13" opacity=".34" filter="url(#snBlurS)" transform="translate(2 15)"/>
+        <g fill="#A2BCCC" opacity=".3" filter="url(#snBlur)">
+          <ellipse cx="8" cy="760.3" rx="26" ry="9"/>
+          <ellipse cx="139" cy="760.2" rx="26" ry="9"/>
+          <ellipse cx="211" cy="759.7" rx="26" ry="9"/>
+          <ellipse cx="344" cy="762.1" rx="26" ry="9"/>
+        </g>
+        <g fill="#FFFFFF" opacity=".9" filter="url(#snBlurS)">
+          <ellipse cx="98" cy="737.8" rx="22" ry="7"/>
+          <ellipse cx="177" cy="735" rx="22" ry="7"/>
+          <ellipse cx="305" cy="735" rx="22" ry="7"/>
+          <ellipse cx="395" cy="738.7" rx="22" ry="7"/>
+        </g>
       </g>
+      <use href="#snEdgeM" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" opacity=".95" transform="translate(0 -0.7)"/>
+      <g fill="#FFFFFF"><circle cx="88" cy="752" r="1.4"/><circle cx="176" cy="746" r="1.2"/><circle cx="268" cy="754" r="1.5"/><circle cx="352" cy="748" r="1.2"/></g>
 
       <!-- étoiles d'hiver -->
       <g fill="#EAF3F1" opacity=".7"><circle cx="46" cy="580" r="1.6"/><circle cx="392" cy="640" r="1.8"/><circle cx="30" cy="700" r="1.5"/><circle cx="412" cy="742" r="1.6"/><circle cx="356" cy="560" r="1.5"/></g>
