@@ -78,8 +78,6 @@
   .cat{box-shadow:0 18px 38px -30px rgba(34,28,21,.4);}
   .card-media{box-shadow:0 22px 46px -34px rgba(34,28,21,.5);}
   .avis{box-shadow:0 22px 46px -36px rgba(34,28,21,.38);}
-  .coll{box-shadow:0 26px 52px -34px rgba(20,15,9,.5);}
-  .pack{box-shadow:0 30px 60px -40px rgba(120,80,30,.5);}
   /* motifs graphiques été/hiver + événementiel */
   /* graphismes couleur + halos */
   .gfx{position:absolute;z-index:0;pointer-events:none;opacity:.92;}
@@ -337,28 +335,6 @@
   .card-caution{font-size:.68rem;color:var(--stone);letter-spacing:.03em;white-space:nowrap;}
   @media (hover:none){.card-add{position:static;opacity:1;transform:none;margin-top:.85rem;}}
 
-  /* ============================ COLLECTIONS (dark) ============================ */
-  .collections{position:relative;}
-  .collections::before{display:none;}
-  .collections::after{display:none;}
-  .collections .wrap{position:relative;z-index:1;}
-  .collections .eyebrow{color:var(--gold-deep);}
-  .collections .eyebrow::before{background:var(--gold);}
-  .collections .sec-flex h2{color:var(--ink);}
-  .coll-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,1.8vw,24px);}
-  .coll{position:relative;aspect-ratio:3/4;overflow:hidden;border-radius:clamp(18px,2vw,26px);display:flex;align-items:flex-end;padding:clamp(20px,2.3vw,32px);box-shadow:0 26px 50px -34px rgba(60,40,18,.5);transition:transform .55s cubic-bezier(.2,.7,.2,1),box-shadow .55s;}
-  .coll:hover{transform:translateY(-7px);box-shadow:0 44px 72px -36px rgba(60,40,18,.55);}
-  .coll-1{background:linear-gradient(158deg,#F0D3A2,#CE9B60);}
-  .coll-2{background:linear-gradient(158deg,#D3CBAA,#9A926B);}
-  .coll-3{background:linear-gradient(158deg,#4C4234,#20180F);}
-  .coll::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(20,15,9,.6),transparent 58%);}
-  .coll-art{position:absolute;top:6%;left:50%;transform:translateX(-50%);width:clamp(128px,18vw,186px);z-index:0;filter:drop-shadow(0 18px 26px rgba(40,25,10,.24));transition:transform .55s cubic-bezier(.2,.7,.2,1);}
-  .coll:hover .coll-art{transform:translateX(-50%) translateY(-5px) scale(1.05);}
-  .coll-body{position:relative;z-index:1;color:#fff;}
-  .coll-body .n{font-size:.62rem;letter-spacing:.26em;text-transform:uppercase;opacity:.86;}
-  .coll-body h3{font-size:clamp(1.6rem,2.4vw,2.2rem);margin:.28em 0 .32em;color:#fff;}
-  .coll-body p{font-size:.84rem;opacity:.9;max-width:26ch;}
-
   /* ============================ PROCESS ============================ */
   .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(16px,1.8vw,26px);counter-reset:step;}
   .step{position:relative;overflow:hidden;background:linear-gradient(165deg,rgba(255,255,255,.64),rgba(245,238,225,.46));backdrop-filter:blur(8px) saturate(1.05);-webkit-backdrop-filter:blur(8px) saturate(1.05);border:1px solid rgba(255,255,255,.6);border-radius:clamp(14px,1.4vw,20px);padding:clamp(20px,2vw,28px);box-shadow:0 20px 40px -34px rgba(60,40,18,.45);transition:transform .5s cubic-bezier(.2,.7,.2,1),box-shadow .5s;}
@@ -370,23 +346,6 @@
   .step-ic svg{width:66%;height:66%;}
   .step h3{font-size:1.1rem;margin-bottom:.4rem;}
   .step p{font-size:.86rem;color:var(--ink-soft);}
-
-  /* ============================ PACK ============================ */
-  .pack{background:linear-gradient(150deg,var(--ete-1),var(--ete-2) 72%,var(--ete-3));border-radius:clamp(18px,2.2vw,30px);overflow:hidden;position:relative;box-shadow:0 30px 60px -38px rgba(80,50,20,.5);}
-  .pack-inner{display:grid;grid-template-columns:1.12fr .88fr;align-items:stretch;}
-  .pack-copy{padding:clamp(34px,4.6vw,68px);color:#3a2410;position:relative;z-index:1;}
-  .pack-copy .eyebrow{color:#7a4a1f;}
-  .pack-copy .eyebrow::before{background:#7a4a1f;}
-  .pack-copy h3{font-size:clamp(1.9rem,3.4vw,2.9rem);color:#2c1c0e;margin:.4em 0 .5em;}
-  .pack-copy p{color:#482e14;max-width:42ch;margin-bottom:1.7rem;}
-  .pack-copy .btn-ink{background:#2c1c0e;}
-  .pack-visual{position:relative;min-height:clamp(240px,30vw,100%);display:grid;place-items:center;overflow:hidden;}
-  .pack-visual::before{content:"";position:absolute;width:76%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.42),transparent 66%);}
-  .pack-art{position:relative;width:clamp(160px,21vw,230px);filter:drop-shadow(0 20px 28px rgba(80,50,20,.28));transition:transform .6s cubic-bezier(.2,.7,.2,1);}
-  .pack:hover .pack-art{transform:translateY(-5px) scale(1.04);}
-  .pack-price{position:absolute;bottom:20px;right:24px;z-index:1;font-family:var(--serif);color:#2c1c0e;text-align:right;}
-  .pack-price b{display:block;font-size:1.9rem;letter-spacing:-.01em;}
-  .pack-price span{font-family:var(--sans);font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;color:#5c3a1c;}
 
   /* ============================ INSPIRATIONS ============================ */
   .inspi{background:transparent;}
@@ -474,11 +433,7 @@
     .univers{grid-template-columns:1fr;}
     .univers::before{display:none;}
     .uni{min-height:clamp(480px,86vw,620px);}
-    .coll-grid{grid-template-columns:1fr;}
-    .coll{aspect-ratio:16/10;}
     .avis-grid{grid-template-columns:1fr;max-width:540px;margin-inline:auto;}
-    .pack-inner{grid-template-columns:1fr;}
-    .pack-visual{min-height:200px;order:-1;}
     .soc-grid{grid-template-columns:repeat(4,1fr);}
   }
   @media (max-width:560px){
@@ -1167,35 +1122,6 @@
   </div>
 </section>
 
-<!-- COLLECTIONS -->
-<section class="section collections">
-  <div class="aura cool" style="right:1%;bottom:4%;width:400px;height:400px"></div>
-  <svg class="gfx float" style="right:2.5%;bottom:3%;width:138px" viewBox="0 0 140 220" aria-hidden="true"><use href="#g-euca"/></svg>
-  <div class="wrap">
-    <div class="sec-flex">
-      <div class="titles">
-        <span class="eyebrow reveal">Nos ambiances</span>
-        <h2 class="reveal d1">Des collections qui donnent le ton</h2>
-      </div>
-      <a class="link-more reveal d1" href="/nos-univers">Toutes les collections <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
-    </div>
-    <div class="coll-grid">
-      <a class="coll coll-1 reveal" href="/nos-univers">
-        <svg class="coll-art" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-glass"/></svg>
-        <div class="coll-body"><span class="n">Solstice d'Été</span><h3>Dolce Vita</h3><p>Terrasses ensoleillées, citrons et lin naturel.</p></div>
-      </a>
-      <a class="coll coll-2 reveal d1" href="/nos-univers">
-        <svg class="coll-art" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-table"/></svg>
-        <div class="coll-body"><span class="n">Solstice d'Été</span><h3>Garden Party</h3><p>Verdure douce, guinguette chic et vaisselle champêtre.</p></div>
-      </a>
-      <a class="coll coll-3 reveal d2" href="/nos-univers">
-        <svg class="coll-art" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-candles"/></svg>
-        <div class="coll-body"><span class="n">Solstice d'Hiver</span><h3>Black &amp; Gold</h3><p>Noir profond, dorures et éclat des grands soirs.</p></div>
-      </a>
-    </div>
-  </div>
-</section>
-
 <!-- PROCESS -->
 <section class="section" id="process">
   <div class="wrap">
@@ -1209,26 +1135,6 @@
       <div class="step reveal d1"><span class="no"></span><div class="step-ic"><svg viewBox="0 0 72 72" aria-hidden="true"><use href="#g3-cal"/></svg></div><h3>Choisissez vos dates</h3><p>Retrait ou livraison, et le lieu de votre événement à Amiens et alentours.</p></div>
       <div class="step reveal d2"><span class="no"></span><div class="step-ic"><svg viewBox="0 0 72 72" aria-hidden="true"><use href="#g3-send"/></svg></div><h3>Envoyez votre demande</h3><p>Sans engagement. On vérifie les disponibilités de chaque pièce.</p></div>
       <div class="step reveal d3"><span class="no"></span><div class="step-ic"><svg viewBox="0 0 72 72" aria-hidden="true"><use href="#g3-doc"/></svg></div><h3>Recevez votre devis</h3><p>Sous 24 à 48 h. Vous validez, et tout est prêt pour le jour J.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- PACK -->
-<section class="section" style="padding-top:0;">
-  <div class="wrap">
-    <div class="pack reveal">
-      <div class="pack-inner">
-        <div class="pack-copy">
-          <span class="eyebrow">Clé en main</span>
-          <h3>Le Pack Garden Party</h3>
-          <p>Tables, chaises, vaisselle, verrerie et décoration végétale pour recevoir jusqu'à 20 invités. Une ambiance complète, pensée pour vous simplifier la vie.</p>
-          <a class="btn btn-ink" href="#">Découvrir le pack <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
-        </div>
-        <div class="pack-visual">
-          <svg class="pack-art" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-table"/></svg>
-          <div class="pack-price"><span>à partir de</span><b>190 €</b></div>
-        </div>
-      </div>
     </div>
   </div>
 </section>

@@ -58,26 +58,78 @@
 .uni-visual:hover .art{transform:scale(1.07);}
 .uni-visual .cap{position:absolute;left:14px;bottom:14px;font-size:.58rem;letter-spacing:.13em;text-transform:uppercase;background:rgba(251,248,242,.9);color:var(--ink-soft);padding:.4em .7em;border-radius:99px;}
 
-/* Grille des collections */
-.colls{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(14px,1.8vw,24px);}
-.coll{position:relative;aspect-ratio:3/4;overflow:hidden;border-radius:clamp(18px,2vw,26px);display:flex;flex-direction:column;justify-content:flex-end;padding:clamp(20px,2.4vw,30px);color:#fff;box-shadow:0 26px 50px -34px rgba(60,40,18,.5);transition:transform .55s cubic-bezier(.2,.7,.2,1),box-shadow .55s;}
-.coll:hover{transform:translateY(-7px);box-shadow:0 44px 72px -36px rgba(60,40,18,.55);}
-.coll::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(20,15,9,.55),transparent 60%);}
-.coll > *{position:relative;z-index:1;}
-.coll .glyph{position:absolute;top:6%;left:50%;transform:translateX(-50%);width:clamp(112px,16vw,162px);height:auto;filter:drop-shadow(0 16px 24px rgba(40,25,10,.24));transition:transform .55s cubic-bezier(.2,.7,.2,1);z-index:0;}
-.coll:hover .glyph{transform:translateX(-50%) translateY(-5px) scale(1.05);}
-.coll .n{font-size:.6rem;letter-spacing:.24em;text-transform:uppercase;opacity:.85;}
-.coll h3{font-size:clamp(1.4rem,2.2vw,2rem);margin:.3em 0 .35em;color:#fff;}
-.coll p{font-size:.84rem;opacity:.92;max-width:26ch;}
-.coll-dolce{background:linear-gradient(158deg,var(--ete-1),var(--ete-2) 60%,var(--ete-3));}
-.coll-garden{background:linear-gradient(158deg,var(--sand),var(--gold-soft) 55%,var(--gold-deep));}
-.coll-black{background:linear-gradient(158deg,var(--hiver-1),var(--hiver-2) 55%,var(--hiver-3));}
-.coll-white{background:linear-gradient(158deg,var(--paper),var(--paper-2) 45%,var(--sand-2));color:var(--ink);}
-.coll-white::after{background:linear-gradient(to top,rgba(255,255,255,.45),transparent 55%);}
-.coll-white .glyph{}
-.coll-white .n{color:var(--gold-deep);opacity:1;}
-.coll-white h3{color:var(--ink);}
-.coll-white p{color:var(--ink-soft);opacity:1;}
+/* Collections : bandeau d'univers + cartes */
+.uni-block{margin-bottom:clamp(34px,5vw,62px);}
+.uni-band{display:flex;align-items:baseline;gap:1rem;flex-wrap:wrap;padding-bottom:.9rem;margin-bottom:clamp(18px,2.4vw,28px);border-bottom:1px solid var(--line);}
+.uni-band .ub-tag{font-family:var(--serif);font-size:clamp(1.25rem,2.2vw,1.7rem);}
+.uni-band p{color:var(--ink-soft);font-size:.9rem;}
+.uni-band.ete .ub-tag{color:var(--gold-deep);}
+.uni-band.hiver .ub-tag{color:var(--hiver-1);}
+.col-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(16px,2.2vw,28px);}
+.col-card{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:clamp(16px,1.8vw,22px);overflow:hidden;background:var(--paper);box-shadow:0 26px 54px -40px rgba(60,40,18,.5);transition:transform .5s cubic-bezier(.2,.7,.2,1),box-shadow .5s;}
+.col-card:hover{transform:translateY(-5px);box-shadow:0 44px 76px -42px rgba(60,40,18,.55);}
+.col-top{position:relative;height:clamp(128px,15vw,180px);display:grid;place-items:center;}
+.col-top .glyph{width:clamp(88px,11vw,128px);height:auto;filter:drop-shadow(0 14px 22px rgba(40,25,10,.22));}
+.ct-dolce{background:linear-gradient(158deg,var(--ete-1),var(--ete-2) 60%,var(--ete-3));}
+.ct-garden{background:linear-gradient(158deg,var(--sand),var(--gold-soft) 55%,var(--gold-deep));}
+.ct-black{background:linear-gradient(158deg,var(--hiver-1),var(--hiver-2) 55%,var(--hiver-3));}
+.ct-white{background:linear-gradient(158deg,var(--paper-2),var(--sand) 45%,var(--sand-2));}
+.col-body{padding:clamp(20px,2.4vw,30px);display:flex;flex-direction:column;gap:.5rem;flex:1;}
+.col-body .n{font-size:.6rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold-deep);}
+.col-body h3{font-size:clamp(1.4rem,2.2vw,1.95rem);}
+.col-body > p{font-size:.9rem;color:var(--ink-soft);}
+.pal{display:flex;gap:7px;margin:.15rem 0 .35rem;}
+.pal span{width:22px;height:22px;border-radius:50%;border:1px solid rgba(34,28,21,.14);}
+.offers{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:auto;padding-top:.7rem;}
+.offer{border:1px solid var(--line);border-radius:var(--radius);background:var(--paper-2);padding:clamp(14px,1.6vw,18px);display:flex;flex-direction:column;gap:.5rem;}
+.offer-table{background:var(--sand);}
+.offer-t .ot-k{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-deep);}
+.offer-t h4{font-family:var(--serif);font-weight:400;font-size:1.1rem;margin:.2rem 0 0;}
+.offer p{font-size:.8rem;color:var(--ink-soft);flex:1;}
+.offer .btn{width:100%;padding:.85em 1em;font-size:.68rem;}
+
+/* Pop-up : invités + récap + ajout au panier */
+.om-root{position:fixed;inset:0;z-index:90;display:none;}
+.om-root.open{display:block;}
+.om-scrim{position:absolute;inset:0;background:rgba(34,28,21,.46);backdrop-filter:blur(3px);opacity:0;transition:opacity .3s ease;}
+.om-root.open .om-scrim{opacity:1;}
+.om-panel{position:absolute;left:50%;top:50%;transform:translate(-50%,-48%);width:min(560px,calc(100% - 32px));max-height:min(88vh,860px);background:var(--paper);border-radius:clamp(14px,1.6vw,20px);display:flex;flex-direction:column;overflow:hidden;box-shadow:0 50px 90px -40px rgba(34,28,21,.6);opacity:0;transition:opacity .3s ease,transform .3s cubic-bezier(.2,.7,.2,1);}
+.om-root.open .om-panel{opacity:1;transform:translate(-50%,-50%);}
+.om-head{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;padding:clamp(20px,2.6vw,28px) clamp(20px,2.6vw,28px) .9rem;border-bottom:1px solid var(--line);}
+.om-k{font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-deep);}
+.om-head h3{font-size:clamp(1.3rem,2.6vw,1.75rem);margin-top:.25rem;}
+.om-x{width:36px;height:36px;border-radius:99px;font-size:1.5rem;line-height:1;display:grid;place-items:center;color:var(--ink);flex:none;transition:background .25s,color .25s;}
+.om-x:hover{background:rgba(176,138,84,.14);color:var(--gold-deep);}
+.om-scroll{overflow-y:auto;padding:clamp(16px,2.2vw,22px) clamp(20px,2.6vw,28px);}
+.om-desc{font-size:.9rem;color:var(--ink-soft);margin-bottom:1.1rem;}
+.om-field{display:flex;flex-direction:column;gap:.4rem;margin-bottom:1.2rem;}
+.om-field label{font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-deep);font-weight:600;}
+.om-field select{font-family:inherit;font-size:1rem;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:.8em 1em;appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--gold-deep) 50%),linear-gradient(135deg,var(--gold-deep) 50%,transparent 50%);background-position:calc(100% - 20px) 55%,calc(100% - 14px) 55%;background-size:6px 6px,6px 6px;background-repeat:no-repeat;}
+.om-field select:focus-visible{outline:2px solid var(--gold-deep);outline-offset:2px;}
+.om-hint{font-size:.75rem;color:var(--stone);}
+.om-listwrap{border:1px solid var(--line);border-radius:var(--radius);background:var(--paper-2);padding:.3rem 1rem;}
+.om-listhead{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;padding:.75rem 0 .5rem;border-bottom:1px solid var(--line);}
+.om-listhead span:first-child{font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-deep);font-weight:600;}
+.om-listhead span:last-child{font-size:.78rem;color:var(--stone);font-variant-numeric:tabular-nums;}
+.om-row{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:.55rem 0;border-bottom:1px dashed var(--line-soft);}
+.om-row:last-child{border-bottom:none;}
+.om-row .rn{font-size:.9rem;}
+.om-row .rn small{display:block;color:var(--stone);font-size:.72rem;}
+.om-row .rq{font-family:var(--serif);font-size:1.05rem;font-variant-numeric:tabular-nums;min-width:2.6ch;text-align:right;}
+.om-also{margin-top:1.4rem;}
+.om-also h4{font-family:var(--serif);font-weight:400;font-size:1.05rem;margin-bottom:.7rem;}
+.om-alsogrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+.om-sug{border:1px solid var(--line);border-radius:var(--radius);background:var(--paper);padding:.75rem .85rem;display:flex;flex-direction:column;gap:.45rem;}
+.om-sug .sn{font-size:.84rem;line-height:1.35;}
+.om-sug .sd{font-size:.72rem;color:var(--stone);}
+.om-sug button{margin-top:auto;font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;font-weight:600;color:var(--gold-deep);border:1px solid var(--line);border-radius:99px;padding:.5em .9em;transition:background .25s,color .25s,border-color .25s;}
+.om-sug button:hover{background:var(--gold);color:#fff;border-color:var(--gold);}
+.om-sug button.on{background:var(--gold);color:#fff;border-color:var(--gold);}
+.om-foot{padding:1rem clamp(20px,2.6vw,28px) clamp(18px,2.4vw,24px);border-top:1px solid var(--line);background:var(--paper-2);}
+.om-foot .btn{width:100%;}
+@media (prefers-reduced-motion:reduce){
+  .col-card,.om-panel,.om-scrim{transition:none;}
+}
 
 /* CTA final */
 .cta{background:linear-gradient(150deg,var(--ete-1),var(--ete-2) 72%,var(--ete-3));border-radius:var(--radius);padding:clamp(42px,6vw,82px) clamp(24px,5vw,60px);text-align:center;color:var(--ink);}
@@ -94,11 +146,12 @@
 @media (max-width:860px){
   .uni-grid{grid-template-columns:1fr;}
   .uni-visual{order:-1;aspect-ratio:16/10;}
-  .colls{grid-template-columns:repeat(2,1fr);}
+  .col-grid{grid-template-columns:1fr;}
 }
 @media (max-width:560px){
   .sband{grid-template-columns:1fr;}
-  .colls{grid-template-columns:1fr;}
+  .offers{grid-template-columns:1fr;}
+  .om-alsogrid{grid-template-columns:1fr;}
 }
 </style>
 </head>
@@ -401,42 +454,162 @@
 <!-- GRILLE DES COLLECTIONS -->
 <section class="section" id="collections">
   <div class="wrap">
-    <div class="sec-flex">
-      <div class="titles">
-        <span class="eyebrow reveal">Nos ambiances</span>
-        <h2 class="reveal d1">Quatre collections pour donner le ton</h2>
-      </div>
-      <a class="link-more reveal d1" href="/catalogue">Voir le catalogue <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+    <div class="sec-head center">
+      <span class="eyebrow center reveal">Nos collections</span>
+      <h2 class="reveal d1">Deux collections par solstice</h2>
+      <p class="lede reveal d2" style="text-align:center;">Chaque collection se prend de deux façons&nbsp;: le <strong>pack complet</strong>, tout le décor prêt à installer&nbsp;; ou <strong>les tables</strong>, la décoration de table seule. Vous choisissez le nombre d'invités, nous ajustons les quantités.</p>
     </div>
-    <p class="lede reveal d1" style="margin-bottom:clamp(30px,4vw,44px);">Au sein de chaque univers, une collection resserre le style : matières, couleurs et petits détails qui feront la signature de votre événement.</p>
-    <div class="colls">
-      <a class="coll coll-dolce reveal" href="/catalogue">
-        <svg class="glyph" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-glass"/></svg>
-        <span class="n">Solstice d'Été</span>
-        <h3>Dolce Vita</h3>
-        <p>Terrasses ensoleillées, citrons et lin naturel. L'art de vivre italien.</p>
-      </a>
-      <a class="coll coll-garden reveal d1" href="/catalogue">
-        <svg class="glyph" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-foliage"/></svg>
-        <span class="n">Solstice d'Été</span>
-        <h3>Garden Party</h3>
-        <p>Verdure douce, guinguette chic et vaisselle champêtre. Recevoir au jardin.</p>
-      </a>
-      <a class="coll coll-white reveal d2" href="/catalogue">
-        <svg class="glyph" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-lantern"/></svg>
-        <span class="n">Été &amp; Hiver</span>
-        <h3>White Party</h3>
-        <p>Total look immaculé, épuré et lumineux. Solaire l'été, givré l'hiver.</p>
-      </a>
-      <a class="coll coll-black reveal d3" href="/catalogue">
-        <svg class="glyph" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-candles"/></svg>
-        <span class="n">Solstice d'Hiver</span>
-        <h3>Black &amp; Gold</h3>
-        <p>Noir profond, dorures et éclat des grands soirs. L'élégance des fêtes.</p>
-      </a>
+
+    <div class="uni-block reveal">
+      <div class="uni-band ete">
+        <span class="ub-tag">Solstice d'Été</span>
+        <p>Lumière, grands airs et dorures&nbsp;: la saison des célébrations en plein air.</p>
+      </div>
+      <div class="col-grid">
+
+        <article class="col-card" data-col="dolce">
+          <div class="col-top ct-dolce">
+            <svg class="glyph" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-glass"/></svg>
+          </div>
+          <div class="col-body">
+            <span class="n">Solstice d'Été</span>
+            <h3>Dolce Vita</h3>
+            <p>Un dîner d'été sous les citronniers&nbsp;: lin naturel, citrons et lumière dorée.</p>
+            <div class="pal" aria-hidden="true"><span style="background:#E4C862"></span><span style="background:#7C8B5A"></span><span style="background:#E5D8C1"></span></div>
+            <div class="offers">
+              <div class="offer">
+                <div class="offer-t"><span class="ot-k">Le pack complet</span><h4>Tout le décor</h4></div>
+                <p>Mobilier, art de la table, décoration et lumière. Rien à choisir pièce par pièce.</p>
+                <button type="button" class="btn btn-ink offer-btn" data-col="dolce" data-kind="pack">Je veux ce pack</button>
+              </div>
+              <div class="offer offer-table">
+                <div class="offer-t"><span class="ot-k">Les tables</span><h4>La table seule</h4></div>
+                <p>Uniquement la décoration de table&nbsp;: linge, vaisselle, verrerie et centre de table.</p>
+                <button type="button" class="btn btn-ghost offer-btn" data-col="dolce" data-kind="table">Je veux cette table</button>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="col-card" data-col="garden">
+          <div class="col-top ct-garden">
+            <svg class="glyph" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-foliage"/></svg>
+          </div>
+          <div class="col-body">
+            <span class="n">Solstice d'Été</span>
+            <h3>Garden Party</h3>
+            <p>Verdure douce, guinguette chic et vaisselle champêtre. Recevoir au jardin.</p>
+            <div class="pal" aria-hidden="true"><span style="background:#8F9D66"></span><span style="background:#EEE4D3"></span><span style="background:#C9A05A"></span></div>
+            <div class="offers">
+              <div class="offer">
+                <div class="offer-t"><span class="ot-k">Le pack complet</span><h4>Tout le décor</h4></div>
+                <p>Mobilier, art de la table, décoration et lumière. Rien à choisir pièce par pièce.</p>
+                <button type="button" class="btn btn-ink offer-btn" data-col="garden" data-kind="pack">Je veux ce pack</button>
+              </div>
+              <div class="offer offer-table">
+                <div class="offer-t"><span class="ot-k">Les tables</span><h4>La table seule</h4></div>
+                <p>Uniquement la décoration de table&nbsp;: linge, vaisselle, verrerie et centre de table.</p>
+                <button type="button" class="btn btn-ghost offer-btn" data-col="garden" data-kind="table">Je veux cette table</button>
+              </div>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+
+    <div class="uni-block reveal">
+      <div class="uni-band hiver">
+        <span class="ub-tag">Solstice d'Hiver</span>
+        <p>Velours, chandelles et éclat feutré&nbsp;: la saison des réceptions au chaud.</p>
+      </div>
+      <div class="col-grid">
+
+        <article class="col-card" data-col="black">
+          <div class="col-top ct-black">
+            <svg class="glyph" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-candles"/></svg>
+          </div>
+          <div class="col-body">
+            <span class="n">Solstice d'Hiver</span>
+            <h3>Black &amp; Gold</h3>
+            <p>Noir profond, dorures et éclat des grands soirs. L'élégance des fêtes.</p>
+            <div class="pal" aria-hidden="true"><span style="background:#1B140D"></span><span style="background:#B08A54"></span><span style="background:#5A1F2B"></span></div>
+            <div class="offers">
+              <div class="offer">
+                <div class="offer-t"><span class="ot-k">Le pack complet</span><h4>Tout le décor</h4></div>
+                <p>Mobilier, art de la table, décoration et lumière. Rien à choisir pièce par pièce.</p>
+                <button type="button" class="btn btn-ink offer-btn" data-col="black" data-kind="pack">Je veux ce pack</button>
+              </div>
+              <div class="offer offer-table">
+                <div class="offer-t"><span class="ot-k">Les tables</span><h4>La table seule</h4></div>
+                <p>Uniquement la décoration de table&nbsp;: linge, vaisselle, verrerie et centre de table.</p>
+                <button type="button" class="btn btn-ghost offer-btn" data-col="black" data-kind="table">Je veux cette table</button>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="col-card" data-col="white">
+          <div class="col-top ct-white">
+            <svg class="glyph" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-lantern"/></svg>
+          </div>
+          <div class="col-body">
+            <span class="n">Solstice d'Hiver</span>
+            <h3>White Party</h3>
+            <p>Total look immaculé, épuré et givré. La clarté d'un hiver lumineux.</p>
+            <div class="pal" aria-hidden="true"><span style="background:#FBF8F2"></span><span style="background:#E5D8C1"></span><span style="background:#AEC0C6"></span></div>
+            <div class="offers">
+              <div class="offer">
+                <div class="offer-t"><span class="ot-k">Le pack complet</span><h4>Tout le décor</h4></div>
+                <p>Mobilier, art de la table, décoration et lumière. Rien à choisir pièce par pièce.</p>
+                <button type="button" class="btn btn-ink offer-btn" data-col="white" data-kind="pack">Je veux ce pack</button>
+              </div>
+              <div class="offer offer-table">
+                <div class="offer-t"><span class="ot-k">Les tables</span><h4>La table seule</h4></div>
+                <p>Uniquement la décoration de table&nbsp;: linge, vaisselle, verrerie et centre de table.</p>
+                <button type="button" class="btn btn-ghost offer-btn" data-col="white" data-kind="table">Je veux cette table</button>
+              </div>
+            </div>
+          </div>
+        </article>
+
+      </div>
     </div>
   </div>
 </section>
+
+<!-- POP-UP : choix du nombre d'invités + ajout au panier -->
+<div class="om-root" id="omRoot" aria-hidden="true">
+  <div class="om-scrim" data-om-close></div>
+  <div class="om-panel" role="dialog" aria-modal="true" aria-labelledby="omTitle">
+    <div class="om-head">
+      <div>
+        <span class="om-k" id="omKicker"></span>
+        <h3 id="omTitle"></h3>
+      </div>
+      <button type="button" class="om-x" data-om-close aria-label="Fermer">×</button>
+    </div>
+    <div class="om-scroll">
+      <p class="om-desc" id="omDesc"></p>
+      <div class="om-field">
+        <label for="omGuests">Nombre d'invités</label>
+        <select id="omGuests"></select>
+        <span class="om-hint">Jusqu'à 60 invités. Au-delà, écrivez-nous : on compose sur mesure.</span>
+      </div>
+      <div class="om-listwrap">
+        <div class="om-listhead"><span>Votre sélection</span><span id="omTotal"></span></div>
+        <div class="om-list" id="omList"></div>
+      </div>
+      <div class="om-also" id="omAlso" hidden>
+        <h4>Ceux qui ont choisi cette table ont aussi ajouté</h4>
+        <div class="om-alsogrid" id="omAlsoGrid"></div>
+      </div>
+    </div>
+    <div class="om-foot">
+      <button type="button" class="btn btn-ink om-add" id="omAdd">Ajouter au panier</button>
+    </div>
+  </div>
+</div>
 
 <!-- CTA -->
 <section class="section">
@@ -469,5 +642,203 @@
 </footer>
 <script src="/site.js"></script>
 <script src="/cart.js" defer></script>
+<script defer>
+/* Collections — choix du nombre d'invités, quantités ajustées, ajout au panier. */
+(function () {
+  'use strict';
+
+  var MAX_GUESTS = 60;
+  var GUEST_STEPS = [2, 4, 6, 8, 10, 12, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60];
+  var DEFAULT_GUESTS = 20;
+
+  /* Base commune : la décoration de table. `per` définit l'ajustement :
+     g = par invité · t = par tablée de 8 · d = par tranche de 12 · v = par tranche de 20 · f = fixe */
+  function tableItems(signature) {
+    return [
+      { n: 'Nappe en lin', per: 't', q: 1 },
+      { n: 'Chemin de table', per: 't', q: 1 },
+      { n: 'Assiettes', s: 'service 2 pièces', per: 'g', q: 1 },
+      { n: 'Verres', s: 'eau + vin', per: 'g', q: 2 },
+      { n: 'Couverts', s: 'parure complète', per: 'g', q: 1 },
+      { n: 'Serviettes en tissu', per: 'g', q: 1 },
+      { n: 'Marque-places', per: 'g', q: 1 },
+      { n: 'Centre de table', s: 'vase + fleurs de saison', per: 't', q: 1 },
+      { n: 'Photophores & bougies', per: 't', q: 3 },
+      { n: signature, s: 'touche signature', per: 't', q: 1 }
+    ];
+  }
+  function packItems(signature) {
+    return [{ n: 'Table (8 couverts)', per: 't', q: 1 }, { n: 'Chaises', per: 'g', q: 1 }]
+      .concat(tableItems(signature))
+      .concat([
+        { n: 'Mange-debout', s: 'espace apéritif', per: 'd', q: 1 },
+        { n: 'Guirlande lumineuse', per: 'v', q: 1 },
+        { n: 'Arche décor photo', per: 'f', q: 1 },
+        { n: 'Coin lounge', s: 'fauteuils & table basse', per: 'f', q: 1 }
+      ]);
+  }
+
+  var COLS = {
+    dolce: { name: 'Dolce Vita', uni: "Solstice d'Été", sig: "Citrons & branches d'olivier",
+      desc: "Un dîner d'été sous les citronniers : lin naturel, citrons et lumière dorée." },
+    garden: { name: 'Garden Party', uni: "Solstice d'Été", sig: 'Bouquet champêtre',
+      desc: 'Verdure douce, guinguette chic et vaisselle champêtre. Recevoir au jardin.' },
+    black: { name: 'Black & Gold', uni: "Solstice d'Hiver", sig: 'Chandeliers dorés',
+      desc: "Noir profond, dorures et éclat des grands soirs. L'élégance des fêtes." },
+    white: { name: 'White Party', uni: "Solstice d'Hiver", sig: 'Photophores givrés',
+      desc: 'Total look immaculé, épuré et givré. La clarté d’un hiver lumineux.' }
+  };
+
+  /* Exemples de suggestions — à remplacer par les vraies pièces plus tard. */
+  var SUGGESTIONS = [
+    { n: 'Mange-debout + housse', d: "Pour l'apéritif d'accueil" },
+    { n: 'Arche fleurie', d: 'Le coin photo des invités' },
+    { n: 'Coin lounge', d: 'Fauteuils, tapis et table basse' },
+    { n: 'Brasero', d: 'Pour prolonger la soirée dehors' }
+  ];
+
+  function qtyFor(item, g) {
+    switch (item.per) {
+      case 'g': return item.q * g;
+      case 't': return item.q * Math.ceil(g / 8);
+      case 'd': return item.q * Math.ceil(g / 12);
+      case 'v': return item.q * Math.ceil(g / 20);
+      default: return item.q;
+    }
+  }
+  function slug(s) {
+    return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+      .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60) || 'piece';
+  }
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  var root = document.getElementById('omRoot');
+  if (!root) return;
+  var elKicker = document.getElementById('omKicker'),
+      elTitle = document.getElementById('omTitle'),
+      elDesc = document.getElementById('omDesc'),
+      elGuests = document.getElementById('omGuests'),
+      elList = document.getElementById('omList'),
+      elTotal = document.getElementById('omTotal'),
+      elAlso = document.getElementById('omAlso'),
+      elAlsoGrid = document.getElementById('omAlsoGrid'),
+      elAdd = document.getElementById('omAdd');
+
+  var state = { col: null, kind: 'pack', guests: DEFAULT_GUESTS, extras: [] };
+  var lastFocus = null;
+
+  GUEST_STEPS.forEach(function (n) {
+    var o = document.createElement('option');
+    o.value = String(n);
+    o.textContent = n + ' invités';
+    if (n === DEFAULT_GUESTS) o.selected = true;
+    elGuests.appendChild(o);
+  });
+
+  function currentItems() {
+    var c = COLS[state.col];
+    if (!c) return [];
+    return state.kind === 'pack' ? packItems(c.sig) : tableItems(c.sig);
+  }
+  function renderList() {
+    var items = currentItems(), g = state.guests, total = 0, html = '';
+    items.forEach(function (it) {
+      var q = qtyFor(it, g);
+      total += q;
+      html += '<div class="om-row"><span class="rn">' + esc(it.n) +
+        (it.s ? '<small>' + esc(it.s) + '</small>' : '') +
+        '</span><span class="rq">' + q + '</span></div>';
+    });
+    elList.innerHTML = html;
+    elTotal.textContent = total + ' pièces';
+  }
+  function renderExtras() {
+    if (state.kind !== 'table') { elAlso.hidden = true; elAlsoGrid.innerHTML = ''; return; }
+    elAlso.hidden = false;
+    elAlsoGrid.innerHTML = SUGGESTIONS.map(function (s, i) {
+      var on = state.extras.indexOf(i) !== -1;
+      return '<div class="om-sug"><span class="sn">' + esc(s.n) + '</span>' +
+        '<span class="sd">' + esc(s.d) + '</span>' +
+        '<button type="button" class="' + (on ? 'on' : '') + '" data-sug="' + i + '" aria-pressed="' + (on ? 'true' : 'false') + '">' +
+        (on ? 'Ajouté ✓' : '+ Ajouter') + '</button></div>';
+    }).join('');
+  }
+  function syncAddLabel() {
+    var n = state.kind === 'table' ? state.extras.length : 0;
+    elAdd.textContent = n ? 'Ajouter au panier (' + (n + 1) + ' lots)' : 'Ajouter au panier';
+  }
+
+  function open(colKey, kind) {
+    var c = COLS[colKey];
+    if (!c) return;
+    state.col = colKey;
+    state.kind = kind;
+    state.extras = [];
+    state.guests = parseInt(elGuests.value, 10) || DEFAULT_GUESTS;
+    elKicker.textContent = c.uni + ' · ' + c.name;
+    elTitle.textContent = kind === 'pack' ? 'Le pack complet' : 'Les tables';
+    elDesc.textContent = kind === 'pack'
+      ? c.desc + ' Le décor entier : mobilier, art de la table, décoration et lumière.'
+      : c.desc + ' Ici, uniquement la décoration de table.';
+    renderList(); renderExtras(); syncAddLabel();
+    lastFocus = document.activeElement;
+    root.classList.add('open');
+    root.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    elGuests.focus();
+  }
+  function close() {
+    root.classList.remove('open');
+    root.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('.offer-btn');
+    if (b) { e.preventDefault(); open(b.getAttribute('data-col'), b.getAttribute('data-kind')); }
+  });
+  root.addEventListener('click', function (e) {
+    if (e.target.closest('[data-om-close]')) { close(); return; }
+    var s = e.target.closest('[data-sug]');
+    if (s) {
+      var i = parseInt(s.getAttribute('data-sug'), 10);
+      var at = state.extras.indexOf(i);
+      if (at === -1) state.extras.push(i); else state.extras.splice(at, 1);
+      renderExtras(); syncAddLabel();
+    }
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && root.classList.contains('open')) close();
+  });
+  elGuests.addEventListener('change', function () {
+    var g = parseInt(elGuests.value, 10) || DEFAULT_GUESTS;
+    state.guests = Math.min(MAX_GUESTS, Math.max(1, g));
+    renderList();
+  });
+
+  elAdd.addEventListener('click', function () {
+    if (!window.SolCart) return;
+    var c = COLS[state.col];
+    var label = (state.kind === 'pack' ? 'Pack complet' : 'Les tables') + ' · ' + c.name;
+    var prefix = state.col + '-' + state.kind + '-';
+    currentItems().forEach(function (it) {
+      window.SolCart.add({
+        name: it.n, ref: slug(prefix + it.n),
+        qty: qtyFor(it, state.guests), priceHint: label + ' · ' + state.guests + ' invités'
+      });
+    });
+    state.extras.forEach(function (i) {
+      var s = SUGGESTIONS[i];
+      window.SolCart.add({ name: s.n, ref: slug('option-' + s.n), qty: 1, priceHint: 'Option · ' + c.name });
+    });
+    close();
+  });
+})();
+</script>
 </body>
 </html>
