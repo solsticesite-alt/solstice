@@ -126,12 +126,17 @@ const DEFAULT_SETTINGS = {
   phone: '',
   website: '',
   tvaMention: 'TVA non applicable, art. 293 B du CGI',
-  quotePrefix: 'D',
+  quotePrefix: 'F',
   validityDays: 30,
-  depositPct: 30,
+  depositPct: 50,
+  // Mentions legales obligatoires sur une facture.
+  latePenalty:
+    'En cas de retard de paiement, une pénalité au taux de trois fois l\'intérêt légal est exigible, ainsi qu\'une indemnité forfaitaire de 40 € pour frais de recouvrement pour les clients professionnels (art. L441-10 du Code de commerce). Pas d\'escompte pour paiement anticipé.',
+  paymentNote:
+    'Acompte de 50 % à la commande, solde de 50 % à la livraison.',
   cautionNote: 'Une caution peut être demandée selon les pièces louées.',
   conditions:
-    'Devis gratuit et sans engagement, valable 30 jours. La réservation est confirmée à réception de l\'acompte. Retrait à l\'atelier ou livraison à Amiens et ses alentours (frais selon distance).'
+    'La réservation est confirmée à réception de l\'acompte. Retrait à l\'atelier ou livraison à Amiens et ses alentours (frais selon distance). Une caution peut être demandée selon les pièces louées ; elle est restituée au retour du matériel en bon état.'
 };
 
 async function getSettings() {

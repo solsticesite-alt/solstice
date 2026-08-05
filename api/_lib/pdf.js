@@ -1,6 +1,6 @@
-// Genere le PDF du devis avec pdfkit (polices integrees, aucun asset externe).
+// Genere le PDF de la facture avec pdfkit (polices integrees, aucun asset externe).
 const PDFDocument = require('pdfkit');
-const { computeQuote } = require('./quote');
+const { computeInvoice } = require('./invoice');
 
 const GOLD = '#B08A54';
 const GOLD_DEEP = '#8C6C3D';
@@ -18,18 +18,18 @@ function dstr(v) {
   return d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
 }
 
-function buildDevisPdf(request, settings, reply) {
+function buildFacturePdf(request, settings, reply) {
   return new Promise((resolve, reject) => {
     try {
       const doc = new PDFDocument({ size: 'A4', margin: 50, info: {
-        Title: 'Devis ' + (reply.quoteNumber || request.ref || ''), Author: settings.companyName || 'Maison Solstice'
+        Title: 'Facture ' + (reply.invoiceNumber || reply.quoteNumber || request.ref || ''), Author: settings.companyName || 'Maison Solstice'
       } });
       const chunks = [];
       doc.on('data', (c) => chunks.push(c));
       doc.on('end', () => resolve(Buffer.concat(chunks)));
       doc.on('error', reject);
 
-      const q = computeQuote(reply.lines, reply.depositPct);
+      const q = computeInvoice(reply.lines, reply.depositPct);
       const L = 50, R = 545, W = R - L;
       const client = request.client || {};
       const ev = request.event || {};
@@ -44,14 +44,13 @@ function buildDevisPdf(request, settings, reply) {
       doc.font('Helvetica').fontSize(8.5).fillColor(SOFT)
         .text('Location de mobilier & décoration d\'événements', L, 80, { width: 300 });
 
-      doc.font('Helvetica-Bold').fontSize(26).fillColor(GOLD_DEEP).text('DEVIS', 350, 50, { width: 195, align: 'right' });
+      doc.font('Helvetica-Bold').fontSize(26).fillColor(GOLD_DEEP).text('FACTURE', 350, 50, { width: 195, align: 'right' });
       doc.font('Helvetica').fontSize(9.5).fillColor(INK);
-      const num = reply.quoteNumber || request.ref || '';
+      const num = reply.invoiceNumber || reply.quoteNumber || request.ref || '';
       const dateStr = dstr(reply.sentAt || Date.now());
-      const valid = dstr(reply.validUntil);
       doc.text('N° ' + num, 350, 84, { width: 195, align: 'right' });
       doc.text('Date : ' + dateStr, 350, 98, { width: 195, align: 'right' });
-      if (valid) doc.text('Valable jusqu\'au ' + valid, 350, 112, { width: 195, align: 'right' });
+      doc.text('Échéance : à réception', 350, 112, { width: 195, align: 'right' });
 
       doc.moveTo(L, 132).lineTo(R, 132).lineWidth(1.4).strokeColor(GOLD).stroke();
 
@@ -140,9 +139,12 @@ function buildDevisPdf(request, settings, reply) {
         y += bold ? 20 : 16;
       }
       totalRow('Sous-total HT', fmt(q.subtotal));
-      totalRow('TVA', 'Non applicable');
+      totalRow('TVA', settings.tvaMention ? 'Non applicable' : 'Non applicable');
       totalRow('TOTAL', fmt(q.subtotal), true);
-      if (q.depositPct > 0) totalRow('Acompte (' + q.depositPct + '%)', fmt(q.deposit));
+      if (q.depositPct > 0) {
+        totalRow('Acompte ' + q.depositPct + '% — à régler maintenant', fmt(q.deposit));
+        totalRow('Solde ' + (100 - q.depositPct) + '% — à la livraison', fmt(q.balance));
+      }
 
       // ---------- Notes ----------
       y += 8;
@@ -161,20 +163,26 @@ function buildDevisPdf(request, settings, reply) {
         y = doc.y + 6;
       }
 
-      // ---------- Bon pour accord (valeur contractuelle) ----------
+      // ---------- Reglement ----------
       y += 14;
-      ensure(90);
-      doc.font('Helvetica-Bold').fontSize(8).fillColor(GOLD_DEEP).text('BON POUR ACCORD', L, y);
-      doc.font('Helvetica').fontSize(8).fillColor(SOFT).text(
-        'Pour confirmer votre réservation, retournez ce devis daté et signé, précédé de la mention manuscrite « Bon pour accord ».',
-        L, y + 12, { width: W });
-      y = doc.y + 16;
-      doc.font('Helvetica').fontSize(9).fillColor(INK);
-      doc.text('Date :', L, y);
-      doc.text('Signature :', 320, y);
-      doc.moveTo(L + 36, y + 11).lineTo(270, y + 11).lineWidth(0.6).strokeColor(LINE).stroke();
-      doc.moveTo(320 + 52, y + 11).lineTo(R, y + 11).lineWidth(0.6).strokeColor(LINE).stroke();
-      y += 34;
+      ensure(96);
+      doc.font('Helvetica-Bold').fontSize(8).fillColor(GOLD_DEEP).text('RÈGLEMENT', L, y);
+      const pay = settings.paymentNote || ('Acompte de ' + q.depositPct + ' % à la commande, solde de ' + (100 - q.depositPct) + ' % à la livraison.');
+      doc.font('Helvetica').fontSize(8.5).fillColor(INK).text(pay, L, y + 12, { width: W });
+      y = doc.y + 6;
+      if (q.depositPct > 0) {
+        doc.font('Helvetica-Bold').fontSize(9).fillColor(INK)
+          .text('À régler à la commande : ' + fmt(q.deposit), L, y, { width: W });
+        y = doc.y + 2;
+        doc.font('Helvetica').fontSize(8.5).fillColor(SOFT)
+          .text('Puis ' + fmt(q.balance) + ' à la livraison du matériel.', L, y, { width: W });
+        y = doc.y + 10;
+      }
+      if (settings.latePenalty) {
+        ensure(46);
+        doc.font('Helvetica').fontSize(7.5).fillColor(SOFT).text(settings.latePenalty, L, y, { width: W });
+        y = doc.y + 8;
+      }
 
       // ---------- Pied de page legal ----------
       const foot = [
@@ -192,4 +200,4 @@ function buildDevisPdf(request, settings, reply) {
   });
 }
 
-module.exports = { buildDevisPdf };
+module.exports = { buildFacturePdf };

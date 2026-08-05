@@ -290,6 +290,10 @@
       $('rcDate').textContent = prefs.date ? new Date(prefs.date + 'T00:00:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : 'à préciser';
       $('rcSub').textContent = t.sub > 0 ? eur(t.sub) : 'Au devis';
       $('rcCaution').textContent = t.caution > 0 ? eur(t.caution) : '—';
+      /* Règlement en deux temps : 50 % à la commande, 50 % à la livraison. */
+      var moitie = Math.round((t.sub / 2) * 100) / 100;
+      $('rcAcompte').textContent = t.sub > 0 ? eur(moitie) : 'Au devis';
+      $('rcSolde').textContent = t.sub > 0 ? eur(Math.round((t.sub - moitie) * 100) / 100) : 'Au devis';
     }
 
     if (window.SolCart) window.SolCart.onChange(renderAll);

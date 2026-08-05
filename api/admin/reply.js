@@ -1,10 +1,10 @@
-// POST admin : compose + envoie le devis (PDF + e-mail) au client.
+// POST admin : compose + envoie la facture (PDF + e-mail) au client.
 const { readJson, send, clean, cleanMultiline, toNumber } = require('../_lib/util');
 const auth = require('../_lib/auth');
 const store = require('../_lib/store');
 const mail = require('../_lib/mail');
-const { buildDevisPdf } = require('../_lib/pdf');
-const { computeQuote } = require('../_lib/quote');
+const { buildFacturePdf } = require('../_lib/pdf');
+const { computeInvoice } = require('../_lib/invoice');
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') return send(res, 405, { ok: false, error: 'method_not_allowed' });
@@ -34,28 +34,26 @@ module.exports = async (req, res) => {
   try { settings = await store.getSettings(); } catch (e) { settings = store.DEFAULT_SETTINGS; }
 
   const depositPct = Math.min(100, Math.max(0, Math.round(toNumber(b.depositPct, settings.depositPct))));
-  const validDays = Math.min(365, Math.max(1, Math.round(toNumber(settings.validityDays, 30))));
   const sentAt = new Date().toISOString();
-  const validUntil = clean(b.validUntil, 40) || new Date(Date.now() + validDays * 86400000).toISOString();
 
   const reply = {
-    quoteNumber: clean(b.quoteNumber, 40) || request.ref,
+    invoiceNumber: clean(b.invoiceNumber || b.quoteNumber, 40) || request.ref,
     message: cleanMultiline(b.message, 4000),
     lines,
     notes: cleanMultiline(b.notes, 1000),
-    depositPct, validUntil, sentAt
+    depositPct, sentAt
   };
 
-  const q = computeQuote(lines, depositPct);
+  const q = computeInvoice(lines, depositPct);
 
   let pdf;
-  try { pdf = await buildDevisPdf(request, settings, reply); }
+  try { pdf = await buildFacturePdf(request, settings, reply); }
   catch (e) { return send(res, 500, { ok: false, error: 'pdf_error' }); }
 
-  try { await mail.sendDevisEmail(request, settings, reply, pdf); }
+  try { await mail.sendFactureEmail(request, settings, reply, pdf); }
   catch (e) { return send(res, 502, { ok: false, error: 'mail_error', detail: String((e && e.message) || e).slice(0, 200) }); }
 
-  request.reply = Object.assign({}, reply, { subtotal: q.subtotal, deposit: q.deposit });
+  request.reply = Object.assign({}, reply, { subtotal: q.subtotal, deposit: q.deposit, balance: q.balance });
   request.status = 'replied';
   try { await store.updateRequest(request); } catch (e) { /* e-mail envoye ; persistance echouee */ }
 

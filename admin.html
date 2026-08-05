@@ -123,7 +123,7 @@
 
 <div class="topbar hidden" id="topbar">
   <div class="wrap topbar-in">
-    <div class="brand">Maison Solstice <small>Back-office · demandes de devis</small></div>
+    <div class="brand">Maison Solstice <small>Back-office · commandes &amp; factures</small></div>
     <div class="topbar-tools">
       <button class="btn btn-sm" id="btn-settings">Réglages</button>
       <button class="btn btn-sm" id="btn-logout">Déconnexion</button>
@@ -158,7 +158,7 @@
           <button class="chip on" data-f="all">Toutes</button>
           <button class="chip" data-f="new">Nouvelles</button>
           <button class="chip" data-f="read">Lues</button>
-          <button class="chip" data-f="replied">Répondues</button>
+          <button class="chip" data-f="replied">Facturées</button>
         </div>
         <ul class="reqs" id="reqs"><li class="empty">Chargement…</li></ul>
       </div>
@@ -241,7 +241,7 @@
     });
     if(!items.length){ ul.innerHTML='<li class="empty">Aucune demande.</li>'; return; }
     ul.innerHTML=items.map(function(it){
-      var b=it.status==='replied'?'<span class="badge b-replied">Répondue</span>':(it.status==='new'?'<span class="badge b-new">Nouvelle</span>':'<span class="badge b-read">Lue</span>');
+      var b=it.status==='replied'?'<span class="badge b-replied">Facturée</span>':(it.status==='new'?'<span class="badge b-new">Nouvelle</span>':'<span class="badge b-read">Lue</span>');
       var sub=[it.eventType,fdate(it.date),it.location].filter(Boolean).join(' · ');
       return '<li><button class="req'+(state.current&&state.current.id===it.id?' sel':'')+'" data-id="'+it.id+'">'+
         '<div class="req-top"><span class="req-name">'+esc(it.clientName||'—')+'</span>'+b+'</div>'+
@@ -291,14 +291,14 @@
 
     var msg = req.message ? '<div class="section-title">Message</div><blockquote class="blockquote">'+esc(req.message)+'</blockquote>' : '';
 
-    var repliedNote = req.reply ? '<div class="sent-note">✓ Devis déjà envoyé le '+esc(fdate(req.reply.sentAt))+' — total '+euros(req.reply.subtotal)+'. Vous pouvez le renvoyer / modifier ci-dessous.</div>' : '';
+    var repliedNote = req.reply ? '<div class="sent-note">✓ Facture déjà envoyée le '+esc(fdate(req.reply.sentAt))+' — total '+euros(req.reply.subtotal)+'. Vous pouvez la renvoyer / modifier ci-dessous.</div>' : '';
 
     $('#detail').innerHTML=
       '<div class="d-head"><div><h2>'+esc(c.name||'Demande')+'</h2><div class="muted">'+esc(req.ref||'')+' · reçue le '+esc(fdate(req.createdAt))+'</div></div>'+
         (c.email?'<a class="btn btn-sm" href="mailto:'+esc(c.email)+'">Écrire un e-mail simple</a>':'')+'</div>'+
       '<div class="info-grid">'+info+'</div>'+ sel + msg +
       repliedNote +
-      '<div class="section-title">Devis à envoyer</div>'+
+      '<div class="section-title">Facture à envoyer</div>'+
       '<div class="devis" id="devis"></div>';
 
     renderDevis(req);
@@ -318,7 +318,7 @@
   function renderDevis(req){
     var lines=buildInitialLines(req);
     var st=state.settings||{};
-    var deposit = req.reply&&req.reply.depositPct!=null ? req.reply.depositPct : (st.depositPct!=null?st.depositPct:30);
+    var deposit = req.reply&&req.reply.depositPct!=null ? req.reply.depositPct : (st.depositPct!=null?st.depositPct:50);
     var message = req.reply&&req.reply.message ? req.reply.message : defaultMessage(req);
     var notes = req.reply&&req.reply.notes ? req.reply.notes : '';
 
@@ -329,10 +329,10 @@
       '<div class="tots" id="tots"></div>'+
       '<div class="field"><label>Message au client</label><textarea id="d-msg" rows="5"></textarea></div>'+
       '<div class="row2">'+
-        '<div><label>Note sur le devis (optionnel)</label><input id="d-notes" placeholder="Livraison incluse, etc."></div>'+
-        '<div><label>Acompte (%)</label><input id="d-deposit" class="num" type="number" min="0" max="100" step="1"></div>'+
+        '<div><label>Note sur la facture (optionnel)</label><input id="d-notes" placeholder="Livraison incluse, etc."></div>'+
+        '<div><label>Acompte à la commande (%)</label><input id="d-deposit" class="num" type="number" min="0" max="100" step="1"></div>'+
       '</div>'+
-      '<div class="devis-actions"><button class="btn btn-gold" id="send-devis">Envoyer le devis (PDF + e-mail)</button>'+
+      '<div class="devis-actions"><button class="btn btn-gold" id="send-devis">Envoyer la facture (PDF + e-mail)</button>'+
         '<span class="muted" id="send-hint"></span></div>';
 
     $('#d-msg').value=message; $('#d-notes').value=notes; $('#d-deposit').value=deposit;
@@ -365,7 +365,8 @@
       $('#tots').innerHTML='<div>Sous-total HT : <b>'+euros(sub)+'</b></div>'+
         '<div class="muted">TVA : non applicable</div>'+
         '<div class="big">Total : '+euros(sub)+'</div>'+
-        (dp>0?'<div class="muted">Acompte ('+dp+'%) : '+euros(dep)+'</div>':'');
+        (dp>0?'<div class="muted">Acompte '+dp+'% à la commande : <b>'+euros(dep)+'</b></div>'+
+             '<div class="muted">Solde '+(100-dp)+'% à la livraison : '+euros(Math.round((sub-dep)*100)/100)+'</div>':'');
     }
     function wire(){
       Array.prototype.forEach.call(body.querySelectorAll('input'),function(inp){ inp.addEventListener('input',recalc); });
@@ -379,7 +380,7 @@
 
   function sendDevis(req,lines){
     var valid=lines.filter(function(l){return String(l.label).trim();});
-    if(!valid.length){ toast('Ajoutez au moins une ligne au devis.',true); return; }
+    if(!valid.length){ toast('Ajoutez au moins une ligne à la facture.',true); return; }
     var btn=$('#send-devis'); btn.disabled=true; $('#send-hint').textContent='Envoi en cours…';
     api('/api/admin/reply',{method:'POST',body:{
       id:req.id, message:$('#d-msg').value, notes:$('#d-notes').value,
@@ -388,7 +389,7 @@
       btn.disabled=false; $('#send-hint').textContent='';
       if(r.__status===401){ showLogin(); return; }
       if(!r.ok){ toast('Échec de l\'envoi : '+(r.detail||r.error||''),true); return; }
-      toast('Devis envoyé à '+(req.client&&req.client.email||'')+' ✓');
+      toast('Facture envoyée à '+(req.client&&req.client.email||'')+' ✓');
       openRequest(req.id); loadList();
     }).catch(function(){ btn.disabled=false; $('#send-hint').textContent=''; toast('Erreur réseau.',true); });
   }
@@ -398,7 +399,7 @@
     var s=state.settings||{};
     var f=function(k){return esc(s[k]!=null?s[k]:'');};
     var bg=document.createElement('div'); bg.className='modal-bg';
-    bg.innerHTML='<div class="modal"><h2>Réglages du devis</h2><p class="muted" style="margin:.2rem 0 1rem;">Ces informations pré-remplissent l\'en-tête et le bas de vos devis. À compléter dès la création de votre entreprise.</p>'+
+    bg.innerHTML='<div class="modal"><h2>Réglages de facturation</h2><p class="muted" style="margin:.2rem 0 1rem;">Ces informations pré-remplissent l\'en-tête et le bas de vos devis. À compléter dès la création de votre entreprise.</p>'+
       '<div class="grid2">'+
         fld('companyName','Nom / dénomination',f('companyName'))+
         fld('legalForm','Statut juridique',f('legalForm'))+
@@ -407,13 +408,13 @@
         fld('address','Adresse',f('address'))+
         fld('postcode','Code postal',f('postcode'))+
         fld('city','Ville',f('city'))+
-        fld('email','E-mail (contact devis)',f('email'))+
+        fld('email','E-mail (contact facturation)',f('email'))+
         fld('phone','Téléphone',f('phone'))+
-        fld('quotePrefix','Préfixe des devis',f('quotePrefix'))+
+        fld('quotePrefix','Préfixe des factures',f('quotePrefix'))+
         fld('depositPct','Acompte par défaut (%)',f('depositPct'),'number')+
         fld('validityDays','Validité (jours)',f('validityDays'),'number')+
       '</div>'+
-      '<div class="field"><label>Conditions (bas de devis)</label><textarea id="s-conditions" rows="4">'+f('conditions')+'</textarea></div>'+
+      '<div class="field"><label>Conditions (bas de facture)</label><textarea id="s-conditions" rows="4">'+f('conditions')+'</textarea></div>'+
       '<div class="devis-actions"><button class="btn btn-gold" id="s-save">Enregistrer</button><button class="btn" id="s-cancel">Annuler</button></div>'+
     '</div>';
     document.body.appendChild(bg);
