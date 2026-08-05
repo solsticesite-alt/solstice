@@ -1,6 +1,6 @@
 /* Maison Solstice — collections : pop-up « nombre d'invités », quantités
    ajustées automatiquement et ajout à la sélection (panier).
-   Partagé par collections.html, collection-*.html et nos-univers.html.
+   Partagé par collections.html, collection-*.html et collections.html.
    Le pop-up est injecté automatiquement dès qu'un bouton .offer-btn existe. */
 (function () {
   'use strict';
@@ -289,8 +289,8 @@
     var intro = document.getElementById('collIntro');
     if (intro) {
       intro.textContent = u === 'ete'
-        ? "Les deux collections du Solstice d'Été. Chacune se prend en pack complet ou en décoration de table seule."
-        : "Les deux collections du Solstice d'Hiver. Chacune se prend en pack complet ou en décoration de table seule.";
+        ? "Deux ambiances d'été, en pack complet ou en décoration de table."
+        : "Deux ambiances d'hiver, en pack complet ou en décoration de table.";
     }
     var h1 = document.getElementById('collTitle');
     if (h1) h1.textContent = u === 'ete' ? "Les collections d'Été" : "Les collections d'Hiver";

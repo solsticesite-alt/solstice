@@ -10,31 +10,42 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/site.css">
 <style>
-.filterbar{border:1px solid var(--line);border-radius:var(--radius);background:var(--paper);padding:clamp(18px,2.4vw,28px);}
-.fb-row{display:flex;flex-wrap:wrap;gap:1rem 1.1rem;align-items:flex-end;}
+/* La barre de filtres tient sur une ligne : les ambiances restent
+   visibles, le reste se déplie à la demande pour ne pas repousser les
+   articles sous la ligne de flottaison. */
+.filterbar{border:1px solid var(--line);border-radius:var(--radius);background:var(--paper);padding:.6rem .7rem;}
+.fb-bar{display:flex;align-items:center;gap:.6rem;}
+.fb-scroll{flex:1 1 auto;min-width:0;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.fb-scroll::-webkit-scrollbar{display:none;}
+.fb-toggle{flex:none;display:inline-flex;align-items:center;gap:.45em;font-family:var(--sans);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:var(--ink);background:var(--paper-2);border:1px solid var(--line);border-radius:99px;padding:.62em 1em;cursor:pointer;transition:border-color .3s,color .3s;}
+.fb-toggle:hover{border-color:var(--gold);color:var(--gold-deep);}
+.fb-toggle svg{width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;transition:transform .3s;}
+.fb-toggle[aria-expanded="true"] svg{transform:rotate(180deg);}
+.fb-row{display:flex;flex-wrap:wrap;gap:.8rem .9rem;align-items:flex-end;margin-top:.8rem;padding-top:.8rem;border-top:1px solid var(--line-soft);}
+.fb-row[hidden]{display:none;}
 .fb-field{display:flex;flex-direction:column;gap:.45rem;flex:1 1 160px;min-width:150px;}
 .fb-field label{font-size:.63rem;letter-spacing:.17em;text-transform:uppercase;color:var(--ink-soft);font-weight:600;}
 .fb-field select{font-family:inherit;font-size:.9rem;color:var(--ink);background-color:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:.72em 2.4em .72em .9em;appearance:none;-webkit-appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23B08A54' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 9l7 7 7-7'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .85em center;transition:border-color .3s,box-shadow .3s;}
 .fb-field select:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(176,138,84,.14);}
-.fb-chips{display:flex;flex-wrap:wrap;align-items:center;gap:.55rem;margin-top:1.15rem;padding-top:1.15rem;border-top:1px solid var(--line-soft);}
-.fb-chips .lbl{font-size:.63rem;letter-spacing:.17em;text-transform:uppercase;color:var(--stone);font-weight:600;margin-right:.3rem;}
-.chip{font-family:var(--sans);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--ink-soft);background:var(--paper-2);border:1px solid var(--line);border-radius:99px;padding:.55em 1.05em;cursor:pointer;transition:color .3s,background .3s,border-color .3s;}
+.fb-chips{display:flex;align-items:center;gap:.45rem;}
+.chip{flex:none;font-family:var(--sans);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;font-weight:600;white-space:nowrap;color:var(--ink-soft);background:var(--paper-2);border:1px solid var(--line);border-radius:99px;padding:.6em 1em;cursor:pointer;transition:color .3s,background .3s,border-color .3s;}
 .chip:hover{border-color:var(--gold);color:var(--gold-deep);}
 .chip.on{background:var(--ink);color:var(--paper);border-color:var(--ink);}
-.fb-hint{font-size:.72rem;color:var(--stone);letter-spacing:.04em;}
-.cat-grid{margin-top:clamp(30px,4vw,46px);}
+.fb-hint{font-size:.68rem;color:var(--stone);letter-spacing:.04em;}
+.cat-grid{margin-top:clamp(18px,2.4vw,30px);}
 .cat-note{margin:clamp(38px,5vw,56px) auto 0;text-align:center;font-family:var(--serif);font-style:italic;font-size:clamp(1.08rem,2.1vw,1.35rem);color:var(--ink-soft);max-width:58ch;line-height:1.5;}
 .cat-note::before{content:"";display:block;width:34px;height:1px;background:var(--gold);margin:0 auto 1.4rem;}
 .cta-actions{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;margin-top:.6rem;}
 .cta-lede{text-align:center;margin-inline:auto;}
 @media (max-width:560px){
-  .filterbar{padding:16px;}
-  .fb-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem .65rem;align-items:stretch;}
+  .filterbar{padding:.5rem .55rem;}
+  .fb-row{display:grid;grid-template-columns:1fr 1fr;gap:.7rem .6rem;align-items:stretch;}
   .fb-field{min-width:0;}
   .fb-field label{font-size:.58rem;letter-spacing:.13em;}
   .fb-field select{font-size:.82rem;padding:.68em 1.8em .68em .65em;background-position:right .55em center;}
-  .fb-chips{gap:.45rem;}
-  .fb-chips .chip{font-size:.66rem;padding:.5em .85em;}
+  .fb-toggle{padding:.6em .8em;letter-spacing:.1em;}
+  .fb-toggle .lbl{display:none;}
+  .fb-chips .chip{font-size:.64rem;padding:.55em .85em;}
   .grid.cat-grid{grid-template-columns:1fr 1fr;gap:18px 12px;}
   .cat-grid .card-info{padding:.75rem .05rem 0;}
   .cat-grid .card-info h3{font-size:.98rem;line-height:1.22;margin-bottom:.28rem;}
@@ -219,7 +230,7 @@
 <div class="announce">Location de mobilier &amp; décoration — <b>Amiens &amp; alentours</b></div>
 <header class="site-head" id="head">
   <div class="nav">
-    <ul class="nav-links nav-left"><li><a href="/catalogue" aria-current="page">Catalogue</a></li><li><a href="/nos-univers">Nos univers</a></li><li><a href="/inspirations">Inspirations</a></li></ul>
+    <ul class="nav-links nav-left"><li><a href="/catalogue" aria-current="page">Catalogue</a></li><li><a href="/collections">Nos collections</a></li><li><a href="/inspirations">Inspirations</a></li></ul>
     <a class="brand" href="/" aria-label="Maison Solstice, accueil"><svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13.5" r="4"/><path d="M12 3v3M4.7 6.7l1.6 1.6M19.3 6.7l-1.6 1.6M2.5 13.5h2M19.5 13.5h2M4 20h16"/></svg><span class="word">Maison Solstice</span></a>
     <div class="nav-right">
       <ul class="nav-links"><li><a href="/a-propos">À propos</a></li><li><a href="/contact">Contact</a></li></ul>
@@ -233,7 +244,7 @@
 </header>
 <div class="mpanel" id="mpanel">
   <div class="mpanel-top"><span class="word">Maison Solstice</span><button class="close" id="mclose" aria-label="Fermer le menu"><svg aria-hidden="true"><use href="#i-close"/></svg></button></div>
-  <nav><a href="/catalogue">Catalogue</a><a href="/nos-univers">Nos univers</a><a href="/inspirations">Inspirations</a><a href="/a-propos">À propos</a><a href="/contact">Contact</a><a href="/favoris">Mes coups de cœur</a></nav>
+  <nav><a href="/catalogue">Catalogue</a><a href="/collections">Nos collections</a><a href="/inspirations">Inspirations</a><a href="/a-propos">À propos</a><a href="/contact">Contact</a><a href="/favoris">Mes coups de cœur</a></nav>
   <div class="m-cta"><a class="btn btn-ink" href="/catalogue">Découvrir le catalogue <svg aria-hidden="true"><use href="#i-arrow"/></svg></a></div>
 </div>
 <main>
@@ -242,16 +253,31 @@
     <nav class="crumbs"><a href="/">Accueil</a><span class="sep">/</span><span>Catalogue</span></nav>
     <span class="eyebrow">Notre collection à louer</span>
     <h1>Le <em>catalogue</em> Maison Solstice</h1>
-    <p class="lede">Mobilier, art de la table, décoration et lumière. Parcourez, mettez de côté vos coups de cœur, composez votre sélection.</p>
+    <p class="lede">Mobilier, art de la table, décoration et lumière — tout se loue à la pièce.</p>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <p class="fb-hint reveal" style="text-align:right;margin-bottom:.7rem;">Aperçu — les filtres interactifs arrivent bientôt</p>
-
     <form class="filterbar reveal" action="#" novalidate aria-label="Filtres du catalogue">
-      <div class="fb-row">
+      <div class="fb-bar">
+        <div class="fb-scroll">
+          <div class="fb-chips" role="group" aria-label="Ambiances rapides">
+            <button type="button" class="chip on">Tout voir</button>
+            <button type="button" class="chip">Dolce Vita</button>
+            <button type="button" class="chip">Garden Party</button>
+            <button type="button" class="chip">White Party</button>
+            <button type="button" class="chip">Black &amp; Gold</button>
+            <button type="button" class="chip">Coups de cœur</button>
+            <button type="button" class="chip">Nouveautés</button>
+          </div>
+        </div>
+        <button type="button" class="fb-toggle" id="fbToggle" aria-expanded="false" aria-controls="fbAdvanced">
+          <span class="lbl">Filtres</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg>
+        </button>
+      </div>
+      <div class="fb-row" id="fbAdvanced" hidden>
         <div class="fb-field">
           <label for="f-categorie">Catégorie</label>
           <select id="f-categorie">
@@ -326,16 +352,7 @@
             <option>Sur demande</option>
           </select>
         </div>
-      </div>
-      <div class="fb-chips" role="group" aria-label="Ambiances rapides">
-        <span class="lbl">Ambiances</span>
-        <button type="button" class="chip on">Tout voir</button>
-        <button type="button" class="chip">Dolce Vita</button>
-        <button type="button" class="chip">Garden Party</button>
-        <button type="button" class="chip">White Party</button>
-        <button type="button" class="chip">Black &amp; Gold</button>
-        <button type="button" class="chip">Coups de cœur</button>
-        <button type="button" class="chip">Nouveautés</button>
+        <p class="fb-hint" style="flex:1 1 100%;margin:0;">Aperçu — les filtres interactifs arrivent bientôt.</p>
       </div>
     </form>
 
@@ -502,8 +519,8 @@
   <div class="wrap">
     <div class="foot-top">
       <div class="foot-brand"><svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13.5" r="4"/><path d="M12 3v3M4.7 6.7l1.6 1.6M19.3 6.7l-1.6 1.6M2.5 13.5h2M19.5 13.5h2M4 20h16"/></svg><span class="word">Maison Solstice</span><p>Location de mobilier et de décoration pour vos événements. Le décor de vos plus beaux moments, à Amiens et ses alentours.</p></div>
-      <div class="foot-col"><h5>Le catalogue</h5><ul><li><a href="/catalogue">Mobilier</a></li><li><a href="/catalogue">Art de la table</a></li><li><a href="/catalogue">Décoration</a></li><li><a href="/catalogue">Cérémonie</a></li><li><a href="/nos-univers">Nos collections</a></li></ul></div>
-      <div class="foot-col"><h5>La maison</h5><ul><li><a href="/nos-univers">Nos univers</a></li><li><a href="/inspirations">Inspirations</a></li><li><a href="/a-propos">À propos</a></li><li><a href="/faq">FAQ</a></li></ul></div>
+      <div class="foot-col"><h5>Le catalogue</h5><ul><li><a href="/catalogue">Mobilier</a></li><li><a href="/catalogue">Art de la table</a></li><li><a href="/catalogue">Décoration</a></li><li><a href="/catalogue">Cérémonie</a></li><li><a href="/collections">Nos collections</a></li></ul></div>
+      <div class="foot-col"><h5>La maison</h5><ul><li><a href="/favoris">Mes coups de cœur</a></li><li><a href="/inspirations">Inspirations</a></li><li><a href="/a-propos">À propos</a></li><li><a href="/faq">FAQ</a></li></ul></div>
       <div class="foot-col"><h5>Contact</h5><address>Amiens, Somme (80)<br>Livraison Amiens &amp; ~30 km<br>[e-mail de contact]<br>Sur rendez-vous</address></div>
     </div>
     <div class="foot-bottom">
@@ -515,5 +532,17 @@
 <script src="/site.js"></script>
 <script src="/cart.js" defer></script>
 <script src="/fav.js" defer></script>
+<script>
+(function () {
+  var btn = document.getElementById('fbToggle');
+  var adv = document.getElementById('fbAdvanced');
+  if (!btn || !adv) return;
+  btn.addEventListener('click', function () {
+    var open = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', open ? 'false' : 'true');
+    adv.hidden = open;
+  });
+})();
+</script>
 </body>
 </html>

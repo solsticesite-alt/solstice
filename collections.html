@@ -9,6 +9,48 @@
 <meta name="theme-color" content="#FBF8F2">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/site.css">
+<style>
+/* ===== Les deux univers, sous la grille des collections ===== */
+/* Les deux univers reprennent la meme carte encadree : l'ete en dore,
+   l'hiver en sombre (classe .dark deja fournie par site.css). */
+#collections{padding-bottom:clamp(22px,3vw,42px);}
+.uni-ete-sec,.uni-hiver-sec{padding-block:clamp(18px,2.4vw,34px);}
+.uni-ete-sec > .wrap{background:linear-gradient(160deg,var(--ete-1),var(--ete-2) 62%,var(--ete-3));border-radius:clamp(20px,2.6vw,34px);padding-block:clamp(30px,4vw,54px);padding-inline:clamp(26px,4vw,58px);box-shadow:0 44px 84px -58px rgba(60,40,18,.55);}
+.uni-hiver-sec > .wrap{padding-block:clamp(30px,4vw,54px);}
+.uni-ete-sec .eyebrow{color:var(--hiver-1);}
+.uni-ete-sec .eyebrow::before{background:var(--hiver-1);opacity:.6;}
+.uni-ete-sec h2,.uni-ete-sec .lead{color:var(--ink);}
+.uni-hiver-sec .lead{color:var(--paper);}
+
+.uni-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(26px,4vw,56px);align-items:center;}
+.uni-copy{display:flex;flex-direction:column;gap:.95rem;}
+.uni-copy h2{font-size:clamp(1.6rem,3.2vw,2.4rem);}
+.uni-copy .lead{margin:0;max-width:52ch;}
+
+.kw-list{display:flex;flex-wrap:wrap;gap:.45rem;list-style:none;padding:0;margin:.1rem 0 0;}
+.kw-list li{font-size:.64rem;letter-spacing:.15em;text-transform:uppercase;padding:.45em .85em;border-radius:99px;}
+.uni-ete-sec .kw-list li{border:1px solid rgba(34,28,21,.26);background:rgba(255,255,255,.16);color:var(--ink);}
+.uni-hiver-sec .kw-list li{border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.05);color:var(--paper);}
+
+.assoc{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1rem;margin-top:.2rem;}
+.assoc-label{font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;opacity:.7;}
+.assoc-list{display:flex;flex-wrap:wrap;gap:.5rem .8rem;list-style:none;padding:0;margin:0;}
+.assoc-list a{display:inline-flex;align-items:center;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;font-weight:600;border-bottom:1px solid currentColor;padding-bottom:.22em;transition:opacity .3s;}
+.assoc-list a:hover{opacity:.65;}
+
+.uni-visual{position:relative;aspect-ratio:5/4;border-radius:clamp(16px,1.8vw,22px);display:grid;place-items:center;overflow:hidden;box-shadow:0 22px 44px -34px rgba(60,40,18,.4);transition:transform .5s cubic-bezier(.2,.7,.2,1),box-shadow .5s;}
+.uni-visual:hover{transform:translateY(-5px);box-shadow:0 36px 58px -34px rgba(60,40,18,.45);}
+.uni-ete-sec .uni-visual{background:rgba(255,255,255,.2);}
+.uni-hiver-sec .uni-visual{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);}
+.uni-visual .art{width:62%;height:62%;transition:transform .6s cubic-bezier(.2,.7,.2,1);}
+.uni-visual:hover .art{transform:scale(1.07);}
+.uni-visual .cap{position:absolute;left:14px;bottom:14px;font-size:.56rem;letter-spacing:.13em;text-transform:uppercase;background:rgba(251,248,242,.9);color:var(--ink-soft);padding:.4em .7em;border-radius:99px;}
+
+@media (max-width:860px){
+  .uni-grid{grid-template-columns:1fr;gap:22px;}
+  .uni-visual{order:-1;aspect-ratio:16/9;}
+}
+</style>
 </head>
 <body>
 <div class="page-bg" aria-hidden="true">
@@ -185,7 +227,7 @@
 <div class="announce">Location de mobilier &amp; décoration — <b>Amiens &amp; alentours</b></div>
 <header class="site-head" id="head">
   <div class="nav">
-    <ul class="nav-links nav-left"><li><a href="/catalogue">Catalogue</a></li><li><a href="/nos-univers" aria-current="page">Nos univers</a></li><li><a href="/inspirations">Inspirations</a></li></ul>
+    <ul class="nav-links nav-left"><li><a href="/catalogue">Catalogue</a></li><li><a href="/collections" aria-current="page">Nos collections</a></li><li><a href="/inspirations">Inspirations</a></li></ul>
     <a class="brand" href="/" aria-label="Maison Solstice, accueil"><svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13.5" r="4"/><path d="M12 3v3M4.7 6.7l1.6 1.6M19.3 6.7l-1.6 1.6M2.5 13.5h2M19.5 13.5h2M4 20h16"/></svg><span class="word">Maison Solstice</span></a>
     <div class="nav-right">
       <ul class="nav-links"><li><a href="/a-propos">À propos</a></li><li><a href="/contact">Contact</a></li></ul>
@@ -199,7 +241,7 @@
 </header>
 <div class="mpanel" id="mpanel">
   <div class="mpanel-top"><span class="word">Maison Solstice</span><button class="close" id="mclose" aria-label="Fermer le menu"><svg aria-hidden="true"><use href="#i-close"/></svg></button></div>
-  <nav><a href="/catalogue">Catalogue</a><a href="/nos-univers">Nos univers</a><a href="/inspirations">Inspirations</a><a href="/a-propos">À propos</a><a href="/contact">Contact</a><a href="/favoris">Mes coups de cœur</a></nav>
+  <nav><a href="/catalogue">Catalogue</a><a href="/collections">Nos collections</a><a href="/inspirations">Inspirations</a><a href="/a-propos">À propos</a><a href="/contact">Contact</a><a href="/favoris">Mes coups de cœur</a></nav>
   <div class="m-cta"><a class="btn btn-ink" href="/catalogue">Découvrir le catalogue <svg aria-hidden="true"><use href="#i-arrow"/></svg></a></div>
 </div>
 <main>
@@ -208,7 +250,7 @@
     <nav class="crumbs"><a href="/">Accueil</a><span class="sep">/</span><span>Nos collections</span></nav>
     <span class="eyebrow">Deux collections par solstice</span>
     <h1 id="collTitle">Nos <em>collections</em></h1>
-    <p class="lede" id="collIntro">Quatre ambiances, deux par saison. Chacune se prend en <strong>pack complet</strong> ou en <strong>décoration de table seule</strong>.</p>
+    <p class="lede" id="collIntro">Quatre ambiances, deux par saison, en pack complet ou en décoration de table.</p>
   </div>
 </section>
 
@@ -218,7 +260,7 @@
     <div class="uni-block reveal" data-univers="ete">
       <div class="uni-band ete">
         <span class="ub-tag">Solstice d'Été</span>
-        <p>Lumière, grands airs et dorures : la saison des célébrations en plein air.</p>
+        <p>La saison des célébrations en plein air.</p>
       </div>
       <div class="col-grid">
         <a class="col-card" href="/collection-dolce-vita">
@@ -254,7 +296,7 @@
     <div class="uni-block reveal" data-univers="hiver">
       <div class="uni-band hiver">
         <span class="ub-tag">Solstice d'Hiver</span>
-        <p>Velours, chandelles et éclat feutré : la saison des réceptions au chaud.</p>
+        <p>La saison des réceptions au chaud.</p>
       </div>
       <div class="col-grid">
         <a class="col-card" href="/collection-black-gold">
@@ -289,13 +331,75 @@
     </div>
   </div>
 </section>
+
+<!-- SOLSTICE D'ÉTÉ — l'univers derrière les collections -->
+<section class="section uni-ete-sec" id="ete" data-univers="ete">
+  <div class="wrap">
+    <div class="uni-grid">
+      <div class="uni-copy">
+        <span class="eyebrow reveal">Solstice d'Été</span>
+        <h2 class="reveal d1">Lumière, doré &amp; grands airs</h2>
+        <p class="lead reveal d1">La saison des célébrations à ciel ouvert : lin froissé, pampa et olivier, tables dressées sous la treille et éclats de laiton au soleil couchant.</p>
+        <ul class="kw-list reveal d2">
+          <li>Lin naturel</li>
+          <li>Pampa &amp; olivier</li>
+          <li>Vaisselle claire</li>
+          <li>Guirlandes guinguette</li>
+          <li>Éclats dorés</li>
+        </ul>
+        <div class="assoc reveal d2">
+          <span class="assoc-label">Collections</span>
+          <ul class="assoc-list">
+            <li><a href="/collection-dolce-vita">Dolce Vita</a></li>
+            <li><a href="/collection-garden-party">Garden Party</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="uni-visual reveal d1">
+        <svg class="art" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-sun"/></svg>
+        <span class="cap">Garden party au soleil couchant</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLSTICE D'HIVER -->
+<section class="section dark uni-hiver-sec" id="hiver" data-univers="hiver">
+  <div class="wrap">
+    <div class="uni-grid">
+      <div class="uni-visual reveal d1">
+        <svg class="art" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-candles"/></svg>
+        <span class="cap">Réception aux chandelles</span>
+      </div>
+      <div class="uni-copy">
+        <span class="eyebrow reveal">Solstice d'Hiver</span>
+        <h2 class="reveal d1">Velours, bougies &amp; brun chaud</h2>
+        <p class="lead reveal d1">Quand les jours raccourcissent, on resserre les tables et l'on tamise la lumière : velours côtelé, verrerie fumée et forêts de bougies.</p>
+        <ul class="kw-list reveal d2">
+          <li>Velours côtelé</li>
+          <li>Verrerie fumée</li>
+          <li>Bougies &amp; chandeliers</li>
+          <li>Dorures</li>
+          <li>Esprit cocon</li>
+        </ul>
+        <div class="assoc reveal d2">
+          <span class="assoc-label">Collections</span>
+          <ul class="assoc-list">
+            <li><a href="/collection-black-gold">Black &amp; Gold</a></li>
+            <li><a href="/collection-white-party">White Party</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 </main>
 <footer class="site-foot">
   <div class="wrap">
     <div class="foot-top">
       <div class="foot-brand"><svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13.5" r="4"/><path d="M12 3v3M4.7 6.7l1.6 1.6M19.3 6.7l-1.6 1.6M2.5 13.5h2M19.5 13.5h2M4 20h16"/></svg><span class="word">Maison Solstice</span><p>Location de mobilier et de décoration pour vos événements. Le décor de vos plus beaux moments, à Amiens et ses alentours.</p></div>
-      <div class="foot-col"><h5>Le catalogue</h5><ul><li><a href="/catalogue">Mobilier</a></li><li><a href="/catalogue">Art de la table</a></li><li><a href="/catalogue">Décoration</a></li><li><a href="/catalogue">Cérémonie</a></li><li><a href="/nos-univers">Nos collections</a></li></ul></div>
-      <div class="foot-col"><h5>La maison</h5><ul><li><a href="/nos-univers">Nos univers</a></li><li><a href="/inspirations">Inspirations</a></li><li><a href="/a-propos">À propos</a></li><li><a href="/faq">FAQ</a></li></ul></div>
+      <div class="foot-col"><h5>Le catalogue</h5><ul><li><a href="/catalogue">Mobilier</a></li><li><a href="/catalogue">Art de la table</a></li><li><a href="/catalogue">Décoration</a></li><li><a href="/catalogue">Cérémonie</a></li><li><a href="/collections">Nos collections</a></li></ul></div>
+      <div class="foot-col"><h5>La maison</h5><ul><li><a href="/favoris">Mes coups de cœur</a></li><li><a href="/inspirations">Inspirations</a></li><li><a href="/a-propos">À propos</a></li><li><a href="/faq">FAQ</a></li></ul></div>
       <div class="foot-col"><h5>Contact</h5><address>Amiens, Somme (80)<br>Livraison Amiens &amp; ~30 km<br>[e-mail de contact]<br>Sur rendez-vous</address></div>
     </div>
     <div class="foot-bottom">

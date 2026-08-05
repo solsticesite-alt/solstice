@@ -3,6 +3,11 @@
    Utilisée par toutes les pages : accueil + pages intérieures.
    ============================================================ */
 
+/* L'attribut hidden doit toujours l'emporter : sans cela, la moindre
+   regle de classe posant un display (flex, grid...) reaffiche l'element
+   qu'on croyait masque. */
+[hidden]{display:none !important;}
+
 :root{
   color-scheme: light;
   --paper:#FBF8F2; --paper-2:#F5EEE1; --sand:#EEE4D3; --sand-2:#E5D8C1;
@@ -107,21 +112,24 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opa
 .mpanel .m-cta{margin-top:auto;padding-top:2rem;display:flex;flex-direction:column;gap:.8rem;}
 
 /* ---------- page hero (pages intérieures) ---------- */
-.page-hero{position:relative;overflow:hidden;background:transparent;padding-block:clamp(24px,3.6vw,48px) clamp(18px,2.4vw,30px);}
+.page-hero{position:relative;overflow:hidden;background:transparent;padding-block:clamp(20px,3vw,40px) clamp(14px,1.8vw,24px);}
 .page-hero .wrap{position:relative;z-index:1;}
-.crumbs{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--stone);margin-bottom:.85rem;display:flex;gap:.5em;flex-wrap:wrap;}
+.crumbs{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--stone);margin-bottom:.6rem;display:flex;gap:.5em;flex-wrap:wrap;}
 .crumbs a{color:var(--ink-soft);} .crumbs a:hover{color:var(--gold-deep);}
 .crumbs .sep{color:var(--gold);}
-.page-hero h1{font-size:clamp(2.05rem,4.4vw,3.3rem);letter-spacing:-.01em;margin:.2em 0 .28em;max-width:24ch;}
+/* Titre et sous-titre respirent sur toute la largeur pour tenir sur une
+   seule ligne : c'est le texte qu'on raccourcit, pas la colonne. */
+.page-hero h1{font-size:clamp(1.95rem,4vw,3rem);letter-spacing:-.012em;margin:.16em 0 .24em;max-width:36ch;text-wrap:balance;}
 .page-hero h1 em{font-style:italic;color:var(--gold-deep);}
-.page-hero .lede{font-size:clamp(.97rem,1.35vw,1.08rem);max-width:62ch;}
+.page-hero .lede{font-size:clamp(.95rem,1.3vw,1.05rem);max-width:86ch;text-wrap:pretty;}
 
 /* ---------- section scaffold ---------- */
 .section{padding-block:var(--sect);position:relative;}
 /* Juste sous le bandeau de titre, on resserre pour que le contenu
    apparaisse sans avoir a faire defiler. */
-.page-hero + .section{padding-top:clamp(16px,2.4vw,30px);}
-.page-hero + .section .sec-head{margin-bottom:clamp(20px,3vw,34px);}
+.page-hero + .section{padding-top:clamp(10px,1.6vw,22px);}
+.page-hero + .section .sec-head{margin-bottom:clamp(18px,2.6vw,30px);}
+.sec-head .lede{max-width:76ch;}
 .section.tint{background:transparent;}
 .section.sand{background:transparent;}
 .section.dark{background:transparent;color:var(--paper);}
@@ -351,9 +359,11 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opa
 }
 
 /* ---------- Page d'une collection : les deux formules ---------- */
-.coll-hero{display:grid;grid-template-columns:1fr 1fr;gap:clamp(22px,3.4vw,52px);align-items:center;margin-bottom:clamp(34px,5vw,60px);}
-.coll-hero-art{position:relative;border-radius:clamp(16px,2vw,24px);min-height:clamp(220px,26vw,320px);display:grid;place-items:center;overflow:hidden;box-shadow:0 30px 60px -40px rgba(60,40,18,.5);}
-.coll-hero-art .glyph{width:clamp(120px,15vw,190px);height:auto;filter:drop-shadow(0 18px 26px rgba(40,25,10,.24));}
+/* Bandeau d'ambiance compact : les deux formules doivent rester
+   visibles sans defiler. */
+.coll-hero{display:grid;grid-template-columns:1.3fr .7fr;gap:clamp(18px,2.4vw,34px);align-items:center;margin-bottom:clamp(18px,2.4vw,30px);}
+.coll-hero-art{position:relative;border-radius:clamp(16px,2vw,24px);min-height:clamp(130px,12vw,165px);display:grid;place-items:center;overflow:hidden;box-shadow:0 30px 60px -40px rgba(60,40,18,.5);}
+.coll-hero-art .glyph{width:clamp(78px,8vw,105px);height:auto;filter:drop-shadow(0 18px 26px rgba(40,25,10,.24));}
 .coll-hero .pal{margin:.8rem 0 0;}
 .formulas{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,2.4vw,28px);}
 .formula{position:relative;border:1px solid var(--line);border-radius:clamp(14px,1.8vw,20px);background:var(--paper);padding:clamp(24px,3vw,38px);display:flex;flex-direction:column;gap:.7rem;box-shadow:0 24px 50px -42px rgba(60,40,18,.5);transition:transform .45s cubic-bezier(.2,.7,.2,1),box-shadow .45s;}
@@ -371,8 +381,13 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opa
 .coll-nav a:hover{background:var(--gold);color:#fff;border-color:var(--gold);}
 .coll-allback{text-align:center;margin-bottom:clamp(20px,3vw,32px);}
 @media (max-width:860px){
-  .coll-hero{grid-template-columns:1fr;}
-  .coll-hero-art{order:-1;min-height:200px;}
+  /* Sur mobile on garde le visuel, mais reduit a une bande : les deux
+     formules doivent apparaitre au premier ecran. */
+  .coll-hero{grid-template-columns:104px 1fr;gap:14px;align-items:center;}
+  .coll-hero-art{order:-1;min-height:104px;}
+  .coll-hero-art .glyph{width:58px;}
+  .coll-hero .lead{font-size:.92rem;}
+  .coll-hero .pal{margin-top:.5rem;}
   .formulas{grid-template-columns:1fr;}
 }
 
