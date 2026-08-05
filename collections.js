@@ -60,12 +60,15 @@
     }
   };
 
-  /* Suggestions — exemples, à remplacer par les vraies pièces plus tard. */
+  /* Options complémentaires — exemples, à remplacer par les vraies pièces.
+     `g` = visuel (symbole du sprite), `t` = teinte de la vignette. */
   var SUGGESTIONS = [
-    { n: 'Mange-debout + housse', d: "Pour l'apéritif d'accueil" },
-    { n: 'Arche fleurie', d: 'Le coin photo des invités' },
-    { n: 'Coin lounge', d: 'Fauteuils, tapis et table basse' },
-    { n: 'Brasero', d: 'Pour prolonger la soirée dehors' }
+    { n: 'Mange-debout + housse', d: "Pour l'apéritif d'accueil", g: 'g3-table', t: 'ct-garden' },
+    { n: 'Arche fleurie', d: 'Le coin photo des invités', g: 'g3-arch', t: 'ct-dolce' },
+    { n: 'Coin lounge', d: 'Fauteuils, tapis et table basse', g: 'g3-chair', t: 'ct-white' },
+    { n: 'Brasero', d: 'Pour prolonger la soirée dehors', g: 'g3-lantern', t: 'ct-black' },
+    { n: 'Bar à champagne', d: 'Verrerie, seau et desserte', g: 'g3-glass', t: 'ct-dolce' },
+    { n: 'Guirlandes lumineuses', d: 'Pour habiller le ciel', g: 'g3-lights', t: 'ct-garden' }
   ];
 
   function qtyFor(item, g) {
@@ -99,19 +102,35 @@
     '<span class="om-hint">Jusqu\'à 60 invités. Au-delà, écrivez-nous : on compose sur mesure.</span></div>' +
     '<div class="om-listwrap"><div class="om-listhead"><span>Votre sélection</span><span id="omTotal"></span></div>' +
     '<div class="om-list" id="omList"></div></div>' +
-    '<div class="om-also" id="omAlso" hidden><h4>Ceux qui ont choisi cette table ont aussi ajouté</h4>' +
-    '<div class="om-alsogrid" id="omAlsoGrid"></div></div>' +
     '</div>' +
     '<div class="om-foot"><button type="button" class="btn btn-ink om-add" id="omAdd">Ajouter au panier</button></div>' +
     '</div></div>';
+
+  /* Second pop-up : les options complémentaires, après l'ajout au panier. */
+  var OPTIONS_HTML =
+    '<div class="om-root" id="osRoot" aria-hidden="true">' +
+    '<div class="om-scrim" data-os-close></div>' +
+    '<div class="om-panel om-panel-wide" role="dialog" aria-modal="true" aria-labelledby="osTitle">' +
+    '<div class="om-head"><div><span class="om-k om-ok" id="osKicker"></span><h3 id="osTitle">Complétez votre table</h3></div>' +
+    '<button type="button" class="om-x" data-os-close aria-label="Fermer">&times;</button></div>' +
+    '<div class="om-scroll">' +
+    '<p class="om-desc">Ceux qui ont choisi cette table ont aussi ajouté&nbsp;:</p>' +
+    '<div class="opt-grid" id="osGrid"></div>' +
+    '</div>' +
+    '<div class="om-foot om-foot-2">' +
+    '<button type="button" class="btn btn-ghost" data-os-close>Continuer sans option</button>' +
+    '<button type="button" class="btn btn-ink" id="osDone">Voir ma sélection</button>' +
+    '</div></div></div>';
 
   function init() {
     if (!document.querySelector('.offer-btn')) return;
 
     var host = document.createElement('div');
-    host.innerHTML = MODAL_HTML;
+    host.innerHTML = MODAL_HTML + OPTIONS_HTML;
     var root = host.firstChild;
+    var optRoot = host.lastChild;
     document.body.appendChild(root);
+    document.body.appendChild(optRoot);
 
     var elKicker = root.querySelector('#omKicker'),
         elTitle = root.querySelector('#omTitle'),
@@ -119,11 +138,12 @@
         elGuests = root.querySelector('#omGuests'),
         elList = root.querySelector('#omList'),
         elTotal = root.querySelector('#omTotal'),
-        elAlso = root.querySelector('#omAlso'),
-        elAlsoGrid = root.querySelector('#omAlsoGrid'),
         elAdd = root.querySelector('#omAdd');
+    var osKicker = optRoot.querySelector('#osKicker'),
+        osGrid = optRoot.querySelector('#osGrid'),
+        osDone = optRoot.querySelector('#osDone');
 
-    var state = { col: null, kind: 'pack', guests: DEFAULT_GUESTS, extras: [] };
+    var state = { col: null, kind: 'pack', guests: DEFAULT_GUESTS, added: [] };
     var lastFocus = null;
 
     GUEST_STEPS.forEach(function (n) {
@@ -151,67 +171,87 @@
       elList.innerHTML = html;
       elTotal.textContent = total + ' pièces';
     }
-    function renderExtras() {
-      if (state.kind !== 'table') { elAlso.hidden = true; elAlsoGrid.innerHTML = ''; return; }
-      elAlso.hidden = false;
-      elAlsoGrid.innerHTML = SUGGESTIONS.map(function (s, i) {
-        var on = state.extras.indexOf(i) !== -1;
-        return '<div class="om-sug"><span class="sn">' + esc(s.n) + '</span>' +
-          '<span class="sd">' + esc(s.d) + '</span>' +
-          '<button type="button" class="' + (on ? 'on' : '') + '" data-sug="' + i + '" aria-pressed="' + (on ? 'true' : 'false') + '">' +
-          (on ? 'Ajouté ✓' : '+ Ajouter') + '</button></div>';
-      }).join('');
-    }
-    function syncAddLabel() {
-      var n = state.kind === 'table' ? state.extras.length : 0;
-      elAdd.textContent = n ? 'Ajouter au panier (' + (n + 1) + ' lots)' : 'Ajouter au panier';
-    }
+
+    /* ---------- pop-up 1 : invités + récapitulatif ---------- */
     function open(colKey, kind) {
       var c = COLS[colKey];
       if (!c) return;
-      state.col = colKey; state.kind = kind; state.extras = [];
+      state.col = colKey; state.kind = kind;
       state.guests = parseInt(elGuests.value, 10) || DEFAULT_GUESTS;
       elKicker.textContent = c.uni + ' · ' + c.name;
       elTitle.textContent = kind === 'pack' ? 'Le pack complet' : 'Les tables';
       elDesc.textContent = kind === 'pack'
         ? c.desc + ' Le décor entier : mobilier, art de la table, décoration et lumière.'
         : c.desc + ' Ici, uniquement la décoration de table.';
-      renderList(); renderExtras(); syncAddLabel();
+      renderList();
       lastFocus = document.activeElement;
-      root.classList.add('open');
-      root.setAttribute('aria-hidden', 'false');
-      document.body.style.overflow = 'hidden';
-      elGuests.focus();
+      show(root);
     }
-    function close() {
-      root.classList.remove('open');
-      root.setAttribute('aria-hidden', 'true');
-      document.body.style.overflow = '';
-      if (lastFocus && lastFocus.focus) lastFocus.focus();
+    function show(el) {
+      el.classList.add('open');
+      el.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+    function hide(el, restoreFocus) {
+      el.classList.remove('open');
+      el.setAttribute('aria-hidden', 'true');
+      if (!root.classList.contains('open') && !optRoot.classList.contains('open')) {
+        document.body.style.overflow = '';
+      }
+      if (restoreFocus && lastFocus && lastFocus.focus) lastFocus.focus();
     }
 
+    /* ---------- pop-up 2 : options complémentaires ---------- */
+    function renderOptions() {
+      osGrid.innerHTML = SUGGESTIONS.map(function (s, i) {
+        var on = state.added.indexOf(i) !== -1;
+        return '<div class="opt' + (on ? ' is-on' : '') + '">' +
+          '<div class="opt-img ' + s.t + '"><svg viewBox="0 0 120 120" aria-hidden="true"><use href="#' + s.g + '"/></svg></div>' +
+          '<div class="opt-body"><span class="opt-n">' + esc(s.n) + '</span>' +
+          '<span class="opt-d">' + esc(s.d) + '</span>' +
+          '<button type="button" class="opt-add' + (on ? ' on' : '') + '" data-sug="' + i + '" aria-pressed="' + (on ? 'true' : 'false') + '">' +
+          (on ? 'Ajouté ✓' : '+ Ajouter') + '</button></div></div>';
+      }).join('');
+    }
+    function openOptions() {
+      var c = COLS[state.col];
+      state.added = [];
+      osKicker.textContent = 'Ajouté à votre sélection ✓ · ' + c.name;
+      renderOptions();
+      show(optRoot);
+    }
+
+    /* ---------- branchements ---------- */
     document.addEventListener('click', function (e) {
       var b = e.target.closest('.offer-btn');
       if (b) { e.preventDefault(); open(b.getAttribute('data-col'), b.getAttribute('data-kind')); }
     });
     root.addEventListener('click', function (e) {
-      if (e.target.closest('[data-om-close]')) { close(); return; }
+      if (e.target.closest('[data-om-close]')) hide(root, true);
+    });
+    optRoot.addEventListener('click', function (e) {
+      if (e.target.closest('[data-os-close]')) { hide(optRoot, true); return; }
       var s = e.target.closest('[data-sug]');
-      if (s) {
+      if (s && window.SolCart) {
         var i = parseInt(s.getAttribute('data-sug'), 10);
-        var at = state.extras.indexOf(i);
-        if (at === -1) state.extras.push(i); else state.extras.splice(at, 1);
-        renderExtras(); syncAddLabel();
+        if (state.added.indexOf(i) !== -1) return;
+        var sug = SUGGESTIONS[i];
+        window.SolCart.add({ name: sug.n, ref: slug('option-' + sug.n), qty: 1, priceHint: 'Option · ' + COLS[state.col].name });
+        state.added.push(i);
+        renderOptions();
       }
     });
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && root.classList.contains('open')) close();
+      if (e.key !== 'Escape') return;
+      if (optRoot.classList.contains('open')) hide(optRoot, true);
+      else if (root.classList.contains('open')) hide(root, true);
     });
     elGuests.addEventListener('change', function () {
       var g = parseInt(elGuests.value, 10) || DEFAULT_GUESTS;
       state.guests = Math.min(MAX_GUESTS, Math.max(1, g));
       renderList();
     });
+
     elAdd.addEventListener('click', function () {
       if (!window.SolCart) return;
       var c = COLS[state.col];
@@ -224,11 +264,16 @@
           priceHint: label + ' · ' + state.guests + ' invités'
         });
       });
-      state.extras.forEach(function (i) {
-        var s = SUGGESTIONS[i];
-        window.SolCart.add({ name: s.n, ref: slug('option-' + s.n), qty: 1, priceHint: 'Option · ' + c.name });
-      });
-      close();
+      hide(root, false);
+      /* Les options ne sont proposées qu'après coup, et seulement pour une table. */
+      if (state.kind === 'table') openOptions();
+      else if (lastFocus && lastFocus.focus) lastFocus.focus();
+    });
+
+    osDone.addEventListener('click', function () {
+      hide(optRoot, false);
+      var cartBtn = document.querySelector('.nav-tools [aria-label="Panier"]');
+      if (cartBtn) cartBtn.click();
     });
   }
 
