@@ -18,7 +18,10 @@
           name: String(i.name).slice(0, 160),
           ref: String(i.ref || slugify(i.name)).slice(0, 80),
           qty: clampQty(i.qty),
-          priceHint: String(i.priceHint || '').slice(0, 40)
+          priceHint: String(i.priceHint || '').slice(0, 60),
+          price: num(i.price),
+          unit: String(i.unit || '').slice(0, 12),
+          caution: num(i.caution)
         };
       });
     } catch (e) { return []; }
@@ -32,6 +35,16 @@
     for (var i = 0; i < listeners.length; i++) { try { listeners[i](it); } catch (e) {} }
   }
   function clampQty(q) { q = Math.round(Number(q) || 1); return Math.max(1, Math.min(MAX_QTY, q)); }
+  /* Montant : un nombre fini et positif, sinon null (pièce « au devis »). */
+  function num(v) {
+    var n = Number(v);
+    return (isFinite(n) && n >= 0 && v !== null && v !== '' && v !== undefined) ? n : null;
+  }
+  /* Extrait le premier montant d'un texte : « 4 € / jour » -> 4 ; « caution 15 € » -> 15 */
+  function parseAmount(txt) {
+    var m = String(txt || '').replace(/ | /g, ' ').match(/(\d+(?:[.,]\d+)?)\s*€/);
+    return m ? Number(m[1].replace(',', '.')) : null;
+  }
   function slugify(s) {
     return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
       .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60) || 'piece';
@@ -49,8 +62,23 @@
       var found = null;
       for (var i = 0; i < items.length; i++) { if (items[i].ref === ref) { found = items[i]; break; } }
       if (found) found.qty = clampQty(found.qty + q);
-      else items.push({ name: String(p.name).slice(0, 160), ref: ref, qty: q, priceHint: String(p.priceHint || '').slice(0, 40) });
+      else items.push({
+        name: String(p.name).slice(0, 160), ref: ref, qty: q,
+        priceHint: String(p.priceHint || '').slice(0, 60),
+        price: num(p.price), unit: String(p.unit || '').slice(0, 12), caution: num(p.caution)
+      });
       write(items);
+    },
+    /* Totaux de la sélection. Les pièces sans tarif connu sont comptées à part
+       (elles sont chiffrées dans le devis). */
+    totals: function () {
+      var items = read(), t = { subtotal: 0, caution: 0, pieces: 0, lines: items.length, quoted: 0 };
+      items.forEach(function (i) {
+        t.pieces += i.qty;
+        if (typeof i.price === 'number') t.subtotal += i.price * i.qty; else t.quoted++;
+        if (typeof i.caution === 'number') t.caution += i.caution * i.qty;
+      });
+      return t;
     },
     setQty: function (ref, qty) {
       var items = read(), out = [];
@@ -166,10 +194,10 @@
   /* --------------------------------------------------------------- drawer */
   var drawer, drawerBody;
   function buildDrawer() {
-    var onContact = /(^|\/)contact($|[/?#.])/.test(location.pathname);
-    var ctaHtml = onContact
-      ? '<button type="button" class="btn btn-ink sol-cart-cta" data-goform>Compléter ma demande <svg aria-hidden="true" width="16" height="16"><use href="#i-arrow"/></svg></button>'
-      : '<a class="btn btn-ink sol-cart-cta" href="/contact">Demander mon devis <svg aria-hidden="true" width="16" height="16"><use href="#i-arrow"/></svg></a>';
+    var onCart = /(^|\/)panier($|[/?#.])/.test(location.pathname);
+    var ctaHtml = onCart
+      ? '<a class="btn btn-ink sol-cart-cta" href="/contact">Demander mon devis <svg aria-hidden="true" width="16" height="16"><use href="#i-arrow"/></svg></a>'
+      : '<a class="btn btn-ink sol-cart-cta" href="/panier">Voir mon panier <svg aria-hidden="true" width="16" height="16"><use href="#i-arrow"/></svg></a>';
     drawer = el(
       '<div class="sol-cart-root" id="solCartRoot" aria-hidden="true">' +
       '<div class="sol-cart-scrim" data-close></div>' +
@@ -222,7 +250,13 @@
     if (!name) return null;
     var priceEl = card.querySelector('.card-price');
     var priceHint = priceEl ? priceEl.textContent.replace(/\s+/g, ' ').trim() : '';
-    return { name: name, ref: slugify(name), priceHint: priceHint };
+    var cautionEl = card.querySelector('.card-caution');
+    return {
+      name: name, ref: slugify(name), priceHint: priceHint,
+      price: parseAmount(priceHint),
+      unit: /week-?end/i.test(priceHint) ? 'week-end' : (/jour/i.test(priceHint) ? 'jour' : ''),
+      caution: cautionEl ? parseAmount(cautionEl.textContent) : null
+    };
   }
   function wireAddButtons() {
     document.addEventListener('click', function (e) {
