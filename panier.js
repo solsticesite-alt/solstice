@@ -238,13 +238,23 @@
     });
     document.querySelectorAll('[name="delivery"]').forEach(function (r) {
       r.checked = r.value === prefs.delivery;
-      r.addEventListener('change', function () { prefs.delivery = r.value; savePrefs(); renderAll(); });
+      r.addEventListener('change', function () {
+        prefs.delivery = r.value; savePrefs(); syncPlaceField(); renderAll();
+      });
     });
+    syncPlaceField();
     var fd = $('f-date'), fg = $('f-guests'), fp = $('f-place');
     fd.value = prefs.date; fg.value = prefs.guests; fp.value = prefs.place;
-    fd.addEventListener('change', function () { prefs.date = fd.value; savePrefs(); });
+    fd.addEventListener('change', function () {
+      prefs.date = fd.value; savePrefs();
+      fd.closest('.f-field').classList.remove('is-err');
+      if (fd.value) { $('pStatus1').textContent = ''; $('pStatus1').className = 'p-status'; }
+    });
     fg.addEventListener('change', function () { prefs.guests = fg.value; savePrefs(); });
-    fp.addEventListener('input', function () { prefs.place = fp.value; savePrefs(); });
+    fp.addEventListener('input', function () {
+      prefs.place = fp.value; savePrefs();
+      if (fp.value.trim()) fp.closest('.f-field').classList.remove('is-err');
+    });
 
     /* lignes du panier */
     el.list.addEventListener('click', function (e) {
@@ -274,8 +284,9 @@
     });
 
     /* navigation entre les étapes */
-    el.go.addEventListener('click', function () { goStep(2); });
-    el.stickyGo.addEventListener('click', function () { goStep(2); });
+    function toStep2() { if (checkStep1()) goStep(2); }
+    el.go.addEventListener('click', toStep2);
+    el.stickyGo.addEventListener('click', toStep2);
     $('back1').addEventListener('click', function () { goStep(1); });
     $('back2').addEventListener('click', function () { goStep(2); });
     $('toStep3').addEventListener('click', function () {
@@ -308,6 +319,33 @@
 
     if (window.SolCart) window.SolCart.onChange(renderAll);
     renderAll();
+  }
+
+  /* Le lieu ne sert qu'en cas de livraison : on ne le demande pas pour un retrait. */
+  function syncPlaceField() {
+    var f = $('placeField');
+    if (f) f.hidden = prefs.delivery !== 'livraison';
+  }
+
+  /* Seules la date (disponibilité) et, en cas de livraison, l'adresse sont
+     exigées. Le reste reste facultatif pour ne pas alourdir le parcours. */
+  function checkStep1() {
+    var st = $('pStatus1');
+    var fail = function (id, msg) {
+      var field = $(id).closest('.f-field');
+      if (field) field.classList.add('is-err');
+      st.textContent = msg; st.className = 'p-status err';
+      $(id).focus();
+      $(id).scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return false;
+    };
+    document.querySelectorAll('.f-field').forEach(function (f) { f.classList.remove('is-err'); });
+    st.textContent = ''; st.className = 'p-status';
+    if (!$('f-date').value) return fail('f-date', 'Indiquez la date de votre événement : elle nous sert à vérifier les disponibilités.');
+    if (prefs.delivery === 'livraison' && !$('f-place').value.trim()) {
+      return fail('f-place', 'Indiquez l’adresse de livraison pour que nous puissions estimer les frais.');
+    }
+    return true;
   }
 
   /* L'acompte est la moitié du total ; le solde se déduit du total pour que la

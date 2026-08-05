@@ -80,9 +80,6 @@
   .info-grid .v{font-weight:600;font-size:.92rem;word-break:break-word;}
   .info-grid .v a{word-break:break-all;}
   .blockquote{background:var(--paper-2);border-left:3px solid var(--gold);border-radius:0 10px 10px 0;padding:10px 14px;margin:0 0 16px;font-size:.92rem;white-space:pre-wrap;}
-  .sel-list{list-style:none;margin:0 0 16px;padding:0;}
-  .sel-list li{display:flex;justify-content:space-between;gap:1rem;padding:7px 0;border-bottom:1px solid var(--line);font-size:.9rem;}
-  .sel-list .q{color:var(--stone);white-space:nowrap;}
   .section-title{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-deep);font-weight:700;margin:18px 0 10px;}
 
   /* ----- Composeur devis ----- */
@@ -285,10 +282,6 @@
       ['Invités',esc(ev.guests||'—')]
     ].map(function(kv){return '<div><div class="k">'+kv[0]+'</div><div class="v">'+kv[1]+'</div></div>';}).join('');
 
-    var sel = (req.items&&req.items.length) ? '<div class="section-title">Sélection du client</div><ul class="sel-list">'+req.items.map(function(it){
-      return '<li><span>'+esc(it.name)+(it.priceHint?' <span class="muted">('+esc(it.priceHint)+')</span>':'')+'</span><span class="q">× '+esc(it.qty)+'</span></li>';
-    }).join('')+'</ul>' : '';
-
     var msg = req.message ? '<div class="section-title">Message</div><blockquote class="blockquote">'+esc(req.message)+'</blockquote>' : '';
 
     var repliedNote = req.reply ? '<div class="sent-note">✓ Facture déjà envoyée le '+esc(fdate(req.reply.sentAt))+' — total '+euros(req.reply.subtotal)+'. Vous pouvez la renvoyer / modifier ci-dessous.</div>' : '';
@@ -296,7 +289,7 @@
     $('#detail').innerHTML=
       '<div class="d-head"><div><h2>'+esc(c.name||'Demande')+'</h2><div class="muted">'+esc(req.ref||'')+' · reçue le '+esc(fdate(req.createdAt))+'</div></div>'+
         (c.email?'<a class="btn btn-sm" href="mailto:'+esc(c.email)+'">Écrire un e-mail simple</a>':'')+'</div>'+
-      '<div class="info-grid">'+info+'</div>'+ sel + msg +
+      '<div class="info-grid">'+info+'</div>'+ msg +
       repliedNote +
       (req.payment ? '<div class="sent-note">Règlement choisi par le client : <b>'+(req.payment==='full'?'paiement intégral à la commande':'acompte de 50 %, solde à la livraison')+'</b></div>' : '')+
       '<div class="section-title">Facture à envoyer</div>'+

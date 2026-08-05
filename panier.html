@@ -163,6 +163,10 @@
 .pay-recap{margin-top:1rem;background:var(--paper-2);border:1px solid var(--line);border-radius:var(--radius);padding:.85rem 1rem;font-size:.84rem;color:var(--ink-soft);line-height:1.6;}
 .pay-recap b{color:var(--ink);font-weight:600;}
 .pay-recap .r{display:flex;justify-content:space-between;gap:1rem;padding:.2rem 0;}
+.f-help{font-size:.74rem;color:var(--stone);line-height:1.45;}
+.f-opt{font-size:.86em;letter-spacing:0;text-transform:none;color:var(--stone);font-weight:400;}
+.f-field input:invalid{border-color:var(--line);}
+.f-field.is-err input{border-color:#a23b30;box-shadow:0 0 0 2px rgba(162,59,48,.12);}
 </style>
 </head>
 <body>
@@ -421,7 +425,7 @@
 
           <div class="p-block">
             <h3>Retrait ou livraison</h3>
-            <p class="hint">Aucun frais surprise : le montant de la livraison est confirmé dans votre devis.</p>
+            <p class="hint">Aucun frais surprise : le montant de la livraison est confirmé sur votre facture.</p>
             <div class="opts">
               <div class="opt-r">
                 <input type="radio" name="delivery" id="v-retrait" value="retrait">
@@ -434,18 +438,22 @@
             </div>
             <div class="f-grid" style="margin-top:1rem;">
               <div class="f-field">
-                <label for="f-date">Date de l'événement</label>
-                <input type="date" id="f-date">
+                <label for="f-date">Date de l'événement *</label>
+                <input type="date" id="f-date" required>
+                <span class="f-help">Indispensable pour vérifier que vos pièces sont libres ce jour-là.</span>
               </div>
               <div class="f-field">
-                <label for="f-guests">Nombre d'invités</label>
+                <label for="f-guests">Nombre d'invités <span class="f-opt">(facultatif)</span></label>
                 <input type="number" id="f-guests" min="1" max="500" inputmode="numeric" placeholder="ex. 40">
               </div>
-              <div class="f-field full">
-                <label for="f-place">Lieu de l'événement</label>
+              <!-- Le lieu n'est demandé que s'il y a livraison : une question de moins. -->
+              <div class="f-field full" id="placeField" hidden>
+                <label for="f-place">Adresse de livraison *</label>
                 <input type="text" id="f-place" placeholder="Ville, domaine, salle…">
+                <span class="f-help">Elle nous sert à estimer les frais de livraison.</span>
               </div>
             </div>
+            <p class="p-status" id="pStatus1"></p>
           </div>
 
           <!-- Suggestions : augmenter le panier moyen sans gêner le bouton principal -->
