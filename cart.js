@@ -176,14 +176,6 @@
     container.innerHTML = items.map(itemRowHtml).join('');
   }
 
-  /* ------------------------------------------------------------ badges/nav */
-  function syncBadges() {
-    var n = SolCart.count();
-    document.querySelectorAll('.nav-tools .count').forEach(function (b) {
-      b.textContent = n;
-      b.style.display = n > 0 ? '' : 'none';
-    });
-  }
 
   /* --------------------------------------------------------- add-to-cart */
   function productFromCard(card) {
@@ -356,6 +348,5 @@
     wireAddButtons();
     mountContactSelection();
     wireContactForm();
-    SolCart.onChange(syncBadges);
   });
 })();

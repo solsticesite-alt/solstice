@@ -163,14 +163,12 @@
   }
   .nav-links a::after{content:"";position:absolute;left:0;bottom:.15em;height:1px;width:0;background:var(--gold);transition:width .35s ease;}
   .nav-links a:hover{color:var(--ink);} .nav-links a:hover::after{width:100%;}
-  .nav-tools{display:flex;align-items:center;gap:.4rem;flex:none;}
-  .nav-tools button{position:relative;width:42px;height:42px;color:var(--ink);display:grid;place-items:center;border-radius:99px;transition:color .3s,background .3s;}
-  .nav-tools button:hover{color:var(--gold-deep);background:rgba(176,138,84,.08);}
-  .nav-tools .count{
-    position:absolute;top:4px;right:4px;background:var(--gold);color:#fff;font-family:var(--sans);
-    font-size:.56rem;font-weight:700;min-width:15px;height:15px;border-radius:99px;display:grid;place-items:center;padding:0 3px;
-  }
-  .burger{display:none;}
+  .nav-tools{display:flex;align-items:center;justify-content:flex-end;gap:.4rem;flex:none;}
+  .nav-tools button,.nav-tools a{position:relative;flex:none;width:42px;height:42px;padding:0;color:var(--ink);display:inline-grid;place-items:center;border-radius:99px;line-height:0;transition:color .3s,background .3s;}
+  .nav-tools button:hover,.nav-tools a:hover{color:var(--gold-deep);background:rgba(176,138,84,.08);}
+  .nav-tools .icon{flex:none;display:block;}
+  .nav-tools .burger{display:none;}
+  .burger svg{width:24px;height:24px;stroke:currentColor;stroke-width:1.5;fill:none;stroke-linecap:round;}
 
   /* ============================ HERO ============================ */
   .hero{
@@ -429,8 +427,12 @@
     :root{--nav-h:66px;}
     .cat-grid{grid-template-columns:repeat(2,1fr);}
     .nav-links{display:none;}
+    /* Le menu disparaît : barre en 2 colonnes pour que le nom ne chevauche
+       jamais les icônes. */
+    .nav{grid-template-columns:1fr auto;gap:.6rem;}
+    .brand{justify-self:start;min-width:0;}
     .nav-tools .desktop-only{display:none;}
-    .burger{display:grid;place-items:center;width:42px;height:42px;color:var(--ink);}
+    .nav-tools .burger{display:inline-grid;place-items:center;width:42px;height:42px;color:var(--ink);}
     .burger svg{width:24px;height:24px;stroke:currentColor;stroke-width:1.5;fill:none;stroke-linecap:round;}
     .univers{grid-template-columns:1fr;}
     .univers::before{display:none;}
@@ -440,7 +442,10 @@
   }
   @media (max-width:560px){
     .announce{font-size:.58rem;letter-spacing:.14em;}
-    .brand .word{font-size:1.12rem;letter-spacing:.32em;}
+    /* « Maison Solstice » tient sur une ligne, sans déborder sur les icônes. */
+    .brand .word{font-size:clamp(.82rem,3.5vw,1.05rem);letter-spacing:.2em;white-space:nowrap;padding-left:.25em;}
+    .brand{gap:.4rem;min-width:0;}
+    .brand .mark{width:20px;height:20px;}
     .hero{min-height:auto;padding-top:6vh;}
     .hero-inner{padding-block:clamp(40px,10vh,64px) clamp(56px,12vh,80px);}
     .hero h1{font-size:clamp(2.4rem,10vw,3.4rem);}
@@ -457,6 +462,11 @@
     .foot-top{grid-template-columns:1fr;gap:1.8rem;}
     .foot-bottom{flex-direction:column;}
     .sec-flex{align-items:flex-start;}
+  }
+  @media (max-width:380px){
+    .brand .word{font-size:.76rem;letter-spacing:.11em;}
+    .nav-tools button,.nav-tools a,.burger{width:38px;height:38px;}
+    .nav{padding-inline:.7rem;}
   }
 </style>
 
@@ -656,7 +666,7 @@
       </ul>
       <div class="nav-tools">
         <button class="desktop-only" aria-label="Favoris"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg></button>
-        <a href="/panier" aria-label="Panier"><svg class="icon" aria-hidden="true"><use href="#i-bag"/></svg><span class="count">3</span></a>
+        <a href="/panier" aria-label="Panier"><svg class="icon" aria-hidden="true"><use href="#i-bag"/></svg></a>
         <button class="burger" id="burger" aria-label="Ouvrir le menu"><svg aria-hidden="true"><use href="#i-menu"/></svg></button>
       </div>
     </div>
