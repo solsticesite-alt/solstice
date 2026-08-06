@@ -258,6 +258,38 @@ cookie, détournement d'en-têtes, inondation du formulaire.
 Au passage : `GET /api/admin/logout` est refusé — une simple image posée sur un
 autre site suffisait sinon à faire sauter ta session.
 
+### Le nettoyeur d'e-mails passé au tamis
+
+Le premier audit n'avait éprouvé le nettoyeur qu'avec **un** jeu de charges,
+écrit par la même main que le nettoyeur — ce qui ne prouve à peu près rien. Il a
+donc été soumis à **1 094 charges** (répertoire classique d'évasion de filtres +
+mutations : casse, espaces exotiques, guillemets dépareillés, entités, octets
+de contrôle), chaque sortie étant **rejouée dans un vrai navigateur, sans le bac
+à sable** — de façon à mesurer cette couche seule et non le filet derrière elle.
+
+**Trois défauts, tous corrigés :**
+
+1. **Un nom d'attribut maquillé contournait le contrôle d'URL.** `href` suivi
+   d'un octet invisible n'était pas reconnu comme une URL, échappait donc à la
+   vérification de schéma — puis le nom était nettoyé à l'écriture et
+   ressortait en `href` parfaitement vivant, avec son `javascript:`. Le nom est
+   désormais normalisé **avant** tout contrôle, jamais après.
+2. **Découpe des attributs à l'expression régulière.** Des guillemets mal
+   appariés faisaient tomber la coupure au mauvais endroit : des débris
+   ressortaient dans la page et le navigateur les relisait comme des attributs
+   que le nettoyeur n'avait jamais examinés. Remplacée par un vrai analyseur,
+   qui lit, filtre, puis réécrit sous une forme toujours bien formée.
+3. **Le pistage à la lecture ne passait que partiellement.** Seuls `<img src>`
+   et `background=` étaient mis de côté ; `//serveur/pixel.png`,
+   `<input type=image>`, l'affiche d'une vidéo, `srcset`, `url()` en CSS et
+   `style=` sans guillemets passaient. _Portée réelle limitée :_ l'iframe porte
+   `default-src 'none'; img-src data:`, qui bloquait déjà ces requêtes — mais
+   le compteur « images bloquées » mentait, et le bouton « afficher les
+   images » en révélait plus que demandé.
+
+Un courrier légitime (tableaux, `bgcolor`, styles, liens, images incorporées)
+traverse intact — c'est vérifié par un test dédié.
+
 **Limites connues, assumées pour l'instant**
 - Le freinage compte **par adresse IP**. Un attaquant disposant de milliers
   d'adresses contourne la limite. C'est inhérent : la vraie défense reste un mot
@@ -267,6 +299,15 @@ autre site suffisait sinon à faire sauter ta session.
 - **Pas de déconnexion à distance** : si `SESSION_SECRET` est défini, changer le
   mot de passe ne ferme pas les sessions ouvertes (jusqu'à 7 jours). À ajouter
   si le besoin se présente.
+- **Rien n'a été vérifié en production.** Tout l'audit a tourné en local, avec
+  Supabase, IMAP et SMTP simulés. Restent à confirmer côté Vercel et OVH : que
+  la Row Level Security est bien active, que les en-têtes de sécurité sont
+  réellement servis, que les déploiements de préversion ne sont pas ouverts,
+  et que le compte OVH est protégé par une double authentification.
+- **`api/_lib/imap.js` (733 lignes) n'a que 12 tests, tous sur des fonctions
+  pures.** Le décodage MIME d'un message hostile — pièces jointes, encodages,
+  structures imbriquées — n'est pas couvert. C'est le prochain morceau à
+  éprouver de la même façon que le nettoyeur HTML.
 
 ---
 
