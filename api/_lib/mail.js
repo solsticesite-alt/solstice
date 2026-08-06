@@ -1,16 +1,35 @@
-// Envoi d'e-mails via le Gmail du gérant (SMTP + mot de passe d'application).
+// Envoi d'e-mails en SMTP.
+//
+// Configuration recommandee — la boite Zimbra du domaine, chez OVH :
+//   SMTP_HOST = ssl0.ovh.net
+//   SMTP_PORT = 587
+//   SMTP_USER = contact@maison-solstice.fr   (l'adresse complete)
+//   SMTP_PASS = le mot de passe de la boite
+//   OWNER_EMAIL = l'adresse qui recoit les notifications de commande
+//
+// A defaut, l'ancienne configuration Gmail (GMAIL_USER + GMAIL_APP_PASSWORD)
+// reste acceptee : rien ne casse tant que la bascule n'est pas faite.
 const nodemailer = require('nodemailer');
 const { escapeHtml, euros } = require('./util');
 const { computeInvoice } = require('./invoice');
 
 let _transport = null;
 
+function smtpConfigured() {
+  return Boolean(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS);
+}
+
 function mailReady() {
-  return Boolean(process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD);
+  return smtpConfigured() || Boolean(process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD);
+}
+
+/* L'adresse d'expedition reelle, celle qui authentifie la connexion SMTP. */
+function senderAddress() {
+  return (smtpConfigured() ? process.env.SMTP_USER : process.env.GMAIL_USER) || '';
 }
 
 function ownerAddress() {
-  return process.env.OWNER_EMAIL || process.env.GMAIL_USER || '';
+  return process.env.OWNER_EMAIL || senderAddress();
 }
 
 function getTransport() {
@@ -18,16 +37,27 @@ function getTransport() {
   if (global.__solMockTransport) return global.__solMockTransport;
   if (_transport) return _transport;
   if (!mailReady()) throw new Error('mail_not_configured');
-  _transport = nodemailer.createTransport({
-    service: 'gmail',
-    auth: { user: process.env.GMAIL_USER, pass: process.env.GMAIL_APP_PASSWORD }
-  });
+  if (smtpConfigured()) {
+    const port = Number(process.env.SMTP_PORT) || 587;
+    _transport = nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port,
+      // 465 = SSL implicite ; 587 = STARTTLS, negocie apres la connexion.
+      secure: port === 465,
+      auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }
+    });
+  } else {
+    _transport = nodemailer.createTransport({
+      service: 'gmail',
+      auth: { user: process.env.GMAIL_USER, pass: process.env.GMAIL_APP_PASSWORD }
+    });
+  }
   return _transport;
 }
 
 function fromHeader(settings) {
   const name = (settings && settings.companyName && !/COMPLÉTER/.test(settings.companyName)) ? settings.companyName : 'Maison Solstice';
-  return `"${name.replace(/"/g, '')}" <${process.env.GMAIL_USER}>`;
+  return `"${name.replace(/"/g, '')}" <${senderAddress()}>`;
 }
 
 function wrap(title, bodyHtml) {

@@ -59,29 +59,38 @@ demandes dans un vrai tableau.
 
 ---
 
-## Étape 2 — L'envoi des e-mails (Gmail)
+## Étape 2 — L'envoi des e-mails (boîte du domaine)
 
-On utilise votre boîte **Gmail** pour envoyer les devis. Gmail exige un
-**« mot de passe d'application »** (différent de votre mot de passe habituel).
+Les factures partent de la boîte **`contact@maison-solstice.fr`**, hébergée
+chez OVH (offre Zimbra incluse avec le nom de domaine).
 
-1. Votre compte Google doit avoir la **validation en deux étapes** activée :
-   [myaccount.google.com/security](https://myaccount.google.com/security) →
-   « Validation en deux étapes » → activez-la si ce n'est pas déjà fait.
-2. Allez sur **[myaccount.google.com/apppasswords](https://myaccount.google.com/apppasswords)**.
-3. Nommez l'application (ex. `Solstice`) et cliquez **Créer**.
-4. Google affiche un code de **16 lettres** (ex. `abcd efgh ijkl mnop`).
-   **Copiez-le** (les espaces n'ont pas d'importance).
+1. Espace client OVH → **Web Cloud** → **Zimbra** → onglet **Compte email** →
+   bouton **+ Configurer**.
+2. Créer l'adresse `contact@maison-solstice.fr` et choisir un mot de passe
+   solide. Le noter : il servira à l'Étape 3.
+3. Vérifier dans l'onglet **Domaine** que `maison-solstice.fr` est bien
+   « configuré » — c'est ce qui pose automatiquement les enregistrements MX,
+   SPF et DKIM chez OVH, indispensables pour que les factures n'arrivent pas
+   en indésirable.
+4. Se connecter une fois sur **<https://webmail.mail.ovh.net/>** pour valider
+   que la boîte reçoit bien : envoyer un message de test depuis une autre
+   adresse.
 
-Vous aurez besoin de deux valeurs à l'Étape 3 :
+Réglages SMTP à retenir pour l'Étape 3 :
 
-- `GMAIL_USER` = votre adresse Gmail complète (ex. `solstice.amiens@gmail.com`)
-- `GMAIL_APP_PASSWORD` = le code à 16 lettres
+| Réglage | Valeur |
+|---|---|
+| Serveur | `ssl0.ovh.net` |
+| Port | `587` (STARTTLS) — `465` fonctionne aussi, en SSL |
+| Identifiant | l'adresse e-mail **complète** |
+| Mot de passe | celui choisi à l'étape 2 |
 
-> **Astuce présentation :** les e-mails partiront de votre adresse Gmail. Le
-> nom affiché (« Maison Solstice ») se règle dans le back-office (Réglages →
-> « Nom de l'entreprise »). Pour une adresse plus professionnelle du type
-> `contact@solstice.fr`, il faudra un nom de domaine + une boîte pro (étape
-> ultérieure, non nécessaire pour démarrer).
+> Pour lire les messages sur téléphone ou dans un client mail : même serveur
+> `ssl0.ovh.net`, en **IMAP port 993 (SSL/TLS)**.
+
+> **Ancienne configuration Gmail.** Les variables `GMAIL_USER` /
+> `GMAIL_APP_PASSWORD` restent acceptées en secours : tant que les variables
+> `SMTP_*` ne sont pas renseignées, l'envoi continue de passer par Gmail.
 
 ---
 
@@ -96,9 +105,11 @@ le souhaitez). Celles de l'Étape 1 sont déjà là si vous avez utilisé
 |---|---|---|---|
 | `ADMIN_PASSWORD` | ✅ | un mot de passe long que vous choisissez | Protège l'accès à `/admin` |
 | `SESSION_SECRET` | ✅ recommandé | une longue chaîne aléatoire | Sécurise les sessions admin |
-| `GMAIL_USER` | ✅ | votre adresse Gmail | Expéditeur des devis |
-| `GMAIL_APP_PASSWORD` | ✅ | le code à 16 lettres (Étape 2) | Autorise l'envoi |
-| `OWNER_EMAIL` | facultatif | l'adresse où recevoir les notifications | Par défaut = `GMAIL_USER` |
+| `SMTP_HOST` | ✅ | `ssl0.ovh.net` | Serveur d'envoi |
+| `SMTP_PORT` | facultatif | `587` (défaut) ou `465` | Port d'envoi |
+| `SMTP_USER` | ✅ | `contact@maison-solstice.fr` | Expéditeur des factures |
+| `SMTP_PASS` | ✅ | le mot de passe de la boîte (Étape 2) | Autorise l'envoi |
+| `OWNER_EMAIL` | facultatif | l'adresse où recevoir les notifications | Par défaut = `SMTP_USER` |
 | `SUPABASE_URL` | ✅ | la *Project URL* (Étape 1c) | Base de données |
 | `SUPABASE_SERVICE_ROLE_KEY` | ✅ | la clé *service_role* (Étape 1c) | Base de données |
 | `PUBLIC_BASE_URL` | facultatif | ex. `https://solstice.fr` | Liens dans les e-mails de notif |
@@ -145,13 +156,13 @@ mentions `[À COMPLÉTER]`.
 - **Le formulaire dit « service non activé » / erreur 503** → `SUPABASE_URL` /
   `SUPABASE_SERVICE_ROLE_KEY` manquants ou le script SQL (Étape 1b) n'a pas été
   exécuté ; ou il faut redéployer (Étape 4).
-- **Le devis ne part pas / erreur d'envoi** → vérifiez `GMAIL_USER` et
-  `GMAIL_APP_PASSWORD` (mot de passe **d'application**, pas le mot de passe
-  Gmail habituel), et que la validation en deux étapes est active.
+- **La facture ne part pas / erreur d'envoi** → vérifiez `SMTP_USER` et
+  `SMTP_PASS` (l'identifiant est l'adresse e-mail **complète**), et que le
+  serveur est bien `ssl0.ovh.net` sur le port `587`.
 - **Impossible de se connecter à `/admin`** → `ADMIN_PASSWORD` non défini ou
   déploiement non refait après l'ajout de la variable.
 - **Je ne reçois pas les notifications** → vérifiez `OWNER_EMAIL` (ou, à
-  défaut, que `GMAIL_USER` est bien votre boîte) et le dossier Spam.
+  défaut, que `SMTP_USER` est bien votre boîte) et le dossier Spam.
 
 ---
 
