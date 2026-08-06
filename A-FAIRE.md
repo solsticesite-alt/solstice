@@ -55,8 +55,10 @@ Tant qu'elles ne sont pas là, l'envoi continue par Gmail : rien ne casse.
 À faire aussi : renseigner cette adresse dans le back-office → **Réglages**,
 c'est elle qui sert d'**adresse de réponse** sur les factures.
 
-> Pour lire les messages : webmail sur <https://webmail.mail.ovh.net/>, ou en
-> IMAP sur téléphone — serveur `ssl0.ovh.net`, port `993` en SSL/TLS.
+> Pour lire les messages : l'onglet **Messages** du back-office (il utilise
+> ces mêmes identifiants, rien de plus à configurer), le webmail sur
+> <https://webmail.mail.ovh.net/>, ou en IMAP sur téléphone — serveur
+> `ssl0.ovh.net`, port `993` en SSL/TLS.
 
 ---
 

@@ -60,6 +60,22 @@ function fromHeader(settings) {
   return `"${name.replace(/"/g, '')}" <${senderAddress()}>`;
 }
 
+/* Compose le message puis l'envoie, et renvoie sa source brute — de quoi le
+   recopier ensuite dans le dossier « Envoyés » de la boite, pour qu'il s'y
+   retrouve depuis le webmail ou le telephone comme n'importe quel envoi. */
+async function sendAndBuild(message) {
+  const MailComposer = require('nodemailer/lib/mail-composer');
+  const raw = await new Promise((resolve, reject) => {
+    new MailComposer(message).compile().build((err, buf) => (err ? reject(err) : resolve(buf)));
+  });
+  const envelope = {
+    from: senderAddress(),
+    to: [].concat(message.to || [], message.cc || [], message.bcc || []).filter(Boolean)
+  };
+  await getTransport().sendMail({ envelope, raw });
+  return raw;
+}
+
 function wrap(title, bodyHtml) {
   return `<!doctype html><html><body style="margin:0;background:#F5EEE1;padding:24px;font-family:Helvetica,Arial,sans-serif;color:#221C15;">
   <div style="max-width:560px;margin:0 auto;background:#FBF8F2;border:1px solid #E6DCCB;border-radius:16px;overflow:hidden;">
@@ -102,7 +118,10 @@ async function sendOwnerNotification(request, baseUrl) {
   });
 }
 
-async function sendFactureEmail(request, settings, reply, pdfBuffer) {
+/* `opts.bccOwner` : copie cachee au gerant. Inutile quand la messagerie IMAP
+   est branchee — l'envoi se retrouve alors dans « Envoyés », sans encombrer
+   la boite de reception. */
+async function sendFactureEmail(request, settings, reply, pdfBuffer, opts) {
   const c = request.client || {};
   const q = computeInvoice(reply.lines, reply.depositPct);
   const rows = q.items.map((it) =>
@@ -125,10 +144,10 @@ async function sendFactureEmail(request, settings, reply, pdfBuffer) {
     ${q.depositPct > 0 ? `<p style="margin:0 0 2px;text-align:right;color:#6F6455;font-size:13px;">Acompte ${q.depositPct}% à régler maintenant : <b style="color:#221C15;">${euros(q.deposit)}</b></p>
     <p style="margin:0 0 16px;text-align:right;color:#6F6455;font-size:13px;">Solde ${100 - q.depositPct}% à la livraison : ${euros(q.balance)}</p>` : ''}
     <p style="margin:16px 0 0;color:#6F6455;font-size:12px;">Votre réservation est confirmée à réception de l'acompte. Pour toute question, répondez simplement à cet e-mail.</p>`;
-  await getTransport().sendMail({
+  return sendAndBuild({
     from: fromHeader(settings),
     to: c.email,
-    bcc: ownerAddress() || undefined,
+    bcc: (opts && opts.bccOwner) ? (ownerAddress() || undefined) : undefined,
     replyTo: (settings && settings.email) || ownerAddress() || undefined,
     subject: `Votre facture Maison Solstice — ${reply.invoiceNumber || reply.quoteNumber || request.ref || ''}`,
     html: wrap('Votre facture', body),
@@ -136,4 +155,20 @@ async function sendFactureEmail(request, settings, reply, pdfBuffer) {
   });
 }
 
-module.exports = { mailReady, ownerAddress, getTransport, sendOwnerNotification, sendFactureEmail };
+/* Reponse libre a un e-mail recu, depuis la messagerie du back-office. */
+async function sendReply(opts) {
+  return sendAndBuild({
+    from: fromHeader(opts.settings),
+    to: opts.to,
+    cc: opts.cc && opts.cc.length ? opts.cc : undefined,
+    replyTo: (opts.settings && opts.settings.email) || undefined,
+    subject: opts.subject,
+    text: opts.text,
+    html: opts.html || undefined,
+    inReplyTo: opts.inReplyTo || undefined,
+    references: opts.references && opts.references.length ? opts.references : undefined,
+    attachments: opts.attachments && opts.attachments.length ? opts.attachments : undefined
+  });
+}
+
+module.exports = { mailReady, ownerAddress, sendOwnerNotification, sendFactureEmail, sendReply };

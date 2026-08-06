@@ -13,6 +13,8 @@ module.exports = async (req, res) => {
       createdAt: r.createdAt,
       status: r.status,
       clientName: (r.client || {}).name || '',
+      // Sert a rapprocher une commande d'un e-mail recu, cote navigateur.
+      clientEmail: ((r.client || {}).email || '').toLowerCase(),
       eventType: (r.event || {}).type || '',
       date: (r.event || {}).date || '',
       location: (r.event || {}).location || '',

@@ -88,6 +88,17 @@ Réglages SMTP à retenir pour l'Étape 3 :
 > Pour lire les messages sur téléphone ou dans un client mail : même serveur
 > `ssl0.ovh.net`, en **IMAP port 993 (SSL/TLS)**.
 
+> **La messagerie du back-office utilise les mêmes identifiants.** Une fois
+> les variables `SMTP_*` en place, l'onglet **Messages** de `/admin` lit
+> directement cette boîte en IMAP (`ssl0.ovh.net`, port 993) : réception,
+> lecture, réponse, corbeille. Aucune variable supplémentaire à ajouter. Les
+> messages ne sont recopiés nulle part — le webmail et le téléphone continuent
+> de fonctionner exactement pareil, et les réponses envoyées depuis le
+> back-office se retrouvent dans « Envoyés ».
+>
+> Pour pointer ailleurs que le serveur d'envoi, quatre variables facultatives
+> existent : `IMAP_HOST`, `IMAP_PORT`, `IMAP_USER`, `IMAP_PASS`.
+
 > **Ancienne configuration Gmail.** Les variables `GMAIL_USER` /
 > `GMAIL_APP_PASSWORD` restent acceptées en secours : tant que les variables
 > `SMTP_*` ne sont pas renseignées, l'envoi continue de passer par Gmail.

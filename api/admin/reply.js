@@ -3,6 +3,7 @@ const { readJson, send, clean, cleanMultiline, toNumber } = require('../_lib/uti
 const auth = require('../_lib/auth');
 const store = require('../_lib/store');
 const mail = require('../_lib/mail');
+const imap = require('../_lib/imap');
 const { buildFacturePdf } = require('../_lib/pdf');
 const { computeInvoice } = require('../_lib/invoice');
 
@@ -50,8 +51,13 @@ module.exports = async (req, res) => {
   try { pdf = await buildFacturePdf(request, settings, reply); }
   catch (e) { return send(res, 500, { ok: false, error: 'pdf_error' }); }
 
-  try { await mail.sendFactureEmail(request, settings, reply, pdf); }
+  // Sans messagerie IMAP, une copie cachee reste le seul moyen de garder une
+  // trace de l'envoi ; avec, la facture est classee dans « Envoyés ».
+  const hasImap = imap.imapReady();
+  let raw;
+  try { raw = await mail.sendFactureEmail(request, settings, reply, pdf, { bccOwner: !hasImap }); }
   catch (e) { return send(res, 502, { ok: false, error: 'mail_error', detail: String((e && e.message) || e).slice(0, 200) }); }
+  if (hasImap && raw) { try { await imap.appendToSent(raw); } catch (e) { /* facture partie : le classement peut attendre */ } }
 
   request.reply = Object.assign({}, reply, { subtotal: q.subtotal, deposit: q.deposit, balance: q.balance });
   request.status = 'replied';

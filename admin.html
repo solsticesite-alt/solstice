@@ -113,7 +113,67 @@
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
   .toast.bad{background:var(--bad);}
 
-  @media(max-width:820px){ .dash{grid-template-columns:1fr;} .modal .grid2{grid-template-columns:1fr;} .row2{grid-template-columns:1fr;} }
+  /* ----- Onglets ----- */
+  .tabs{display:flex;gap:.2rem;}
+  .tab{position:relative;border:1px solid transparent;background:transparent;border-radius:99px;padding:.42em 1em;font-size:.84rem;color:var(--ink-soft);transition:.15s;}
+  .tab:hover{background:var(--paper-2);}
+  .tab.on{background:var(--ink);color:var(--paper);}
+  .tab .pill{display:inline-block;min-width:18px;padding:0 5px;margin-left:.45em;border-radius:99px;background:var(--gold);color:#fff;font-size:.66rem;line-height:18px;text-align:center;font-weight:700;vertical-align:1px;}
+  .tab.on .pill{background:var(--gold-soft);color:var(--ink);}
+
+  /* ----- Messagerie ----- */
+  .mail{display:grid;grid-template-columns:minmax(320px,400px) 1fr;gap:22px;padding:22px 0 60px;align-items:start;}
+  .mlist{list-style:none;margin:0;padding:6px;max-height:72vh;overflow:auto;}
+  .mrow{display:block;width:100%;text-align:left;background:transparent;border:1px solid transparent;border-radius:11px;padding:10px 12px;margin:2px 0;transition:.12s;}
+  .mrow:hover{background:var(--paper-2);}
+  .mrow.sel{background:var(--paper-2);border-color:var(--gold-soft);}
+  .m-top{display:flex;justify-content:space-between;gap:.6rem;align-items:baseline;}
+  .m-from{font-size:.92rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .mrow.unseen .m-from,.mrow.unseen .m-subj{font-weight:700;}
+  .m-date{font-size:.72rem;color:var(--stone);white-space:nowrap;flex:none;}
+  .m-subj{font-size:.86rem;margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .m-prev{font-size:.78rem;color:var(--stone);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .m-marks{display:inline-flex;gap:.3rem;align-items:center;margin-right:.35em;}
+  .m-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);display:inline-block;}
+  .m-clip,.m-star{font-size:.78rem;line-height:1;color:var(--stone);}
+  .m-star.on{color:var(--gold);}
+  .more-row{padding:10px;text-align:center;}
+
+  .mdetail{padding:20px 22px;}
+  .mh-top{display:flex;justify-content:space-between;gap:1rem;align-items:flex-start;flex-wrap:wrap;}
+  .mh-subject{font-family:var(--serif);font-size:1.35rem;line-height:1.2;}
+  .mh-meta{color:var(--stone);font-size:.82rem;margin-top:.3rem;word-break:break-word;}
+  .mh-actions{display:flex;gap:.4rem;flex-wrap:wrap;}
+  .linkreq{display:inline-flex;align-items:center;gap:.5em;background:#efe3c8;color:var(--gold-deep);border:1px solid var(--gold-soft);border-radius:10px;padding:8px 12px;font-size:.82rem;margin:12px 0 0;}
+  .mbody{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff;margin-top:14px;}
+  .mbody iframe{width:100%;border:0;display:block;min-height:180px;background:#fff;}
+  .imgbar{display:flex;align-items:center;justify-content:space-between;gap:1rem;background:#FBE7C8;border-bottom:1px solid #E7C98A;color:#6b4a1c;padding:8px 12px;font-size:.8rem;}
+  .atts{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:12px;}
+  .att{display:inline-flex;align-items:center;gap:.5em;border:1px solid var(--line);border-radius:10px;padding:.5em .8em;font-size:.8rem;color:var(--ink);background:var(--paper);text-decoration:none;}
+  .att:hover{border-color:var(--gold);}
+  .att .sz{color:var(--stone);font-size:.74rem;}
+
+  .compose{background:var(--paper-2);border:1px solid var(--line);border-radius:14px;padding:16px;margin-top:16px;}
+  .compose .to{display:grid;grid-template-columns:auto 1fr;gap:.6rem;align-items:center;margin-bottom:10px;}
+  .compose .to label{margin:0;white-space:nowrap;}
+  .compose textarea{min-height:150px;background:var(--paper);}
+  .compose-actions{display:flex;gap:.6rem;align-items:center;margin-top:12px;flex-wrap:wrap;}
+
+  .hidden-desk{display:none;}
+  .skel{background:linear-gradient(90deg,var(--paper-2) 25%,#efe6d6 37%,var(--paper-2) 63%);background-size:400% 100%;animation:shine 1.3s ease-in-out infinite;border-radius:6px;}
+  @keyframes shine{0%{background-position:100% 50%;}100%{background-position:0 50%;}}
+  .skel-row{padding:12px;} .skel-row div{height:10px;margin:5px 0;}
+
+  @media(max-width:820px){
+    .dash{grid-template-columns:1fr;} .modal .grid2{grid-template-columns:1fr;} .row2{grid-template-columns:1fr;}
+    .mail{grid-template-columns:1fr;}
+    .mail.reading .panel-list{display:none;}
+    .mail:not(.reading) > .panel:last-child{display:none;}
+    .mlist{max-height:none;}
+    .hidden-desk{display:inline-block;}
+    .topbar-in{flex-wrap:wrap;height:auto;padding:10px 0;}
+    .tabs{order:3;width:100%;}
+  }
 </style>
 </head>
 <body>
@@ -121,6 +181,10 @@
 <div class="topbar hidden" id="topbar">
   <div class="wrap topbar-in">
     <div class="brand">Maison Solstice <small>Back-office · commandes &amp; factures</small></div>
+    <nav class="tabs" id="tabs" aria-label="Sections">
+      <button class="tab on" data-tab="orders">Commandes</button>
+      <button class="tab" data-tab="mail">Messages<span class="pill hidden" id="unread-pill">0</span></button>
+    </nav>
     <div class="topbar-tools">
       <button class="btn btn-sm" id="btn-settings">Réglages</button>
       <button class="btn btn-sm" id="btn-logout">Déconnexion</button>
@@ -164,6 +228,30 @@
       </div>
     </div>
   </div>
+
+  <!-- Messagerie -->
+  <div class="hidden" id="mailview">
+    <div id="mail-banner"></div>
+    <div class="mail" id="mail-grid">
+      <div class="panel panel-list">
+        <div class="list-head">
+          <input type="search" id="msearch" placeholder="Rechercher (expéditeur, objet)…">
+          <button class="btn btn-sm" id="mrefresh" title="Actualiser">↻</button>
+          <button class="btn btn-sm btn-gold" id="mnew" title="Écrire un message">✎ Nouveau</button>
+        </div>
+        <div class="filters" id="mboxes">
+          <button class="chip on" data-box="inbox">Réception</button>
+          <button class="chip" data-box="sent">Envoyés</button>
+          <button class="chip" data-box="trash">Corbeille</button>
+          <button class="chip" data-box="junk">Indésirables</button>
+        </div>
+        <ul class="mlist" id="mlist"></ul>
+      </div>
+      <div class="panel">
+        <div class="mdetail" id="mdetail"><div class="empty">Sélectionnez un message.</div></div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -186,7 +274,7 @@
       .then(function(r){return r.json().catch(function(){return {ok:false,error:'bad_response',status:r.status};}).then(function(j){j.__status=r.status;return j;});});
   }
 
-  var state={me:null,settings:null,list:[],filter:'all',q:'',current:null};
+  var state={me:null,settings:null,list:[],filter:'all',q:'',current:null,tab:'orders',unreadTimer:null};
 
   // ---------- Boot ----------
   function boot(){
@@ -199,6 +287,7 @@
   }
 
   function showLogin(){
+    if(state.unreadTimer){ clearInterval(state.unreadTimer); state.unreadTimer=null; }
     $('#topbar').classList.add('hidden'); $('#dash').classList.add('hidden'); $('#login').classList.remove('hidden');
     setTimeout(function(){ try{$('#pw').focus();}catch(e){} },50);
   }
@@ -206,17 +295,29 @@
   function configBanner(){
     var c=(state.me&&state.me.config)||{}; var miss=[];
     if(!c.store) miss.push('la base de données (variables SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY)');
-    if(!c.mail) miss.push("l'envoi d'e-mail (GMAIL_USER / GMAIL_APP_PASSWORD)");
+    if(!c.mail) miss.push("l'envoi d'e-mail (SMTP_HOST / SMTP_USER / SMTP_PASS)");
     if(!c.adminPassword) miss.push('le mot de passe admin (ADMIN_PASSWORD)');
     if(!miss.length) return '';
     return '<div class="banner"><b>Configuration à finir sur Vercel.</b> Il manque : <ul>'+miss.map(function(m){return '<li>'+esc(m)+'</li>';}).join('')+'</ul></div>';
   }
 
   function showDash(){
-    $('#login').classList.add('hidden'); $('#topbar').classList.remove('hidden'); $('#dash').classList.remove('hidden');
-    $('#banner-slot').innerHTML=configBanner();
+    $('#login').classList.add('hidden'); $('#topbar').classList.remove('hidden');
+    switchTab(state.tab||'orders');
     loadSettings();
     loadList();
+    if(state.unreadTimer){ clearInterval(state.unreadTimer); state.unreadTimer=null; }
+    if(state.me&&state.me.config&&state.me.config.imap){ pollUnread(true); state.unreadTimer=setInterval(pollUnread,60000); }
+  }
+
+  function switchTab(tab){
+    state.tab=tab;
+    $('#dash').classList.toggle('hidden',tab!=='orders');
+    $('#mailview').classList.toggle('hidden',tab!=='mail');
+    Array.prototype.forEach.call(document.querySelectorAll('#tabs .tab'),function(b){
+      b.classList.toggle('on',b.getAttribute('data-tab')===tab);
+    });
+    if(tab==='mail') initMail();
   }
 
   function loadSettings(){ api('/api/admin/settings').then(function(r){ if(r.ok) state.settings=r.settings; }); }
@@ -382,12 +483,385 @@
       id:req.id, message:$('#d-msg').value, notes:$('#d-notes').value,
       depositPct:num($('#d-deposit').value), lines:valid
     }}).then(function(r){
-      btn.disabled=false; $('#send-hint').textContent='';
+      // Le volet a pu être remplacé pendant l'envoi : accès conditionnels.
+      var b2=$('#send-devis'); if(b2) b2.disabled=false;
+      var h2=$('#send-hint'); if(h2) h2.textContent='';
       if(r.__status===401){ showLogin(); return; }
       if(!r.ok){ toast('Échec de l\'envoi : '+(r.detail||r.error||''),true); return; }
       toast('Facture envoyée à '+(req.client&&req.client.email||'')+' ✓');
       openRequest(req.id); loadList();
-    }).catch(function(){ btn.disabled=false; $('#send-hint').textContent=''; toast('Erreur réseau.',true); });
+    }).catch(function(){
+      var b3=$('#send-devis'); if(b3) b3.disabled=false;
+      var h3=$('#send-hint'); if(h3) h3.textContent='';
+      toast('Erreur réseau.',true);
+    });
+  }
+
+  // =====================================================================
+  //  Messagerie — branchée sur la boîte du domaine, en IMAP.
+  // =====================================================================
+  var M={box:'inbox',items:[],nextSeq:0,total:0,sel:0,msg:null,q:'',
+         reqId:0,images:false,unread:0,msgs:{},msgOrder:[],booted:false,
+         composing:null,sending:false,prefetching:{},hoverT:null};
+  var CACHE_MAX=20;
+
+  /* Les corps de messages, images incorporées comprises, peuvent peser lourd :
+     le cache garde les plus récents et laisse partir les autres. */
+  function cachePut(k,msg){
+    if(!M.msgs[k]) M.msgOrder.push(k);
+    M.msgs[k]=msg;
+    while(M.msgOrder.length>CACHE_MAX){ delete M.msgs[M.msgOrder.shift()]; }
+  }
+  function cacheClear(){ M.msgs={}; M.msgOrder=[]; }
+
+  function mapi(qs,opts){ return api('/api/admin/mail'+(qs?'?'+qs:''),opts); }
+
+  function mdate(iso){
+    if(!iso) return '';
+    var d=new Date(iso); if(isNaN(d.getTime())) return '';
+    var now=new Date();
+    if(d.toDateString()===now.toDateString()) return d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+    if(d.getFullYear()===now.getFullYear()) return d.toLocaleDateString('fr-FR',{day:'numeric',month:'short'});
+    return d.toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'2-digit'});
+  }
+  function fdatetime(iso){
+    if(!iso) return '';
+    var d=new Date(iso); if(isNaN(d.getTime())) return '';
+    return d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'})+' à '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+  }
+  function who(a){ return a?(a.name||a.address||'—'):'—'; }
+  function whoFull(a){ return a?((a.name?a.name+' ':'')+'<'+(a.address||'')+'>'):'—'; }
+  function poids(n){ n=Number(n)||0; return n<1024?n+' o':(n<1048576?Math.round(n/1024)+' Ko':(n/1048576).toFixed(1)+' Mo'); }
+
+  function initMail(){
+    if(M.booted) return;
+    if(!(state.me&&state.me.config&&state.me.config.imap)){
+      $('#mail-banner').innerHTML='<div class="banner"><b>Messagerie non configurée.</b> Ajoutez les variables <code>SMTP_HOST</code>, <code>SMTP_USER</code> et <code>SMTP_PASS</code> dans Vercel : la lecture de la boîte utilise les mêmes identifiants que l\'envoi.</div>';
+      $('#mlist').innerHTML=''; $('#mdetail').innerHTML='<div class="empty">Messagerie non configurée.</div>';
+      M.booted=true; return;
+    }
+    M.booted=true; loadBox('inbox');
+  }
+
+  function skeleton(){
+    var one='<li class="skel-row"><div class="skel" style="width:45%"></div><div class="skel" style="width:80%"></div><div class="skel" style="width:60%"></div></li>';
+    $('#mlist').innerHTML=new Array(7).join(one)+one;
+  }
+
+  /* Un jeton de séquence remplace le verrou : un changement de dossier n'est
+     jamais ignoré, c'est la réponse devenue obsolète qu'on écarte. */
+  function loadBox(box,more){
+    var mine=++M.reqId;
+    if(!more){ M.box=box; M.items=[]; M.sel=0; M.msg=null; renderMailDetail(); skeleton(); }
+    var qs='action='+(M.q?'search':'list')+'&box='+encodeURIComponent(M.box)+'&limit=40';
+    if(M.q) qs+='&q='+encodeURIComponent(M.q);
+    else if(more&&M.nextSeq) qs+='&beforeSeq='+M.nextSeq;
+    mapi(qs).then(function(r){
+      if(mine!==M.reqId) return;
+      if(r.__status===401){ showLogin(); return; }
+      if(!r.ok){ $('#mlist').innerHTML='<li class="empty">'+esc(mailError(r))+'</li>'; return; }
+      M.items=more?M.items.concat(r.items||[]):(r.items||[]);
+      M.nextSeq=r.nextSeq||0; M.total=r.total||0;
+      renderMailList();
+    }).catch(function(){ if(mine===M.reqId) $('#mlist').innerHTML='<li class="empty">Erreur réseau.</li>'; });
+  }
+
+  function mailError(r){
+    if(r.error==='imap_not_configured') return 'Messagerie non configurée.';
+    if(r.error==='not_found') return 'Ce dossier n\'existe pas sur le serveur.';
+    if(r.error==='imap_auth_failed') return 'Identifiants refusés par le serveur de messagerie.';
+    return 'Erreur : '+(r.detail||r.error||'inconnue');
+  }
+
+  function renderMailList(){
+    var ul=$('#mlist');
+    if(!M.items.length){ ul.innerHTML='<li class="empty">'+(M.q?'Aucun message trouvé.':'Aucun message.')+'</li>'; return; }
+    var html=M.items.map(function(m){
+      var marks='<span class="m-marks">'+(m.seen?'':'<span class="m-dot" title="Non lu"></span>')+
+        (m.flagged?'<span class="m-star on">★</span>':'')+(m.attachments?'<span class="m-clip" title="Pièce jointe">📎</span>':'')+'</span>';
+      return '<li><button class="mrow'+(m.seen?'':' unseen')+(M.sel===m.uid?' sel':'')+'" data-uid="'+m.uid+'">'+
+        '<div class="m-top"><span class="m-from">'+marks+esc(who(M.box==='sent'?(m.to&&m.to[0]):m.from))+'</span><span class="m-date">'+esc(mdate(m.date))+'</span></div>'+
+        '<div class="m-subj">'+esc(m.subject||'(sans objet)')+'</div>'+
+        (m.preview?'<div class="m-prev">'+esc(m.preview)+'</div>':'')+
+      '</button></li>';
+    }).join('');
+    if(!M.q&&M.nextSeq) html+='<li class="more-row"><button class="btn btn-sm" id="mmore">Charger les messages plus anciens</button></li>';
+    else if(M.total>M.items.length) html+='<li class="more-row"><span class="muted" style="font-size:.78rem;">'+M.items.length+' sur '+M.total+' messages</span></li>';
+    ul.innerHTML=html;
+    Array.prototype.forEach.call(ul.querySelectorAll('.mrow'),function(b){
+      var uid=parseInt(b.getAttribute('data-uid'),10);
+      b.addEventListener('click',function(){ openMessage(uid); });
+      // Pré-chargement au survol : le message est souvent déjà là au clic.
+      b.addEventListener('mouseenter',function(){ hoverPrefetch(uid); });
+      b.addEventListener('mouseleave',function(){ clearTimeout(M.hoverT); });
+    });
+    var more=$('#mmore'); if(more) more.addEventListener('click',function(){ loadBox(M.box,true); });
+  }
+
+  function cacheKey(uid){ return M.box+':'+uid; }
+
+  /* Pré-chargement au survol : seulement après une intention réelle (un quart
+     de seconde d'arrêt), un seul à la fois, et jamais marqué comme lu. */
+  function hoverPrefetch(uid){
+    clearTimeout(M.hoverT);
+    M.hoverT=setTimeout(function(){ prefetch(uid); },250);
+  }
+  function prefetch(uid){
+    var k=cacheKey(uid);
+    if(M.msgs[k]||M.prefetching[k]) return;
+    var enCours=0; for(var x in M.prefetching) if(M.prefetching[x]) enCours++;
+    if(enCours>=1) return;
+    M.prefetching[k]=true;
+    mapi('action=message&peek=1&box='+encodeURIComponent(M.box)+'&uid='+uid).then(function(r){
+      delete M.prefetching[k];
+      if(r&&r.ok) cachePut(k,r.message);
+    }).catch(function(){ delete M.prefetching[k]; });
+  }
+
+  function openMessage(uid){
+    M.sel=uid; M.images=false;
+    var row=M.items.filter(function(x){return x.uid===uid;})[0];
+    var etaitNonLu=row&&!row.seen;
+    // La pastille ne compte que la Réception : ne la toucher qu'ici.
+    if(etaitNonLu){ row.seen=true; if(M.box==='inbox'&&M.unread>0) setUnread(M.unread-1); }
+    renderMailList();
+    $('#mail-grid').classList.add('reading');
+    var k=cacheKey(uid);
+    if(M.msgs[k]){
+      M.msg=M.msgs[k]; renderMailDetail();
+      // Servi depuis le cache : c'est au navigateur de poser le drapeau, sans
+      // quoi le message ressortirait non lu au prochain rafraîchissement.
+      if(etaitNonLu&&M.box==='inbox') mapi('',{method:'POST',body:{action:'seen',box:M.box,uid:uid,value:true}});
+      return;
+    }
+    M.msg=null;
+    $('#mdetail').innerHTML=backBtn()+'<div class="skel-row"><div class="skel" style="width:60%;height:16px"></div><div class="skel" style="width:40%"></div><div class="skel" style="width:100%;height:140px;margin-top:14px"></div></div>';
+    wireBack();
+    mapi('action=message&box='+encodeURIComponent(M.box)+'&uid='+uid).then(function(r){
+      if(M.sel!==uid) return;
+      if(r.__status===401){ showLogin(); return; }
+      if(!r.ok){ echecLecture(uid,mailError(r)); return; }
+      cachePut(k,r.message);
+      M.msg=r.message; renderMailDetail();
+    }).catch(function(){ if(M.sel===uid) echecLecture(uid,'Erreur réseau.'); });
+  }
+
+  /* Un échec de lecture doit toujours laisser une porte de sortie : sur mobile
+     la liste est masquée, sans bouton on resterait coincé. */
+  function echecLecture(uid,msg){
+    $('#mdetail').innerHTML=backBtn()+'<div class="empty">'+esc(msg)+
+      '<div style="margin-top:12px;"><button class="btn btn-sm" id="mretry">Réessayer</button></div></div>';
+    wireBack();
+    var r=$('#mretry'); if(r) r.addEventListener('click',function(){ delete M.msgs[cacheKey(uid)]; openMessage(uid); });
+  }
+
+  function backBtn(){ return '<button class="btn btn-sm hidden-desk" id="mback" style="margin-bottom:12px;">← Retour à la liste</button>'; }
+  function wireBack(){ var b=$('#mback'); if(b) b.addEventListener('click',function(){ $('#mail-grid').classList.remove('reading'); }); }
+
+  /* Le corps du message s'affiche dans une iframe cloisonnée : sans script,
+     sans accès à cette page, et sans pouvoir aller chercher quoi que ce soit
+     sur le réseau tant que les images ne sont pas autorisées. */
+  function viewerDoc(html,images){
+    var csp="default-src 'none'; img-src data:"+(images?" https: http:":"")+"; style-src 'unsafe-inline'; font-src data:; form-action 'none'; base-uri 'none'";
+    var body=images?String(html).replace(/data-osrc=/g,'src='):html;
+    return '<!doctype html><html><head><meta charset="utf-8">'+
+      '<meta http-equiv="Content-Security-Policy" content="'+csp+'">'+
+      '<style>html,body{margin:0;padding:14px 16px;}'+
+      'body{font:15px/1.6 -apple-system,"Helvetica Neue",Helvetica,Arial,sans-serif;color:#221C15;word-wrap:break-word;overflow-wrap:break-word;}'+
+      'img{max-width:100%;height:auto;}table{max-width:100%;}'+
+      'a{color:#8C6C3D;}blockquote.q{margin:.4em 0;padding-left:.9em;border-left:2px solid #E6DCCB;color:#6F6455;}'+
+      'pre{white-space:pre-wrap;}</style></head><body>'+body+'</body></html>';
+  }
+
+  function fitFrame(fr){
+    try{
+      var d=fr.contentDocument; if(!d||!d.body) return;
+      var h=Math.max(d.body.scrollHeight,d.documentElement.scrollHeight);
+      fr.style.height=Math.min(4000,Math.max(160,h+24))+'px';
+    }catch(e){ /* rien de grave : la hauteur par défaut s'applique */ }
+  }
+
+  function renderMailDetail(){
+    var host=$('#mdetail');
+    if(!M.msg){ if(!M.sel) host.innerHTML='<div class="empty">Sélectionnez un message.</div>'; return; }
+    var m=M.msg;
+    var linked=findRequestFor(m.from&&m.from.address);
+    var atts=(m.attachments||[]).map(function(a){
+      return '<a class="att" href="/api/admin/mail?action=attachment&box='+encodeURIComponent(m.box)+'&uid='+m.uid+'&index='+a.index+'" download>'+
+        '📎 '+esc(a.filename)+' <span class="sz">'+poids(a.size)+'</span></a>';
+    }).join('');
+
+    host.innerHTML=
+      backBtn()+
+      '<div class="mh-top">'+
+        '<div style="min-width:0;"><div class="mh-subject">'+esc(m.subject||'(sans objet)')+'</div>'+
+          '<div class="mh-meta"><b>'+esc(whoFull(m.from))+'</b><br>à '+esc((m.to||[]).map(whoFull).join(', ')||'—')+
+          ((m.cc&&m.cc.length)?'<br>copie : '+esc(m.cc.map(whoFull).join(', ')):'')+
+          '<br>'+esc(fdatetime(m.date))+'</div></div>'+
+        '<div class="mh-actions">'+
+          '<button class="btn btn-sm btn-gold" id="mreply">Répondre</button>'+
+          '<button class="btn btn-sm" id="munseen">Marquer non lu</button>'+
+          '<button class="btn btn-sm" id="mstar">★</button>'+
+          (M.box!=='trash'?'<button class="btn btn-sm" id="mtrash">Supprimer</button>':'')+
+        '</div>'+
+      '</div>'+
+      (linked?'<div class="linkreq">Commande <b>'+esc(linked.ref||'')+'</b> de ce client'+
+        '<button class="btn btn-sm" id="mgoreq" style="margin-left:auto;">Ouvrir la facture</button></div>':'')+
+      (m.blockedImages?'<div class="mbody"><div class="imgbar"><span>'+m.blockedImages+' image(s) distante(s) bloquée(s) — elles signalent la lecture à l\'expéditeur.</span><button class="btn btn-sm" id="mimg">Afficher les images</button></div><iframe id="mframe" sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe></div>'
+        :'<div class="mbody"><iframe id="mframe" sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe></div>')+
+      (atts?'<div class="atts">'+atts+'</div>':'')+
+      '<div id="compose-slot"></div>';
+
+    var fr=$('#mframe');
+    fr.addEventListener('load',function(){ fitFrame(fr); setTimeout(function(){fitFrame(fr);},300); setTimeout(function(){fitFrame(fr);},1200); });
+    fr.srcdoc=viewerDoc(m.body||'',M.images);
+
+    wireBack();
+    $('#mreply').addEventListener('click',function(){ openCompose('reply'); });
+    $('#munseen').addEventListener('click',function(){ markSeen(m.uid,false); });
+    $('#mstar').addEventListener('click',function(){ toggleStar(m.uid); });
+    var tr=$('#mtrash'); if(tr) tr.addEventListener('click',function(){ trash(m.uid); });
+    var im=$('#mimg'); if(im) im.addEventListener('click',function(){ M.images=true; fr.srcdoc=viewerDoc(m.body||'',true); im.parentNode.style.display='none'; });
+    if(M.composing&&M.composing.uid===m.uid) openCompose(M.composing.mode);
+    var go=$('#mgoreq'); if(go) go.addEventListener('click',function(){ switchTab('orders'); openRequest(linked.id); });
+  }
+
+  /* Rapproche un e-mail d'une commande, par l'adresse du client. */
+  function findRequestFor(address){
+    if(!address) return null;
+    var a=String(address).toLowerCase();
+    return state.list.filter(function(r){ return r.clientEmail&&r.clientEmail===a; })[0]||null;
+  }
+
+  function markSeen(uid,seen){
+    mapi('',{method:'POST',body:{action:'seen',box:M.box,uid:uid,value:seen}}).then(function(r){
+      if(!r.ok){ toast(mailError(r),true); return; }
+      var row=M.items.filter(function(x){return x.uid===uid;})[0];
+      if(row){ row.seen=seen; renderMailList(); }
+      if(M.box==='inbox') setUnread(M.unread+(seen?-1:1));
+      if(!seen){ M.sel=0; M.msg=null; $('#mail-grid').classList.remove('reading'); $('#mdetail').innerHTML='<div class="empty">Message marqué non lu.</div>'; }
+    });
+  }
+
+  function toggleStar(uid){
+    var row=M.items.filter(function(x){return x.uid===uid;})[0]; if(!row) return;
+    var next=!row.flagged;
+    row.flagged=next; renderMailList();
+    mapi('',{method:'POST',body:{action:'flag',box:M.box,uid:uid,value:next}}).then(function(r){
+      if(!r.ok){ row.flagged=!next; renderMailList(); toast(mailError(r),true); }
+    });
+  }
+
+  function trash(uid){
+    mapi('',{method:'POST',body:{action:'trash',box:M.box,uid:uid}}).then(function(r){
+      if(!r.ok){ toast(mailError(r),true); return; }
+      M.items=M.items.filter(function(x){return x.uid!==uid;});
+      delete M.msgs[cacheKey(uid)];
+      M.sel=0; M.msg=null; $('#mail-grid').classList.remove('reading');
+      renderMailList(); renderMailDetail();
+      toast('Message déplacé à la corbeille ✓');
+    });
+  }
+
+  function quoted(m){
+    var head='\n\nLe '+fdatetime(m.date)+', '+who(m.from)+' a écrit :\n';
+    var src=(m.text||'').replace(/\r\n/g,'\n');
+    if(!src&&m.body) src=String(m.body).replace(/<br\s*\/?>/gi,'\n').replace(/<[^>]*>/g,'');
+    return head+src.split('\n').map(function(l){return '> '+l;}).join('\n');
+  }
+
+  /* Message neuf : le volet de lecture devient une feuille blanche. */
+  function newMessage(prefillTo){
+    M.sel=0; M.msg=null;
+    $('#mail-grid').classList.add('reading');
+    Array.prototype.forEach.call(document.querySelectorAll('#mlist .mrow'),function(b){b.classList.remove('sel');});
+    $('#mdetail').innerHTML=
+      backBtn()+'<div class="mh-subject">Nouveau message</div><div id="compose-slot"></div>';
+    wireBack();
+    openCompose('new',prefillTo);
+  }
+
+  function openCompose(mode,prefillTo){
+    var m=M.msg;
+    var to=mode==='reply'?[(m.from&&m.from.address)||''].filter(Boolean).join(', '):(prefillTo||'');
+    var subject=mode==='reply'?(/^re\s*:/i.test(m.subject||'')?m.subject:'Re : '+(m.subject||'')):'';
+    var sig='\n\n—\nMaison Solstice\n'+((state.settings&&state.settings.email)||'')+'\n';
+    var text=mode==='reply'?sig+quoted(m):sig;
+    // Un brouillon deja commence sur ce meme message est repris tel quel.
+    var repris=M.composing&&M.composing.uid===M.sel&&M.composing.mode===mode;
+    if(repris){ to=M.composing.to; subject=M.composing.subject; text=M.composing.text; }
+    else M.composing={mode:mode,uid:M.sel,to:to,subject:subject,text:text,
+      inReplyTo:(mode==='reply'&&m)?(m.messageId||''):'',
+      references:(mode==='reply'&&m)?[].concat(m.references||[],[m.messageId||'']).filter(Boolean):[]};
+
+    $('#compose-slot').innerHTML=
+      '<div class="compose">'+
+        '<div class="to"><label for="c-to">À</label><input id="c-to" value="'+esc(to)+'" placeholder="adresse@exemple.fr"></div>'+
+        '<div class="to"><label for="c-subj">Objet</label><input id="c-subj" value="'+esc(subject)+'"></div>'+
+        '<textarea id="c-text"></textarea>'+
+        '<div class="compose-actions"><button class="btn btn-gold" id="c-send">Envoyer</button>'+
+          '<button class="btn" id="c-cancel">Annuler</button><span class="muted" id="c-hint"></span></div>'+
+      '</div>';
+    var ta=$('#c-text'); ta.value=text; ta.focus(); ta.setSelectionRange(0,0);
+    // Chaque frappe est recopiee dans l'etat : un rafraichissement de la vue
+    // ne peut plus emporter le brouillon.
+    ['c-to','c-subj','c-text'].forEach(function(id){
+      var el=document.getElementById(id);
+      el.addEventListener('input',function(){
+        if(!M.composing) return;
+        M.composing.to=$('#c-to').value; M.composing.subject=$('#c-subj').value; M.composing.text=$('#c-text').value;
+      });
+    });
+    $('#c-cancel').addEventListener('click',function(){
+      if(($('#c-text').value||'').trim()&&!confirm('Abandonner ce message ?')) return;
+      $('#compose-slot').innerHTML=''; M.composing=null;
+    });
+    $('#c-send').addEventListener('click',sendMailNow);
+    $('#compose-slot').scrollIntoView({behavior:'smooth',block:'nearest'});
+  }
+
+  /* Le composeur peut disparaître pendant l'envoi (clic sur un autre message) :
+     tous les accès au DOM sont donc conditionnels, et le résultat est annoncé
+     par un toast, qui lui survit à tout. */
+  function setHint(t){ var h=$('#c-hint'); if(h) h.textContent=t; }
+  function sendBtn(on){ var b=$('#c-send'); if(b) b.disabled=!on; }
+
+  function sendMailNow(){
+    if(M.sending) return;
+    var to=$('#c-to').value.trim(), subject=$('#c-subj').value.trim(), text=$('#c-text').value;
+    if(!to){ toast('Indiquez au moins un destinataire.',true); return; }
+    if(!text.trim()){ toast('Le message est vide.',true); return; }
+    M.sending=true; sendBtn(false); setHint('Envoi en cours…');
+    var c=M.composing||{};
+    mapi('',{method:'POST',body:{action:'send',to:to,subject:subject,text:text,
+      inReplyTo:c.inReplyTo,references:c.references,box:M.box,uid:c.uid||M.sel}}).then(function(r){
+      M.sending=false; sendBtn(true); setHint('');
+      if(r.__status===401){ showLogin(); return; }
+      if(!r.ok){ toast(mailError(r),true); return; }
+      M.composing=null;
+      var slot=$('#compose-slot'); if(slot) slot.innerHTML='';
+      var row=M.items.filter(function(x){return x.uid===(c.uid||M.sel);})[0];
+      if(row){ row.answered=true; renderMailList(); }
+      toast('Message envoyé ✓'+(r.archived?'':' (non classé dans « Envoyés »)'));
+    }).catch(function(){ M.sending=false; sendBtn(true); setHint(''); toast('Erreur réseau.',true); });
+  }
+
+  function setUnread(n){
+    M.unread=Math.max(0,n|0);
+    var p=$('#unread-pill');
+    p.textContent=M.unread; p.classList.toggle('hidden',M.unread===0);
+  }
+
+  function pollUnread(force){
+    if(document.hidden&&!force) return;
+    mapi('action=unread').then(function(r){
+      if(!r||!r.ok) return;
+      var before=M.unread;
+      setUnread(r.unread);
+      // Un message vient d'arriver pendant qu'on regarde la boîte : on rafraîchit.
+      // Jamais pendant une rédaction : le rafraîchissement réécrirait la vue.
+      if(r.unread>before && state.tab==='mail' && !M.q && M.box==='inbox' && !M.composing) loadBox('inbox');
+    }).catch(function(){});
   }
 
   // ---------- Réglages (settings) ----------
@@ -442,6 +916,32 @@
   $('#search').addEventListener('input',function(e){ state.q=e.target.value; renderList(); });
   Array.prototype.forEach.call(document.querySelectorAll('#filters .chip'),function(ch){
     ch.addEventListener('click',function(){ Array.prototype.forEach.call(document.querySelectorAll('#filters .chip'),function(x){x.classList.remove('on');}); ch.classList.add('on'); state.filter=ch.getAttribute('data-f'); renderList(); });
+  });
+
+  // ----- Messagerie -----
+  Array.prototype.forEach.call(document.querySelectorAll('#tabs .tab'),function(b){
+    b.addEventListener('click',function(){ switchTab(b.getAttribute('data-tab')); });
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('#mboxes .chip'),function(ch){
+    ch.addEventListener('click',function(){
+      Array.prototype.forEach.call(document.querySelectorAll('#mboxes .chip'),function(x){x.classList.remove('on');});
+      ch.classList.add('on');
+      $('#msearch').value=''; M.q='';
+      $('#mail-grid').classList.remove('reading');
+      loadBox(ch.getAttribute('data-box'));
+    });
+  });
+  var mq;
+  $('#msearch').addEventListener('input',function(e){
+    clearTimeout(mq);
+    var v=e.target.value.trim();
+    mq=setTimeout(function(){ if(v===M.q) return; M.q=v; loadBox(M.box); },350);
+  });
+  $('#mrefresh').addEventListener('click',function(){ cacheClear(); loadBox(M.box); });
+  $('#mnew').addEventListener('click',function(){ newMessage(''); });
+  document.addEventListener('visibilitychange',function(){ if(!document.hidden&&state.tab==='mail') pollUnread(); });
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'&&state.tab==='mail'&&M.composing){ $('#compose-slot').innerHTML=''; M.composing=null; }
   });
 
   boot();
