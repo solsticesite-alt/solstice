@@ -151,6 +151,12 @@ Et si possible :
 - la **grille de livraison** (ex. offert sous X km, puis Y €), pour un total
   complet sans surprise.
 
+Les filtres du catalogue fonctionnent désormais. Ils lisent des étiquettes
+posées sur chaque fiche : **catégorie, style, couleur, thème, saison, prix**
+(plus « coup de cœur » ou « nouveauté »). Quand tu m'enverras le vrai
+catalogue, indique simplement ces informations pour chaque pièce — je pose
+les étiquettes et tout se filtre sans autre travail.
+
 ---
 
 ## Déjà fait

@@ -32,6 +32,15 @@
 .chip:hover{border-color:var(--gold);color:var(--gold-deep);}
 .chip.on{background:var(--ink);color:var(--paper);border-color:var(--ink);}
 .fb-hint{font-size:.68rem;color:var(--stone);letter-spacing:.04em;}
+/* Le bandeau de résultats n'apparaît qu'une fois un filtre posé : au repos
+   la barre reste aussi discrète qu'avant. */
+.fb-foot{display:flex;align-items:center;justify-content:space-between;gap:.8rem;flex-wrap:wrap;margin-top:.7rem;padding-top:.7rem;border-top:1px solid var(--line-soft);}
+.fb-count{margin:0;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:var(--ink-soft);}
+.fb-count em{font-style:normal;color:var(--gold-deep);}
+.fb-reset{font-family:var(--sans);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;font-weight:600;color:var(--ink-soft);background:none;border:none;border-bottom:1px solid var(--line);padding:0 0 .2em;cursor:pointer;transition:color .3s,border-color .3s;}
+.fb-reset:hover{color:var(--gold-deep);border-color:var(--gold);}
+.cat-empty{margin:clamp(30px,4vw,48px) auto 0;text-align:center;font-family:var(--serif);font-style:italic;font-size:clamp(1.02rem,1.9vw,1.22rem);color:var(--ink-soft);max-width:46ch;line-height:1.55;}
+.linkish{font:inherit;color:var(--gold-deep);background:none;border:none;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:.22em;}
 .cat-grid{margin-top:clamp(18px,2.4vw,30px);}
 .cat-note{margin:clamp(38px,5vw,56px) auto 0;text-align:center;font-family:var(--serif);font-style:italic;font-size:clamp(1.08rem,2.1vw,1.35rem);color:var(--ink-soft);max-width:58ch;line-height:1.5;}
 .cat-note::before{content:"";display:block;width:34px;height:1px;background:var(--gold);margin:0 auto 1.4rem;}
@@ -263,13 +272,13 @@
       <div class="fb-bar">
         <div class="fb-scroll">
           <div class="fb-chips" role="group" aria-label="Ambiances rapides">
-            <button type="button" class="chip on">Tout voir</button>
-            <button type="button" class="chip">Dolce Vita</button>
-            <button type="button" class="chip">Garden Party</button>
-            <button type="button" class="chip">White Party</button>
-            <button type="button" class="chip">Black &amp; Gold</button>
-            <button type="button" class="chip">Coups de cœur</button>
-            <button type="button" class="chip">Nouveautés</button>
+            <button type="button" class="chip on" data-chip="tout" aria-pressed="true">Tout voir</button>
+            <button type="button" class="chip" data-chip="theme:dolce" aria-pressed="false">Dolce Vita</button>
+            <button type="button" class="chip" data-chip="theme:garden" aria-pressed="false">Garden Party</button>
+            <button type="button" class="chip" data-chip="theme:white" aria-pressed="false">White Party</button>
+            <button type="button" class="chip" data-chip="theme:black" aria-pressed="false">Black &amp; Gold</button>
+            <button type="button" class="chip" data-chip="marque:coeur" aria-pressed="false">Coups de cœur</button>
+            <button type="button" class="chip" data-chip="marque:nouveau" aria-pressed="false">Nouveautés</button>
           </div>
         </div>
         <button type="button" class="fb-toggle" id="fbToggle" aria-expanded="false" aria-controls="fbAdvanced">
@@ -281,83 +290,77 @@
         <div class="fb-field">
           <label for="f-categorie">Catégorie</label>
           <select id="f-categorie">
-            <option>Toutes les catégories</option>
-            <option>Mobilier</option>
-            <option>Art de la table</option>
-            <option>Décoration</option>
-            <option>Ambiance &amp; lumière</option>
-            <option>Animations</option>
-            <option>Cérémonie</option>
-            <option>Confort extérieur</option>
+            <option value="">Toutes les catégories</option>
+            <option value="mobilier">Mobilier</option>
+            <option value="table">Art de la table</option>
+            <option value="decoration">Décoration</option>
+            <option value="lumiere">Ambiance &amp; lumière</option>
+            <option value="animations">Animations</option>
+            <option value="ceremonie">Cérémonie</option>
+            <option value="exterieur">Confort extérieur</option>
           </select>
         </div>
         <div class="fb-field">
           <label for="f-style">Style</label>
           <select id="f-style">
-            <option>Tous les styles</option>
-            <option>Bohème</option>
-            <option>Champêtre</option>
-            <option>Classique chic</option>
-            <option>Minimal</option>
-            <option>Vintage</option>
-            <option>Baroque doré</option>
+            <option value="">Tous les styles</option>
+            <option value="boheme">Bohème</option>
+            <option value="champetre">Champêtre</option>
+            <option value="classique">Classique chic</option>
+            <option value="minimal">Minimal</option>
+            <option value="vintage">Vintage</option>
+            <option value="baroque">Baroque doré</option>
           </select>
         </div>
         <div class="fb-field">
           <label for="f-couleur">Couleur</label>
           <select id="f-couleur">
-            <option>Toutes les couleurs</option>
-            <option>Naturel / bois</option>
-            <option>Blanc</option>
-            <option>Doré</option>
-            <option>Fumé / gris</option>
-            <option>Vert eucalyptus</option>
-            <option>Terracotta</option>
+            <option value="">Toutes les couleurs</option>
+            <option value="bois">Naturel / bois</option>
+            <option value="blanc">Blanc</option>
+            <option value="dore">Doré</option>
+            <option value="fume">Fumé / gris</option>
+            <option value="vert">Vert eucalyptus</option>
+            <option value="terracotta">Terracotta</option>
           </select>
         </div>
         <div class="fb-field">
           <label for="f-theme">Thème</label>
           <select id="f-theme">
-            <option>Tous les thèmes</option>
-            <option>Dolce Vita</option>
-            <option>Garden Party</option>
-            <option>White Party</option>
-            <option>Black &amp; Gold</option>
+            <option value="">Tous les thèmes</option>
+            <option value="dolce">Dolce Vita</option>
+            <option value="garden">Garden Party</option>
+            <option value="white">White Party</option>
+            <option value="black">Black &amp; Gold</option>
           </select>
         </div>
         <div class="fb-field">
           <label for="f-saison">Saison</label>
           <select id="f-saison">
-            <option>Toutes les saisons</option>
-            <option>Solstice d'Été</option>
-            <option>Solstice d'Hiver</option>
+            <option value="">Toutes les saisons</option>
+            <option value="ete">Solstice d'Été</option>
+            <option value="hiver">Solstice d'Hiver</option>
           </select>
         </div>
         <div class="fb-field">
           <label for="f-prix">Prix</label>
           <select id="f-prix">
-            <option>Indifférent</option>
-            <option>Moins de 10 €</option>
-            <option>10 € à 30 €</option>
-            <option>30 € à 60 €</option>
-            <option>Plus de 60 €</option>
+            <option value="">Indifférent</option>
+            <option value="0-10">Moins de 10 €</option>
+            <option value="10-30">10 € à 30 €</option>
+            <option value="30-60">30 € à 60 €</option>
+            <option value="60-">Plus de 60 €</option>
           </select>
         </div>
-        <div class="fb-field">
-          <label for="f-dispo">Disponibilité</label>
-          <select id="f-dispo">
-            <option>Peu importe</option>
-            <option>Disponible ce week-end</option>
-            <option>Disponible en semaine</option>
-            <option>Sur demande</option>
-          </select>
-        </div>
-        <p class="fb-hint" style="flex:1 1 100%;margin:0;">Aperçu — les filtres interactifs arrivent bientôt.</p>
+      </div>
+      <div class="fb-foot" id="fbFoot" hidden>
+        <p class="fb-count" id="fbCount" role="status" aria-live="polite"></p>
+        <button type="button" class="fb-reset" id="fbReset">Tout réinitialiser</button>
       </div>
     </form>
 
     <div class="grid grid-4 cat-grid">
-      <article class="card reveal">
+      <article class="card reveal" data-cat="mobilier" data-style="classique" data-couleur="blanc" data-theme="white black" data-saison="ete hiver" data-prix="4" data-marque="coeur">
         <div class="card-media"><svg class="art" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-chair"/></svg>
           <span class="card-tag gold">Coup de cœur</span>
           <button class="fav" aria-label="Ajouter la chaise Napoléon aux favoris"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
@@ -368,7 +371,7 @@
         </div>
       </article>
 
-      <article class="card reveal d1">
+      <article class="card reveal d1" data-cat="mobilier" data-style="champetre" data-couleur="bois" data-theme="garden dolce" data-saison="ete" data-prix="18">
         <div class="card-media"><svg class="art" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-table"/></svg>
           <button class="fav" aria-label="Ajouter la table de banquet aux favoris"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
           <button class="card-add">Ajouter au panier</button>
@@ -378,7 +381,7 @@
         </div>
       </article>
 
-      <article class="card reveal d2">
+      <article class="card reveal d2" data-cat="ceremonie" data-style="boheme" data-couleur="bois" data-theme="garden dolce" data-saison="ete" data-prix="45" data-marque="nouveau">
         <div class="card-media"><svg class="art" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-arch"/></svg>
           <span class="card-tag">Nouveau</span>
           <button class="fav" aria-label="Ajouter l'arche ronde aux favoris"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
@@ -389,7 +392,7 @@
         </div>
       </article>
 
-      <article class="card reveal d3">
+      <article class="card reveal d3" data-cat="table" data-style="vintage" data-couleur="fume" data-theme="black" data-saison="hiver" data-prix="9">
         <div class="card-media"><svg class="art" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-glass"/></svg>
           <button class="fav" aria-label="Ajouter la verrerie fumée aux favoris"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
           <button class="card-add">Ajouter au panier</button>
@@ -399,7 +402,7 @@
         </div>
       </article>
 
-      <article class="card reveal">
+      <article class="card reveal" data-cat="table" data-style="baroque" data-couleur="dore" data-theme="black dolce" data-saison="ete hiver" data-prix="12" data-marque="coeur">
         <div class="card-media"><svg class="art" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-cutlery"/></svg>
           <span class="card-tag gold">Coup de cœur</span>
           <button class="fav" aria-label="Ajouter la ménagère dorée aux favoris"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
@@ -410,7 +413,7 @@
         </div>
       </article>
 
-      <article class="card reveal d1">
+      <article class="card reveal d1" data-cat="animations" data-style="vintage" data-couleur="bois" data-theme="garden" data-saison="ete" data-prix="90" data-marque="coeur">
         <div class="card-media"><svg class="art" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-camera"/></svg>
           <span class="card-tag gold">Coup de cœur</span>
           <button class="fav" aria-label="Ajouter le photobooth vintage aux favoris"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
@@ -421,7 +424,7 @@
         </div>
       </article>
 
-      <article class="card reveal d2">
+      <article class="card reveal d2" data-cat="lumiere" data-style="champetre" data-couleur="dore" data-theme="garden dolce" data-saison="ete" data-prix="15">
         <div class="card-media"><svg class="art" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-lantern"/></svg>
           <span class="card-tag">Nouveau</span>
           <button class="fav" aria-label="Ajouter la guirlande guinguette aux favoris"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
@@ -432,7 +435,7 @@
         </div>
       </article>
 
-      <article class="card reveal d3">
+      <article class="card reveal d3" data-cat="exterieur" data-style="minimal" data-couleur="fume" data-theme="garden" data-saison="hiver" data-prix="35">
         <div class="card-media"><svg class="art" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-sun"/></svg>
           <button class="fav" aria-label="Ajouter le brasero convivial aux favoris"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
           <button class="card-add">Ajouter au panier</button>
@@ -441,23 +444,8 @@
           <div class="card-meta"><span class="card-price">35 €<span> / week-end</span></span><span class="card-caution">caution 90 €</span></div>
         </div>
       </article>
-    </div>
 
-    <p class="cat-note reveal">Fiches détaillées, dimensions et disponibilités en temps réel arrivent très bientôt. En attendant, glissez vos pièces en favoris et confiez-nous votre date : nous vérifions tout pour vous.</p>
-  </div>
-</section>
-
-<section class="section sand">
-  <div class="wrap">
-    <div class="sec-flex">
-      <div class="titles">
-        <span class="eyebrow reveal">Pour compléter la table</span>
-        <h2 class="reveal d1">Vous aimerez aussi…</h2>
-      </div>
-      <a class="link-more reveal d1" href="/contact">Demander un conseil déco <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
-    </div>
-    <div class="grid grid-4">
-      <article class="card reveal">
+      <article class="card reveal" data-cat="decoration" data-style="champetre" data-couleur="vert" data-theme="garden white" data-saison="ete" data-prix="6">
         <div class="card-media"><svg class="art" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-foliage"/></svg>
           <button class="fav" aria-label="Ajouter le chemin de table eucalyptus aux favoris"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
           <button class="card-add">Ajouter au panier</button>
@@ -467,7 +455,7 @@
         </div>
       </article>
 
-      <article class="card reveal d1">
+      <article class="card reveal d1" data-cat="decoration" data-style="boheme" data-couleur="terracotta" data-theme="dolce" data-saison="ete" data-prix="14">
         <div class="card-media"><svg class="art" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-vase"/></svg>
           <span class="card-tag">Nouveau</span>
           <button class="fav" aria-label="Ajouter le centre de table fleuri aux favoris"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
@@ -478,7 +466,7 @@
         </div>
       </article>
 
-      <article class="card reveal d2">
+      <article class="card reveal d2" data-cat="lumiere" data-style="minimal" data-couleur="blanc" data-theme="white black" data-saison="hiver" data-prix="3">
         <div class="card-media"><svg class="art" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-candles"/></svg>
           <button class="fav" aria-label="Ajouter les photophores aux favoris"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
           <button class="card-add">Ajouter au panier</button>
@@ -488,7 +476,7 @@
         </div>
       </article>
 
-      <article class="card reveal d3">
+      <article class="card reveal d3" data-cat="table" data-style="minimal" data-couleur="blanc" data-theme="white dolce" data-saison="ete hiver" data-prix="8">
         <div class="card-media"><svg class="art" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-doc"/></svg>
           <button class="fav" aria-label="Ajouter la nappe en lin lavé aux favoris"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
           <button class="card-add">Ajouter au panier</button>
@@ -498,6 +486,10 @@
         </div>
       </article>
     </div>
+
+    <p class="cat-empty" id="fbEmpty" hidden>Aucune pièce ne correspond à cette combinaison. Élargissez un critère — ou <button type="button" class="linkish" id="fbEmptyReset">repartez de zéro</button>.</p>
+
+    <p class="cat-note reveal">Fiches détaillées, dimensions et disponibilités en temps réel arrivent très bientôt. En attendant, glissez vos pièces en favoris et confiez-nous votre date : nous vérifions tout pour vous.</p>
   </div>
 </section>
 
@@ -519,7 +511,7 @@
   <div class="wrap">
     <div class="foot-top">
       <div class="foot-brand"><svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13.5" r="4"/><path d="M12 3v3M4.7 6.7l1.6 1.6M19.3 6.7l-1.6 1.6M2.5 13.5h2M19.5 13.5h2M4 20h16"/></svg><span class="word">Maison Solstice</span><p>Location de mobilier et de décoration pour vos événements. Le décor de vos plus beaux moments, à Amiens et ses alentours.</p></div>
-      <div class="foot-col"><h5>Le catalogue</h5><ul><li><a href="/catalogue">Mobilier</a></li><li><a href="/catalogue">Art de la table</a></li><li><a href="/catalogue">Décoration</a></li><li><a href="/catalogue">Cérémonie</a></li><li><a href="/collections">Nos collections</a></li></ul></div>
+      <div class="foot-col"><h5>Le catalogue</h5><ul><li><a href="/catalogue?cat=mobilier">Mobilier</a></li><li><a href="/catalogue?cat=table">Art de la table</a></li><li><a href="/catalogue?cat=decoration">Décoration</a></li><li><a href="/catalogue?cat=ceremonie">Cérémonie</a></li><li><a href="/collections">Nos collections</a></li></ul></div>
       <div class="foot-col"><h5>La maison</h5><ul><li><a href="/favoris">Mes coups de cœur</a></li><li><a href="/inspirations">Inspirations</a></li><li><a href="/a-propos">À propos</a></li><li><a href="/faq">FAQ</a></li></ul></div>
       <div class="foot-col"><h5>Contact</h5><address>Amiens, Somme (80)<br>Livraison Amiens &amp; ~30 km<br><a href="mailto:contact@maison-solstice.fr">contact@maison-solstice.fr</a><br>Sur rendez-vous</address></div>
     </div>
@@ -534,14 +526,186 @@
 <script src="/fav.js" defer></script>
 <script>
 (function () {
-  var btn = document.getElementById('fbToggle');
-  var adv = document.getElementById('fbAdvanced');
-  if (!btn || !adv) return;
-  btn.addEventListener('click', function () {
-    var open = btn.getAttribute('aria-expanded') === 'true';
-    btn.setAttribute('aria-expanded', open ? 'false' : 'true');
-    adv.hidden = open;
+  var form = document.querySelector('.filterbar');
+  if (!form) return;
+
+  var btn    = document.getElementById('fbToggle');
+  var adv    = document.getElementById('fbAdvanced');
+  var foot   = document.getElementById('fbFoot');
+  var compte = document.getElementById('fbCount');
+  var vide   = document.getElementById('fbEmpty');
+
+  // Seule la grille du catalogue est filtrée. « Vous aimerez aussi… » est un
+  // choix de la maison, pas un résultat de recherche : il reste intact.
+  var principale = document.querySelector('.cat-grid');
+  if (!principale) return;
+  var toutes = [].slice.call(principale.querySelectorAll('.card'));
+
+  // Un critère = un select. La marque (coup de cœur / nouveauté) n'existe
+  // que sous forme de pastille.
+  var CRITERES = [
+    { cle: 'cat',     id: 'f-categorie' },
+    { cle: 'style',   id: 'f-style' },
+    { cle: 'couleur', id: 'f-couleur' },
+    { cle: 'theme',   id: 'f-theme' },
+    { cle: 'saison',  id: 'f-saison' },
+    { cle: 'prix',    id: 'f-prix' }
+  ];
+  CRITERES.forEach(function (c) { c.el = document.getElementById(c.id); });
+
+  var marque = '';
+  var pastilles = [].slice.call(form.querySelectorAll('.chip[data-chip]'));
+
+  function valeur(cle) {
+    for (var i = 0; i < CRITERES.length; i++) {
+      if (CRITERES[i].cle === cle) return CRITERES[i].el ? CRITERES[i].el.value : '';
+    }
+    return '';
+  }
+
+  // Les attributs des cartes sont des listes séparées par des espaces :
+  // data-saison="ete hiver" doit répondre à « été » comme à « hiver ».
+  function contient(carte, attr, val) {
+    if (!val) return true;
+    return (' ' + (carte.getAttribute('data-' + attr) || '') + ' ').indexOf(' ' + val + ' ') >= 0;
+  }
+
+  function dansLaTranche(carte, tranche) {
+    if (!tranche) return true;
+    var p = parseFloat(carte.getAttribute('data-prix'));
+    if (!isFinite(p)) return false;
+    if (tranche === '0-10')  return p < 10;
+    if (tranche === '10-30') return p >= 10 && p < 30;
+    if (tranche === '30-60') return p >= 30 && p <= 60;
+    if (tranche === '60-')   return p > 60;
+    return true;
+  }
+
+  function retenue(carte) {
+    return contient(carte, 'cat', valeur('cat'))
+        && contient(carte, 'style', valeur('style'))
+        && contient(carte, 'couleur', valeur('couleur'))
+        && contient(carte, 'theme', valeur('theme'))
+        && contient(carte, 'saison', valeur('saison'))
+        && contient(carte, 'marque', marque)
+        && dansLaTranche(carte, valeur('prix'));
+  }
+
+  function actif() {
+    if (marque) return true;
+    for (var i = 0; i < CRITERES.length; i++) if (CRITERES[i].el && CRITERES[i].el.value) return true;
+    return false;
+  }
+
+  // Une carte masquée n'est jamais entrée dans le champ de l'observateur
+  // d'apparition : sans ce coup de pouce elle reviendrait transparente.
+  function montrer(carte, oui) {
+    carte.hidden = !oui;
+    if (oui) carte.classList.add('in');
+  }
+
+  function appliquer() {
+    var trouves = 0;
+    toutes.forEach(function (c) { var ok = retenue(c); montrer(c, ok); if (ok) trouves++; });
+
+    var filtre = actif();
+
+    if (vide) vide.hidden = !(filtre && trouves === 0);
+    if (foot) foot.hidden = !filtre;
+    if (compte) {
+      compte.innerHTML = trouves === 0
+        ? 'Aucune pièce sur ' + toutes.length
+        : '<em>' + trouves + '</em> pièce' + (trouves > 1 ? 's' : '') + ' sur ' + toutes.length;
+    }
+
+    synchroniserPastilles();
+    ecrireUrl();
+  }
+
+  function synchroniserPastilles() {
+    var theme = valeur('theme');
+    var rien = !actif();
+    pastilles.forEach(function (p) {
+      var v = p.getAttribute('data-chip');
+      var on = v === 'tout' ? rien
+             : v === 'theme:' + theme ? true
+             : v === 'marque:' + marque ? true
+             : false;
+      p.classList.toggle('on', on);
+      p.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+  }
+
+  function ecrireUrl() {
+    if (!window.history || !history.replaceState) return;
+    var bouts = [];
+    CRITERES.forEach(function (c) { if (c.el && c.el.value) bouts.push(c.cle + '=' + encodeURIComponent(c.el.value)); });
+    if (marque) bouts.push('marque=' + encodeURIComponent(marque));
+    history.replaceState(null, '', location.pathname + (bouts.length ? '?' + bouts.join('&') : '') + location.hash);
+  }
+
+  function reinitialiser() {
+    CRITERES.forEach(function (c) { if (c.el) c.el.value = ''; });
+    marque = '';
+    appliquer();
+  }
+
+  CRITERES.forEach(function (c) { if (c.el) c.el.addEventListener('change', appliquer); });
+
+  pastilles.forEach(function (p) {
+    p.addEventListener('click', function () {
+      var v = p.getAttribute('data-chip') || '';
+      if (v === 'tout') { reinitialiser(); return; }
+      var sep = v.indexOf(':');
+      var quoi = v.slice(0, sep), val = v.slice(sep + 1);
+      if (quoi === 'marque') {
+        marque = (marque === val) ? '' : val;
+      } else if (quoi === 'theme') {
+        var sel = document.getElementById('f-theme');
+        if (sel) sel.value = (sel.value === val) ? '' : val;
+      }
+      appliquer();
+    });
   });
+
+  var razBtn = document.getElementById('fbReset');
+  if (razBtn) razBtn.addEventListener('click', reinitialiser);
+  var razVide = document.getElementById('fbEmptyReset');
+  if (razVide) razVide.addEventListener('click', reinitialiser);
+
+  form.addEventListener('submit', function (e) { e.preventDefault(); });
+
+  if (btn && adv) {
+    btn.addEventListener('click', function () {
+      var ouvert = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', ouvert ? 'false' : 'true');
+      adv.hidden = ouvert;
+    });
+  }
+
+  // Entrées directes : /catalogue?cat=mobilier depuis le pied de page,
+  // ou une adresse partagée qui rejoue exactement la même sélection.
+  (function depuisUrl() {
+    var q = location.search.replace(/^\?/, '');
+    if (!q) { appliquer(); return; }
+    var lu = {};
+    q.split('&').forEach(function (p) {
+      var i = p.indexOf('=');
+      if (i < 0) return;
+      try { lu[decodeURIComponent(p.slice(0, i))] = decodeURIComponent(p.slice(i + 1)); } catch (e) {}
+    });
+    var deplie = false;
+    CRITERES.forEach(function (c) {
+      var v = lu[c.cle];
+      if (!c.el || !v) return;
+      // On n'accepte que les valeurs réellement proposées par le select.
+      var connue = [].some.call(c.el.options, function (o) { return o.value === v; });
+      if (connue) { c.el.value = v; deplie = true; }
+    });
+    if (lu.marque === 'coeur' || lu.marque === 'nouveau') marque = lu.marque;
+    if (deplie && btn && adv) { btn.setAttribute('aria-expanded', 'true'); adv.hidden = false; }
+    appliquer();
+  })();
 })();
 </script>
 </body>
