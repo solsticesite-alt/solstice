@@ -53,6 +53,7 @@ function attentePour(fails) {
 }
 
 function supabase() {
+  if (global.__solMockLoginDb) return global.__solMockLoginDb; // injection en test
   const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key =
     process.env.SUPABASE_SERVICE_ROLE_KEY ||
@@ -90,6 +91,18 @@ async function lire(cle) {
   return { fails: (m && m.fails) || 0, lastFail: (m && m.lastFail) || 0, durable: false };
 }
 
+// Rien ne supprimait les lignes devenues inutiles : une campagne lancee depuis
+// des milliers d'adresses aurait fait gonfler la table sans fin. On balaie donc
+// les compteurs oublies au moment ou un nouveau commence — c'est exactement
+// quand il y en a besoin, et jamais a chaque tentative.
+async function purger(sb, avant) {
+  try {
+    await sb.from('admin_logins').delete().lt('last_fail', new Date(avant).toISOString());
+  } catch (e) {
+    /* le menage n'est pas critique : on n'en fait pas un echec de connexion */
+  }
+}
+
 async function ecrire(cle, fails, lastFail) {
   const sb = supabase();
   if (sb) {
@@ -101,6 +114,7 @@ async function ecrire(cle, fails, lastFail) {
           { onConflict: 'ip_hash' }
         );
       if (error) throw new Error(error.message);
+      if (fails === 1) await purger(sb, lastFail - OUBLI_MS);
       return;
     } catch (e) {
       /* repli memoire ci-dessous */

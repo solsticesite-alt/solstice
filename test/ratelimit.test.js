@@ -94,3 +94,122 @@ test('secondes arrondit vers le haut et ne descend jamais a zero', () => {
   assert.strictEqual(frein.secondes(1500), 2);
   assert.strictEqual(frein.secondes(60000), 60);
 });
+
+// ---------------------------------------------------------------------------
+// Le chemin durable (Supabase). Une fausse base, volontairement minimale, qui
+// reproduit les quatre requetes utilisees : select / upsert / delete par cle /
+// delete par anciennete.
+// ---------------------------------------------------------------------------
+function fausseBase() {
+  const lignes = new Map();
+  const journal = [];
+  return {
+    lignes,
+    journal,
+    from() {
+      const filtres = [];
+      const api = {
+        select() { return api; },
+        eq(col, val) { filtres.push(['eq', col, val]); return api; },
+        lt(col, val) { filtres.push(['lt', col, val]); return api; },
+        async maybeSingle() {
+          journal.push('select');
+          const f = filtres.find((x) => x[0] === 'eq');
+          const l = f ? lignes.get(f[2]) : null;
+          return { data: l || null, error: null };
+        },
+        async upsert(row) {
+          journal.push('upsert');
+          lignes.set(row.ip_hash, row);
+          return { error: null };
+        },
+        delete() {
+          const suppr = {
+            async eq(col, val) { journal.push('delete-eq'); lignes.delete(val); return { error: null }; },
+            async lt(col, val) {
+              journal.push('delete-lt');
+              const limite = Date.parse(val);
+              for (const [k, v] of lignes) if (Date.parse(v.last_fail) < limite) lignes.delete(k);
+              return { error: null };
+            }
+          };
+          return suppr;
+        }
+      };
+      return api;
+    }
+  };
+}
+
+test('avec la base, le compteur y est ecrit et relu', async (t) => {
+  const db = fausseBase();
+  global.__solMockLoginDb = db;
+  t.after(() => { delete global.__solMockLoginDb; });
+
+  const r = req('ip-durable');
+  await frein.echec(r);
+  assert.strictEqual(db.lignes.size, 1, 'une ligne creee');
+  assert.strictEqual([...db.lignes.values()][0].fails, 1);
+
+  await frein.echec(r);
+  assert.strictEqual(db.lignes.size, 1, 'la meme ligne est mise a jour');
+  assert.strictEqual([...db.lignes.values()][0].fails, 2, 'le compte suit');
+
+  await frein.succes(r);
+  assert.strictEqual(db.lignes.size, 0, 'la reussite efface la ligne');
+});
+
+// Le defaut trouve en relecture : rien ne supprimait les compteurs abandonnes.
+// Des milliers d'adresses differentes auraient fait grossir la table sans fin.
+test('les compteurs oublies sont balayes quand un nouveau commence', async (t) => {
+  const db = fausseBase();
+  global.__solMockLoginDb = db;
+  t.after(() => { delete global.__solMockLoginDb; });
+
+  const vieux = new Date(Date.now() - frein.OUBLI_MS - 60000).toISOString();
+  for (let i = 0; i < 5; i++) db.lignes.set('ancien-' + i, { ip_hash: 'ancien-' + i, fails: 3, last_fail: vieux });
+  db.lignes.set('recent', { ip_hash: 'recent', fails: 2, last_fail: new Date().toISOString() });
+
+  await frein.echec(req('ip-neuve'));
+
+  assert.ok(!db.journal.includes('delete-eq'), 'aucune suppression ciblee ici');
+  assert.ok(db.journal.includes('delete-lt'), 'le balayage a bien eu lieu');
+  assert.strictEqual(db.lignes.size, 2, 'les cinq compteurs abandonnes sont partis');
+  assert.ok(db.lignes.has('recent'), 'le compteur encore vivant est conserve');
+  assert.strictEqual([...db.lignes.keys()].filter((k) => k.startsWith('ancien-')).length, 0);
+  // La cle stockee est l'empreinte de l'adresse, jamais l'adresse elle-meme.
+  const nouvelle = [...db.lignes.keys()].find((k) => k !== 'recent');
+  assert.match(nouvelle, /^[0-9a-f]{32}$/, 'la nouvelle ligne est indexee par une empreinte');
+  assert.ok(!db.lignes.has('ip-neuve'), 'l adresse en clair n apparait nulle part');
+});
+
+test('le balayage ne se declenche pas a chaque tentative', async (t) => {
+  const db = fausseBase();
+  global.__solMockLoginDb = db;
+  t.after(() => { delete global.__solMockLoginDb; });
+
+  const r = req('ip-repetee');
+  await frein.echec(r);
+  const apresLePremier = db.journal.filter((x) => x === 'delete-lt').length;
+  for (let i = 0; i < 6; i++) await frein.echec(r);
+  const total = db.journal.filter((x) => x === 'delete-lt').length;
+  assert.strictEqual(apresLePremier, 1, 'un balayage au premier echec');
+  assert.strictEqual(total, 1, 'et aucun pour les six suivants');
+});
+
+// Si la base tombe, la connexion doit rester possible : on bascule en memoire.
+test('une base en panne ne ferme pas le back-office', async (t) => {
+  global.__solMockLoginDb = {
+    from() {
+      const boom = () => { throw new Error('base injoignable'); };
+      return { select: boom, upsert: boom, delete: boom, eq: boom, lt: boom, maybeSingle: boom };
+    }
+  };
+  t.after(() => { delete global.__solMockLoginDb; });
+
+  const r = req('ip-panne');
+  const e = await frein.echec(r);
+  assert.strictEqual(e.fails, 1, 'le comptage continue en memoire');
+  assert.strictEqual(e.bloque, false);
+  await assert.doesNotReject(() => frein.succes(r));
+});
