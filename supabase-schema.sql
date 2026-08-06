@@ -1,8 +1,11 @@
 -- ============================================================================
--- Solstice — schéma de base de données pour les demandes de devis (Supabase)
+-- Maison Solstice — schéma de base de données (Supabase)
 --
--- À exécuter UNE SEULE FOIS dans Supabase :
+-- À exécuter dans Supabase :
 --   Dashboard → SQL Editor → New query → coller ce script → Run.
+--
+-- Le script est REJOUABLE sans risque : tout est en « if not exists », rien
+-- n'est effacé ni écrasé. Relancez-le simplement quand le schéma évolue.
 -- ============================================================================
 
 -- Numéros de demande incrémentaux (1, 2, 3, …) via une séquence Postgres.
