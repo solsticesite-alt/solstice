@@ -5,11 +5,14 @@ const { parseCookies, send } = require('./util');
 const COOKIE = 'sol_admin';
 const MAX_AGE = 60 * 60 * 24 * 7; // 7 jours
 
+// Sans secret configure, il n'y a pas de signature possible. La valeur de
+// repli qui existait ici etait publiee dans le depot : un cookie forge avec
+// elle aurait ouvert le back-office sur un deploiement mal configure. On
+// prefere desormais ne laisser entrer personne.
 function secret() {
   return (
     process.env.SESSION_SECRET ||
-    (process.env.ADMIN_PASSWORD ? 'derived:' + process.env.ADMIN_PASSWORD : '') ||
-    'solstice-insecure-fallback-change-me'
+    (process.env.ADMIN_PASSWORD ? 'derived:' + process.env.ADMIN_PASSWORD : '')
   );
 }
 
@@ -27,6 +30,7 @@ function makeToken() {
 }
 
 function verifyToken(token) {
+  if (!secret()) return false;
   if (!token || typeof token !== 'string' || token.indexOf('.') < 0) return false;
   const [payload, sig] = token.split('.');
   if (!payload || !sig) return false;

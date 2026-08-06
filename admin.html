@@ -85,7 +85,7 @@
   .blockquote{background:var(--paper-2);border-left:3px solid var(--gold);border-radius:0 10px 10px 0;padding:10px 14px;margin:0 0 16px;font-size:.92rem;white-space:pre-wrap;}
   .section-title{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-deep);font-weight:700;margin:18px 0 10px;}
 
-  /* ----- Composeur devis ----- */
+  /* ----- Composeur de facture ----- */
   .devis{background:var(--paper-2);border:1px solid var(--line);border-radius:14px;padding:18px;margin-top:6px;}
   .lines{width:100%;border-collapse:collapse;}
   .lines th{font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--stone);text-align:left;padding:0 6px 6px;font-weight:600;}
@@ -479,7 +479,7 @@
       '<button class="btn btn-sm" data-bounce="'+b.uid+'" style="margin-left:auto;">Voir le rapport</button></div>';
   }
 
-  // ------- Composeur de devis -------
+  // ------- Composeur de facture -------
   function buildInitialLines(req){
     if(req.reply&&req.reply.lines&&req.reply.lines.length){
       return req.reply.lines.map(function(l){return {label:l.label,qty:l.qty,unit:l.unit};});
@@ -1072,7 +1072,7 @@
     var s=state.settings||{};
     var f=function(k){return esc(s[k]!=null?s[k]:'');};
     var bg=document.createElement('div'); bg.className='modal-bg';
-    bg.innerHTML='<div class="modal"><h2>Réglages de facturation</h2><p class="muted" style="margin:.2rem 0 1rem;">Ces informations pré-remplissent l\'en-tête et le bas de vos devis. À compléter dès la création de votre entreprise.</p>'+
+    bg.innerHTML='<div class="modal"><h2>Réglages de facturation</h2><p class="muted" style="margin:.2rem 0 1rem;">Ces informations pré-remplissent l\'en-tête et le bas de vos factures. À compléter dès la création de votre entreprise.</p>'+
       '<div class="grid2">'+
         fld('companyName','Nom / dénomination',f('companyName'))+
         fld('legalForm','Statut juridique',f('legalForm'))+
@@ -1085,7 +1085,6 @@
         fld('phone','Téléphone',f('phone'))+
         fld('quotePrefix','Préfixe des factures',f('quotePrefix'))+
         fld('depositPct','Acompte par défaut (%)',f('depositPct'),'number')+
-        fld('validityDays','Validité (jours)',f('validityDays'),'number')+
       '</div>'+
       '<div class="field"><label>Signature des e-mails</label><textarea id="s-signature" rows="3" placeholder="Maison Solstice&#10;Location de mobilier &amp; décoration — Amiens">'+f('signature')+'</textarea></div>'+
       '<div class="field"><label>Conditions (bas de facture)</label><textarea id="s-conditions" rows="4">'+f('conditions')+'</textarea></div>'+
@@ -1096,7 +1095,7 @@
     bg.querySelector('#s-cancel').addEventListener('click',function(){ document.body.removeChild(bg); });
     bg.addEventListener('click',function(e){ if(e.target===bg) document.body.removeChild(bg); });
     bg.querySelector('#s-save').addEventListener('click',function(){
-      var payload={};['companyName','legalForm','siret','tvaMention','address','postcode','city','email','phone','quotePrefix','depositPct','validityDays'].forEach(function(k){payload[k]=fldGet(k);});
+      var payload={};['companyName','legalForm','siret','tvaMention','address','postcode','city','email','phone','quotePrefix','depositPct'].forEach(function(k){payload[k]=fldGet(k);});
       payload.conditions=bg.querySelector('#s-conditions').value;
       payload.signature=bg.querySelector('#s-signature').value;
       api('/api/admin/settings',{method:'POST',body:payload}).then(function(r){
@@ -1108,11 +1107,24 @@
   function fld(id,label,val,type){ return '<div class="field"><label>'+esc(label)+'</label><input id="s-'+id+'" type="'+(type||'text')+'" value="'+val+'"></div>'; }
 
   // ---------- Events ----------
+  // « 90 s », « 4 min », « 2 h » : plus lisible qu'un nombre de secondes.
+  function duree(s){
+    s=Math.max(1,Math.round(Number(s)||0));
+    if(s<60) return s+' seconde'+(s>1?'s':'');
+    if(s<3600){ var m=Math.max(1,Math.round(s/60)); return m+' minute'+(m>1?'s':''); }
+    var h=Math.max(1,Math.round(s/3600)); return h+' heure'+(h>1?'s':'');
+  }
   $('#login-form').addEventListener('submit',function(e){
     e.preventDefault(); var err=$('#login-err'); err.textContent='';
     api('/api/admin/login',{method:'POST',body:{password:$('#pw').value}}).then(function(r){
       if(r.ok){ boot(); }
       else if(r.error==='admin_password_not_set'){ err.textContent="Le mot de passe admin n'est pas encore configuré sur le serveur."; }
+      else if(r.error==='too_many_attempts'){ err.textContent='Trop de tentatives. Réessayez dans '+duree(r.retryAfter)+'.'; }
+      else if(typeof r.remaining==='number' && r.remaining<=2){
+        err.textContent='Mot de passe incorrect. '+(r.remaining>0
+          ? 'Encore '+r.remaining+' essai'+(r.remaining>1?'s':'')+' avant une mise en attente.'
+          : 'Prochaine erreur : mise en attente.');
+      }
       else { err.textContent='Mot de passe incorrect.'; }
     }).catch(function(){ err.textContent='Erreur réseau.'; });
   });

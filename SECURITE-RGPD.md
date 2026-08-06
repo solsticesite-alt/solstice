@@ -46,6 +46,31 @@ En-têtes HTTP de sécurité appliqués à tout le site :
 
 > ⚠️ Ces pages contiennent des champs `[À COMPLÉTER]` : voir la section 6.
 
+### Accès au back-office
+Un seul mot de passe (`ADMIN_PASSWORD`) garde les commandes des clients **et**
+la boîte mail du domaine. Ce qui le protège aujourd'hui :
+
+- **Comparaison en temps constant** : la durée de la vérification ne trahit pas
+  le nombre de caractères justes.
+- **Cookie de session signé** (HMAC-SHA256), `HttpOnly` + `Secure` +
+  `SameSite=Strict`, valable 7 jours. Inaccessible au JavaScript de la page,
+  jamais envoyé en clair, jamais joint à une requête venue d'un autre site.
+- **Changer le mot de passe ferme les sessions ouvertes** (la clé de signature
+  en dérive), sauf si `SESSION_SECRET` est défini séparément.
+- **Aucune session possible sans secret configuré.** Un secret de repli était
+  auparavant écrit en clair dans le dépôt : sur un déploiement où
+  `ADMIN_PASSWORD` n'était pas encore renseigné, un cookie forgé avec cette
+  valeur publique aurait ouvert le back-office. Corrigé.
+- **Mise en attente progressive** : 5 essais tolérés, puis l'adresse attend
+  1 min, 2 min, 4 min… jusqu'à 6 h, et le bon mot de passe lui-même n'y coupe
+  pas. Sous le seuil, chaque réponse est déjà ralentie. Le compteur s'oublie
+  après 6 h sans erreur, et une connexion réussie le remet à zéro.
+- **L'adresse IP n'est jamais stockée en clair** : seule une empreinte HMAC
+  sert de clé de comptage (table `admin_logins`).
+
+> À faire quand le besoin s'en fera sentir : une 2FA, et un second compte pour
+> séparer la lecture des commandes de l'accès à la boîte mail.
+
 ---
 
 ## 3. 📋 Registre RGPD des traitements (à tenir à jour)

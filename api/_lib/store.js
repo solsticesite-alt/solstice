@@ -129,7 +129,6 @@ const DEFAULT_SETTINGS = {
   quotePrefix: 'F',
   // Signature ajoutee aux reponses ecrites depuis la messagerie.
   signature: 'Maison Solstice\nLocation de mobilier & décoration — Amiens',
-  validityDays: 30,
   depositPct: 50,
   // Mentions legales obligatoires sur une facture.
   latePenalty:

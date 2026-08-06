@@ -27,7 +27,6 @@ module.exports = async (req, res) => {
       tvaMention: clean(b.tvaMention, 160),
       quotePrefix: clean(b.quotePrefix, 8),
       signature: cleanMultiline(b.signature, 600),
-      validityDays: Math.min(365, Math.max(1, Math.round(toNumber(b.validityDays, 30)))),
       depositPct: Math.min(100, Math.max(0, Math.round(toNumber(b.depositPct, 30)))),
       cautionNote: cleanMultiline(b.cautionNote, 600),
       conditions: cleanMultiline(b.conditions, 2000)

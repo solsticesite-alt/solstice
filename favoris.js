@@ -53,7 +53,7 @@
       var isF = i.type === 'formule';
       var sub = isF
         ? esc(i.priceHint || 'Collection')
-        : (typeof i.price === 'number' ? esc(i.priceHint) : 'Tarif au devis');
+        : (typeof i.price === 'number' ? esc(i.priceHint) : 'Tarif sur demande');
       /* Pour une formule on réutilise le bouton de collections.js, qui ouvre
          le choix du nombre d'invités. */
       var action = isF

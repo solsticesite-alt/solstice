@@ -74,7 +74,7 @@ function buildFacturePdf(request, settings, reply) {
 
       // ---------- Mot d'accompagnement (message au client) ----------
       // Le message du client (request.message) n'apparait volontairement PAS
-      // ici : c'est le mot de l'atelier (reply.message) qui figure sur le devis.
+      // ici : c'est le mot de l'atelier (reply.message) qui figure sur la facture.
       if (reply.message) {
         doc.font('Helvetica-Bold').fontSize(8).fillColor(GOLD_DEEP).text('MESSAGE', L, y);
         doc.font('Helvetica').fontSize(9).fillColor(INK).text(reply.message, L, y + 13, { width: W });

@@ -98,6 +98,17 @@ Gmail, variables Vercel. Tant que ce n'est pas fait, le formulaire affiche
 > À régler au passage : la variable Vercel `PUBLIC_BASE_URL` =
 > `https://maison-solstice.fr` (liens dans les e-mails de notification).
 
+> 🔁 **Si Supabase est déjà en place**, relance une fois le script
+> `supabase-schema.sql` (SQL Editor → coller → Run). Il ajoute la table
+> `admin_logins`, qui retient les tentatives de connexion ratées au
+> back-office. Le script ne détruit rien et peut être rejoué autant de fois
+> que nécessaire.
+
+> 🔑 **Le mot de passe du back-office** (`ADMIN_PASSWORD` dans Vercel) ouvre
+> désormais aussi ta boîte mail : prends-en un long et unique. Au-delà de
+> 5 essais ratés, l'adresse qui insiste est mise en attente, pour un temps qui
+> double à chaque nouvelle erreur (jusqu'à 6 h).
+
 ---
 
 ## 5. Compléter les informations légales

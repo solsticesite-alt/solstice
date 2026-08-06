@@ -1,4 +1,4 @@
-/* Maison Solstice — sélection (panier) + demande de devis.
+/* Maison Solstice — sélection (panier) + demande de réservation.
    Autonome : injecte son propre style, se branche sur toutes les pages
    (y compris index.html qui n'utilise pas site.js). */
 (function () {
@@ -35,7 +35,7 @@
     for (var i = 0; i < listeners.length; i++) { try { listeners[i](it); } catch (e) {} }
   }
   function clampQty(q) { q = Math.round(Number(q) || 1); return Math.max(1, Math.min(MAX_QTY, q)); }
-  /* Montant : un nombre fini et positif, sinon null (pièce « au devis »). */
+  /* Montant : un nombre fini et positif, sinon null (pièce à chiffrer). */
   function num(v) {
     var n = Number(v);
     return (isFinite(n) && n >= 0 && v !== null && v !== '' && v !== undefined) ? n : null;
@@ -70,7 +70,7 @@
       write(items);
     },
     /* Totaux de la sélection. Les pièces sans tarif connu sont comptées à part
-       (elles sont chiffrées dans le devis). */
+       (elles sont chiffrées sur la facture). */
     totals: function () {
       var items = read(), t = { subtotal: 0, caution: 0, pieces: 0, lines: items.length, quoted: 0 };
       items.forEach(function (i) {

@@ -45,6 +45,13 @@ demandes dans un vrai tableau.
 3. Vous devez voir « Success ». (Vous pourrez ensuite retrouver vos demandes
    dans **Table Editor → devis_requests**.)
 
+> 🔁 **Si vous avez déjà exécuté ce script avant août 2026**, relancez-le : il
+> contient désormais une table `admin_logins` qui compte les tentatives de
+> connexion ratées au back-office. Le script est rejouable sans risque
+> (`create table if not exists`) — il n'efface rien. Sans cette table, le
+> comptage se fait en mémoire : le back-office reste protégé, mais le compteur
+> repart de zéro à chaque redémarrage du serveur.
+
 **c) Récupérer les 2 clés d'accès**
 1. Menu de gauche → **Project Settings** (roue crantée) → **API**.
 2. Notez deux valeurs (elles serviront à l'Étape 3) :

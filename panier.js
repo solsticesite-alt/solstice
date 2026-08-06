@@ -99,7 +99,7 @@
       var lt = lineTotal(it);
       var unit = typeof it.price === 'number'
         ? eur(it.price) + ' / ' + (it.unit || 'jour')
-        : 'Tarif au devis';
+        : 'Tarif sur demande';
       return '<article class="ci" data-ref="' + esc(it.ref) + '">' +
         '<div class="ci-img"><svg viewBox="0 0 120 120" aria-hidden="true"><use href="#' + glyphFor(it.name) + '"/></svg></div>' +
         '<div class="ci-main">' +
@@ -112,7 +112,7 @@
           '<div class="qty"><button type="button" data-act="dec" aria-label="Diminuer la quantité de ' + esc(it.name) + '">−</button>' +
           '<span class="qty-n" aria-live="polite">' + it.qty + '</span>' +
           '<button type="button" data-act="inc" aria-label="Augmenter la quantité de ' + esc(it.name) + '">+</button></div>' +
-          '<span class="ci-total">' + (lt === null ? '<em>au devis</em>' : eur(lt)) + '</span>' +
+          '<span class="ci-total">' + (lt === null ? '<em>sur demande</em>' : eur(lt)) + '</span>' +
         '</div>' +
       '</article>';
     }).join('');
@@ -130,13 +130,13 @@
     el.sumDeliv.className = 'sum-v' + (liv ? ' is-free' : '');
     el.sumDelivNote.hidden = liv;
     el.sumCaution.textContent = t.caution > 0 ? eur(t.caution) : '—';
-    el.sumTotal.textContent = t.sub > 0 ? eur(t.sub) : 'Au devis';
+    el.sumTotal.textContent = t.sub > 0 ? eur(t.sub) : 'Sur demande';
     el.sumTotalNote.hidden = !(t.quoted || !liv);
 
     var empty = t.lines === 0;
     el.go.disabled = empty;
     el.stickyGo.disabled = empty;
-    el.stickyTotal.textContent = t.sub > 0 ? eur(t.sub) : (empty ? '—' : 'Au devis');
+    el.stickyTotal.textContent = t.sub > 0 ? eur(t.sub) : (empty ? '—' : 'Sur demande');
     el.sticky.hidden = empty;
   }
 
@@ -306,7 +306,7 @@
       $('rcFormule').textContent = (prefs.duration === 'weekend' ? 'Week-end (2 jours)' : '1 journée') +
         ' · ' + (prefs.delivery === 'retrait' ? 'Retrait à l’atelier' : 'Livraison');
       $('rcDate').textContent = prefs.date ? new Date(prefs.date + 'T00:00:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : 'à préciser';
-      $('rcSub').textContent = t.sub > 0 ? eur(t.sub) : 'Au devis';
+      $('rcSub').textContent = t.sub > 0 ? eur(t.sub) : 'Sur demande';
       $('rcCaution').textContent = t.caution > 0 ? eur(t.caution) : '—';
       renderPayment();
     }

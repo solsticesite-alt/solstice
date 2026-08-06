@@ -1,4 +1,5 @@
-// POST public : reception d'une demande de devis depuis le site.
+// POST public : reception d'une demande de reservation depuis le site.
+// La route garde son nom historique : elle est appelee par cart.js et panier.js.
 const { readJson, send, clean, cleanMultiline, isEmail, toNumber } = require('./_lib/util');
 const store = require('./_lib/store');
 const mail = require('./_lib/mail');
