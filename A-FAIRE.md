@@ -62,30 +62,30 @@ c'est elle qui sert d'**adresse de réponse** sur les factures.
 
 ---
 
-## 3. Protéger le domaine contre l'usurpation (DMARC) ⬅️ *à faire, 5 min*
+## 3. Protection du domaine — *fait, avec une réserve*
 
-Vérifié le 6 août 2026 : **SPF et MX sont bien en place**, mais **DMARC est
-absent**. Sans lui, deux conséquences : les factures partent avec une moins
-bonne réputation auprès de Gmail et Outlook, et surtout **n'importe qui peut
-envoyer des e-mails en se faisant passer pour `@maison-solstice.fr`** sans que
-vous ne le sachiez jamais.
+**DMARC est en place** (vérifié le 6 août 2026) :
+`v=DMARC1; p=none; rua=mailto:contact@maison-solstice.fr`, aux côtés de SPF
+(`v=spf1 include:mx.ovh.com ~all`) et des MX OVH.
 
-Chez OVH → **Noms de domaine** → `maison-solstice.fr` → **Zone DNS** →
-*Ajouter une entrée* :
+**DKIM n'est pas disponible** sur l'offre Zimbra du domaine. Ce n'est pas
+bloquant : DMARC passe dès lors que **SPF *ou* DKIM** s'aligne, et SPF
+s'aligne bien puisque les envois partent de `contact@maison-solstice.fr`
+via les serveurs OVH.
 
-| Champ | Valeur |
-|---|---|
-| Type | `TXT` |
-| Sous-domaine | `_dmarc` |
-| Valeur | `v=DMARC1; p=none; rua=mailto:contact@maison-solstice.fr` |
+> ⚠️ **Ne pas passer à `p=quarantine` ni `p=reject` tant qu'il n'y a pas de
+> DKIM.** Sans lui, un message légitime *redirigé* par le destinataire (une
+> ancienne adresse qui renvoie vers Gmail, par exemple) échoue à SPF à
+> l'arrivée et n'a aucune autre preuve d'authenticité. `p=none` donne la
+> visibilité sans ce risque.
 
-`p=none` n'impose rien : il se contente de faire remonter des rapports. Au bout
-de quelques semaines sans incident, on passera à `p=quarantine`.
+Si l'occasion se présente : espace OVH → **Zimbra** → onglet **Domaine**, ou
+un ticket au support pour demander l'activation de DKIM. Gratuit, côté
+serveur, rien à modifier dans le site.
 
-**À vérifier aussi au même endroit :** que **DKIM** est activé pour le domaine
-(souvent une case à cocher dans l'onglet e-mail). Je n'ai trouvé aucun
-sélecteur DKIM publié — soit il n'est pas activé, soit il porte un nom généré
-par OVH que je ne peux pas deviner.
+**Les rapports DMARC** arrivent désormais sur `contact@maison-solstice.fr` :
+pièces jointes XML ou ZIP quotidiennes envoyées par Google, Microsoft et
+consorts. C'est normal, ce n'est pas du spam.
 
 ---
 
