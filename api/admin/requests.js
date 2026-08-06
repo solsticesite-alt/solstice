@@ -19,7 +19,9 @@ module.exports = async (req, res) => {
       date: (r.event || {}).date || '',
       location: (r.event || {}).location || '',
       itemCount: (r.items || []).length,
-      replied: Boolean(r.reply)
+      replied: Boolean(r.reply),
+      // false uniquement si la notification a echoue ; absent = envoyee.
+      notified: r.notified !== false
     }));
     return send(res, 200, { ok: true, items });
   } catch (e) {

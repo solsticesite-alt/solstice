@@ -68,6 +68,9 @@
   .b-new{background:#e9f0e9;color:var(--ok);}
   .b-read{background:var(--sand);color:var(--ink-soft);}
   .b-replied{background:#efe3c8;color:var(--gold-deep);}
+  .b-bounce{background:#f6e3df;color:var(--bad);}
+  .alert-note{background:#f6e3df;border:1px solid #e2b8ad;color:var(--bad);border-radius:10px;padding:11px 14px;font-size:.85rem;margin-bottom:12px;display:flex;gap:.7rem;align-items:flex-start;flex-wrap:wrap;}
+  .alert-note b{color:#8a3320;}
   .empty{padding:40px 20px;text-align:center;color:var(--stone);font-size:.9rem;}
 
   /* ----- Détail ----- */
@@ -176,6 +179,12 @@
   .compose .to label{margin:0;white-space:nowrap;}
   .compose textarea{min-height:150px;background:var(--paper);}
   .compose-actions{display:flex;gap:.6rem;align-items:center;margin-top:12px;flex-wrap:wrap;}
+  .compose-actions label.btn{font-size:.82rem;letter-spacing:0;text-transform:none;color:var(--ink);}
+  .c-files{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.6rem;}
+  .c-file{display:inline-flex;align-items:center;gap:.5em;border:1px solid var(--line);border-radius:9px;padding:.35em .6em;font-size:.78rem;background:var(--paper);}
+  .c-file button{border:0;background:transparent;color:var(--stone);font-size:1rem;line-height:1;padding:0 .1em;}
+  .c-file button:hover{color:var(--bad);}
+  .c-file .sz{color:var(--stone);font-size:.72rem;}
 
   .hidden-desk{display:none;}
   .skel{background:linear-gradient(90deg,var(--paper-2) 25%,#efe6d6 37%,var(--paper-2) 63%);background-size:400% 100%;animation:shine 1.3s ease-in-out infinite;border-radius:6px;}
@@ -297,7 +306,8 @@
       .then(function(r){return r.json().catch(function(){return {ok:false,error:'bad_response',status:r.status};}).then(function(j){j.__status=r.status;return j;});});
   }
 
-  var state={me:null,settings:null,list:[],filter:'all',q:'',current:null,tab:'orders',unreadTimer:null};
+  var state={me:null,settings:null,list:[],filter:'all',q:'',current:null,tab:'orders',
+             unreadTimer:null,bounces:{}};
 
   // ---------- Boot ----------
   function boot(){
@@ -350,7 +360,29 @@
       if(r.__status===401){ state.me.authed=false; showLogin(); return; }
       if(!r.ok){ $('#reqs').innerHTML='<li class="empty">Erreur : '+esc(r.error||'')+'</li>'; return; }
       state.list=r.items||[]; renderList();
+      loadBounces();
     });
+  }
+
+  /* Une facture qui n'arrive pas revient en rapport de non-remise. Sans ce
+     rapprochement, elle ressemblerait a une facture simplement impayee. */
+  function loadBounces(){
+    if(!(state.me&&state.me.config&&state.me.config.imap)) return;
+    api('/api/admin/mail?action=bounces').then(function(r){
+      if(!r||!r.ok||!r.items||!r.items.length) return;
+      var chgt=false;
+      r.items.forEach(function(b){
+        if(!b.address) return;
+        // On ne garde que le rebond le plus recent par adresse.
+        var vu=state.bounces[b.address];
+        if(!vu||String(b.date||'')>String(vu.date||'')){ state.bounces[b.address]=b; chgt=true; }
+      });
+      if(chgt){ renderList(); if(state.current) renderDetail(); }
+    }).catch(function(){});
+  }
+
+  function bounceFor(email){
+    return email?state.bounces[String(email).toLowerCase()]||null:null;
   }
 
   function renderList(){
@@ -363,6 +395,8 @@
     if(!items.length){ ul.innerHTML='<li class="empty">Aucune demande.</li>'; return; }
     ul.innerHTML=items.map(function(it){
       var b=it.status==='replied'?'<span class="badge b-replied">Facturée</span>':(it.status==='new'?'<span class="badge b-new">Nouvelle</span>':'<span class="badge b-read">Lue</span>');
+      if(bounceFor(it.clientEmail)) b+=' <span class="badge b-bounce">Non distribué</span>';
+      else if(it.notified===false) b+=' <span class="badge b-bounce">Alerte non partie</span>';
       var sub=[it.eventType,fdate(it.date),it.location].filter(Boolean).join(' · ');
       return '<li><button class="req'+(state.current&&state.current.id===it.id?' sel':'')+'" data-id="'+it.id+'">'+
         '<div class="req-top"><span class="req-name">'+esc(it.clientName||'—')+'</span>'+b+'</div>'+
@@ -408,12 +442,15 @@
 
     var msg = req.message ? '<div class="section-title">Message</div><blockquote class="blockquote">'+esc(req.message)+'</blockquote>' : '';
 
+    var li = state.list.filter(function(x){ return x.id===req.id; })[0] || {};
     var repliedNote = req.reply ? '<div class="sent-note">✓ Facture déjà envoyée le '+esc(fdate(req.reply.sentAt))+' — total '+euros(req.reply.subtotal)+'. Vous pouvez la renvoyer / modifier ci-dessous.</div>' : '';
 
     $('#detail').innerHTML=
       '<div class="d-head"><div><h2>'+esc(c.name||'Demande')+'</h2><div class="muted">'+esc(req.ref||'')+' · reçue le '+esc(fdate(req.createdAt))+'</div></div>'+
         (c.email?'<button class="btn btn-sm" id="d-mail">Écrire un e-mail</button>':'')+'</div>'+
       '<div class="info-grid">'+info+'</div>'+ msg +
+      bounceNote(c.email) +
+      (li&&li.notified===false?'<div class="alert-note"><span><b>L\'alerte de nouvelle commande n\'a pas pu être envoyée.</b> La demande est bien enregistrée — vous la voyez ici — mais aucun e-mail ne vous a prévenu.</span></div>':'')+
       repliedNote +
       (req.payment ? '<div class="sent-note">Règlement choisi par le client : <b>'+(req.payment==='full'?'paiement intégral à la commande':'acompte de 50 %, solde à la livraison')+'</b></div>' : '')+
       '<div class="section-title">Facture à envoyer</div>'+
@@ -421,8 +458,25 @@
 
     var dm=$('#d-mail');
     if(dm) dm.addEventListener('click',function(){ mailWith(c.email); });
+    var vb=$('#detail [data-bounce]');
+    if(vb) vb.addEventListener('click',function(){
+      switchTab('mail');
+      Array.prototype.forEach.call(document.querySelectorAll('#mboxes .chip'),function(x){ x.classList.toggle('on',x.getAttribute('data-box')==='inbox'); });
+      M.q=''; $('#msearch').value='';
+      loadBox('inbox'); openMessage(parseInt(vb.getAttribute('data-bounce'),10));
+    });
 
     renderDevis(req);
+  }
+
+  /* Bandeau rouge quand un e-mail a cette adresse est revenu en erreur. */
+  function bounceNote(email){
+    var b=bounceFor(email); if(!b) return '';
+    return '<div class="alert-note"><span><b>Un e-mail à cette adresse n\'est pas arrivé.</b> '+
+      'Rapport de non-remise reçu le '+esc(fdate(b.date))+
+      (b.reason?' — <i>'+esc(b.reason)+'</i>':'')+
+      '. Vérifiez l\'adresse du client avant de renvoyer la facture.</span>'+
+      '<button class="btn btn-sm" data-bounce="'+b.uid+'" style="margin-left:auto;">Voir le rapport</button></div>';
   }
 
   // ------- Composeur de devis -------
@@ -595,6 +649,7 @@
   function mailError(r){
     if(r.error==='imap_not_configured') return 'Messagerie non configurée.';
     if(r.error==='not_found') return 'Ce dossier n\'existe pas sur le serveur.';
+    if(r.error==='too_large') return 'Les pièces jointes dépassent la taille autorisée (3 Mo au total).';
     if(r.error==='imap_auth_failed') return 'Identifiants refusés par le serveur de messagerie.';
     return 'Erreur : '+(r.detail||r.error||'inconnue');
   }
@@ -887,7 +942,7 @@
     var m=M.msg;
     var to=prefillTo||(mode==='reply'?((m&&m.from&&m.from.address)||''):'');
     var subject=mode==='reply'?(/^re\s*:/i.test(m.subject||'')?m.subject:'Re : '+(m.subject||'')):'';
-    var sig='\n\n—\nMaison Solstice\n'+((state.settings&&state.settings.email)||'')+'\n';
+    var sig='\n\n-- \n'+(((state.settings&&state.settings.signature)||'Maison Solstice').trim())+'\n';
     var text=mode==='reply'?sig+quoted(m):sig;
     // Un brouillon deja commence sur ce meme message est repris tel quel.
     var repris=M.composing&&M.composing.uid===M.sel&&M.composing.mode===mode;
@@ -901,7 +956,11 @@
         '<div class="to"><label for="c-to">À</label><input id="c-to" value="'+esc(to)+'" placeholder="adresse@exemple.fr"></div>'+
         '<div class="to"><label for="c-subj">Objet</label><input id="c-subj" value="'+esc(subject)+'"></div>'+
         '<textarea id="c-text"></textarea>'+
-        '<div class="compose-actions"><button class="btn btn-gold" id="c-send">Envoyer</button>'+
+        '<div class="c-files" id="c-files"></div>'+
+        '<div class="compose-actions">'+
+          '<button class="btn btn-gold" id="c-send">Envoyer</button>'+
+          '<label class="btn" for="c-file" style="margin:0;">📎 Joindre un fichier</label>'+
+          '<input type="file" id="c-file" multiple hidden>'+
           '<button class="btn" id="c-cancel">Annuler</button><span class="muted" id="c-hint"></span></div>'+
       '</div>';
     var ta=$('#c-text'); ta.value=text; ta.focus(); ta.setSelectionRange(0,0);
@@ -914,12 +973,52 @@
         M.composing.to=$('#c-to').value; M.composing.subject=$('#c-subj').value; M.composing.text=$('#c-text').value;
       });
     });
+    if(!M.composing.files) M.composing.files=[];
+    renderFiles();
+    $('#c-file').addEventListener('change',function(e){ addFiles(e.target.files); e.target.value=''; });
     $('#c-cancel').addEventListener('click',function(){
       if(($('#c-text').value||'').trim()&&!confirm('Abandonner ce message ?')) return;
       $('#compose-slot').innerHTML=''; M.composing=null;
     });
     $('#c-send').addEventListener('click',sendMailNow);
     $('#compose-slot').scrollIntoView({behavior:'smooth',block:'nearest'});
+  }
+
+  /* Les fichiers voyagent en base64 dans le corps de la requête : la
+     plateforme plafonne celui-ci, d'où la limite annoncée à l'utilisateur. */
+  var MAX_PIECES=3*1024*1024;
+
+  function addFiles(liste){
+    if(!M.composing) return;
+    var restants=Array.prototype.slice.call(liste||[]);
+    (function suivant(){
+      if(!restants.length){ renderFiles(); return; }
+      var f=restants.shift();
+      var deja=M.composing.files.reduce(function(n,x){return n+x.size;},0);
+      if(deja+f.size>MAX_PIECES){ toast('« '+f.name+' » dépasse la limite de 3 Mo au total.',true); suivant(); return; }
+      var fr=new FileReader();
+      fr.onload=function(){
+        var b64=String(fr.result||'').split(',')[1]||'';
+        M.composing.files.push({filename:f.name,contentType:f.type||'application/octet-stream',size:f.size,content:b64});
+        suivant();
+      };
+      fr.onerror=function(){ toast('Impossible de lire « '+f.name+' ».',true); suivant(); };
+      fr.readAsDataURL(f);
+    })();
+  }
+
+  function renderFiles(){
+    var host=$('#c-files'); if(!host||!M.composing) return;
+    var fs=M.composing.files||[];
+    host.innerHTML=fs.map(function(f,i){
+      return '<span class="c-file">📎 '+esc(f.filename)+' <span class="sz">'+poids(f.size)+'</span>'+
+        '<button type="button" data-i="'+i+'" title="Retirer">×</button></span>';
+    }).join('');
+    Array.prototype.forEach.call(host.querySelectorAll('button'),function(b){
+      b.addEventListener('click',function(){
+        M.composing.files.splice(parseInt(b.getAttribute('data-i'),10),1); renderFiles();
+      });
+    });
   }
 
   /* Le composeur peut disparaître pendant l'envoi (clic sur un autre message) :
@@ -936,7 +1035,9 @@
     M.sending=true; sendBtn(false); setHint('Envoi en cours…');
     var c=M.composing||{};
     mapi('',{method:'POST',body:{action:'send',to:to,subject:subject,text:text,
-      inReplyTo:c.inReplyTo,references:c.references,box:M.box,uid:c.uid||M.sel}}).then(function(r){
+      inReplyTo:c.inReplyTo,references:c.references,box:M.box,uid:c.uid||M.sel,
+      attachments:(c.files||[]).map(function(f){return {filename:f.filename,contentType:f.contentType,content:f.content};})
+    }}).then(function(r){
       M.sending=false; sendBtn(true); setHint('');
       if(r.__status===401){ showLogin(); return; }
       if(!r.ok){ toast(mailError(r),true); return; }
@@ -986,6 +1087,7 @@
         fld('depositPct','Acompte par défaut (%)',f('depositPct'),'number')+
         fld('validityDays','Validité (jours)',f('validityDays'),'number')+
       '</div>'+
+      '<div class="field"><label>Signature des e-mails</label><textarea id="s-signature" rows="3" placeholder="Maison Solstice&#10;Location de mobilier &amp; décoration — Amiens">'+f('signature')+'</textarea></div>'+
       '<div class="field"><label>Conditions (bas de facture)</label><textarea id="s-conditions" rows="4">'+f('conditions')+'</textarea></div>'+
       '<div class="devis-actions"><button class="btn btn-gold" id="s-save">Enregistrer</button><button class="btn" id="s-cancel">Annuler</button></div>'+
     '</div>';
@@ -996,6 +1098,7 @@
     bg.querySelector('#s-save').addEventListener('click',function(){
       var payload={};['companyName','legalForm','siret','tvaMention','address','postcode','city','email','phone','quotePrefix','depositPct','validityDays'].forEach(function(k){payload[k]=fldGet(k);});
       payload.conditions=bg.querySelector('#s-conditions').value;
+      payload.signature=bg.querySelector('#s-signature').value;
       api('/api/admin/settings',{method:'POST',body:payload}).then(function(r){
         if(r.ok){ state.settings=r.settings; toast('Réglages enregistrés ✓'); document.body.removeChild(bg); }
         else toast('Erreur : '+(r.error||''),true);

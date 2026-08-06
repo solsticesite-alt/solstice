@@ -68,10 +68,16 @@ module.exports = async (req, res) => {
     return send(res, 500, { ok: false, error: 'store_error' });
   }
 
-  // Notification e-mail au gérant (best effort : ne bloque pas la demande).
+  // Notification e-mail au gérant : elle ne bloque jamais la demande, mais son
+  // echec est enregistre — sans quoi une commande pourrait passer inapercue.
+  let notified = false;
   try {
-    if (mail.mailReady()) await mail.sendOwnerNotification(request, baseUrl(req));
+    if (mail.mailReady()) { await mail.sendOwnerNotification(request, baseUrl(req)); notified = true; }
   } catch (e) { /* la demande est enregistrée quand même */ }
+  if (!notified) {
+    request.notified = false;
+    try { await store.updateRequest(request); } catch (e) { /* sans consequence */ }
+  }
 
   return send(res, 200, { ok: true, ref: request.ref });
 };

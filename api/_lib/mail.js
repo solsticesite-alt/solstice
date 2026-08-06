@@ -109,49 +109,75 @@ async function sendOwnerNotification(request, baseUrl) {
     ${items ? `<p style="margin:0 0 6px;color:#6F6455;">Sélection :</p><ul style="margin:0 0 14px;padding-left:18px;">${items}</ul>` : ''}
     ${request.message ? `<p style="margin:0 0 14px;color:#6F6455;">Message :</p><blockquote style="margin:0 0 14px;padding:10px 14px;background:#F5EEE1;border-radius:10px;">${escapeHtml(request.message)}</blockquote>` : ''}
     <a href="${escapeHtml(link)}" style="display:inline-block;background:#221C15;color:#FBF8F2;text-decoration:none;padding:11px 20px;border-radius:8px;font-size:13px;">Ouvrir le back-office</a>`;
+  const lignes = [
+    `Nouvelle demande ${request.ref || ''}.`, '',
+    `Client   : ${c.name || ''}`,
+    `E-mail   : ${c.email || ''}`,
+    `Téléphone: ${c.phone || '—'}`,
+    `Événement: ${ev.type || '—'}`,
+    `Date     : ${ev.date || '—'}`,
+    `Lieu     : ${ev.location || '—'}`,
+    `Invités  : ${ev.guests || '—'}`
+  ];
+  if ((request.items || []).length) {
+    lignes.push('', 'Sélection :');
+    (request.items || []).forEach((i) => lignes.push(`  - ${i.name}${i.qty ? ' x ' + i.qty : ''}`));
+  }
+  if (request.message) lignes.push('', 'Message :', request.message);
+  lignes.push('', `Ouvrir le back-office : ${link}`);
+
   await getTransport().sendMail({
     from: fromHeader(null),
     to: ownerAddress(),
     replyTo: c.email || undefined,
     subject: `Nouvelle demande — ${c.name || 'client'} (${request.ref || ''})`,
+    text: lignes.join('\n'),
     html: wrap('Nouvelle demande', body)
   });
 }
 
 /* `opts.bccOwner` : copie cachee au gerant. Inutile quand la messagerie IMAP
    est branchee — l'envoi se retrouve alors dans « Envoyés », sans encombrer
-   la boite de reception. */
+   la boite de reception.
+
+   Le corps ne reproduit PAS la facture : elle est en piece jointe, et la
+   recopier ligne a ligne dans le message la rendait illisible et faisait
+   doublon. Le message explique, le PDF fait foi. */
 async function sendFactureEmail(request, settings, reply, pdfBuffer, opts) {
   const c = request.client || {};
   const q = computeInvoice(reply.lines, reply.depositPct);
-  const rows = q.items.map((it) =>
-    `<tr><td style="padding:6px 10px;border-bottom:1px solid #E6DCCB;">${escapeHtml(it.label)}</td>
-     <td style="padding:6px 10px;border-bottom:1px solid #E6DCCB;text-align:right;">${escapeHtml(String(it.qty))}</td>
-     <td style="padding:6px 10px;border-bottom:1px solid #E6DCCB;text-align:right;">${euros(it.total)}</td></tr>`).join('');
-  const msgHtml = escapeHtml(reply.message || '').replace(/\n/g, '<br>');
-  const body = `
-    ${reply.message ? `<p style="margin:0 0 16px;line-height:1.6;">${msgHtml}</p>` : ''}
-    <p style="margin:0 0 8px;color:#6F6455;font-size:13px;">Votre facture <b>${escapeHtml(reply.invoiceNumber || reply.quoteNumber || request.ref || '')}</b> est jointe en PDF. Récapitulatif :</p>
-    <table style="width:100%;border-collapse:collapse;font-size:14px;margin-bottom:12px;">
-      <thead><tr>
-        <th style="text-align:left;padding:6px 10px;color:#6F6455;font-weight:600;border-bottom:2px solid #B08A54;">Désignation</th>
-        <th style="text-align:right;padding:6px 10px;color:#6F6455;font-weight:600;border-bottom:2px solid #B08A54;">Qté</th>
-        <th style="text-align:right;padding:6px 10px;color:#6F6455;font-weight:600;border-bottom:2px solid #B08A54;">Total HT</th>
-      </tr></thead>
-      <tbody>${rows}</tbody>
-    </table>
-    <p style="margin:0 0 4px;text-align:right;font-size:15px;"><b>Total : ${euros(q.subtotal)}</b></p>
-    ${q.depositPct > 0 ? `<p style="margin:0 0 2px;text-align:right;color:#6F6455;font-size:13px;">Acompte ${q.depositPct}% à régler maintenant : <b style="color:#221C15;">${euros(q.deposit)}</b></p>
-    <p style="margin:0 0 16px;text-align:right;color:#6F6455;font-size:13px;">Solde ${100 - q.depositPct}% à la livraison : ${euros(q.balance)}</p>` : ''}
-    <p style="margin:16px 0 0;color:#6F6455;font-size:12px;">Votre réservation est confirmée à réception de l'acompte. Pour toute question, répondez simplement à cet e-mail.</p>`;
+  const numero = reply.invoiceNumber || reply.quoteNumber || request.ref || '';
+  const prenom = String(c.name || '').trim().split(/\s+/)[0] || '';
+  const fichier = `Facture-Maison-Solstice-${numero || 'facture'}.pdf`;
+
+  const reglement = q.depositPct > 0 && q.depositPct < 100
+    ? `Pour confirmer votre réservation, un acompte de ${euros(q.deposit)} (${q.depositPct} %) est à régler dès maintenant. Le solde, ${euros(q.balance)}, sera dû à la livraison.`
+    : `Le montant est à régler en totalité pour confirmer votre réservation.`;
+
+  const paragraphes = [
+    reply.message || `Bonjour${prenom ? ' ' + prenom : ''},`,
+    `Vous trouverez votre facture ${numero} en pièce jointe, au format PDF. Elle détaille l'ensemble des pièces retenues.`,
+    `Son montant total s'élève à ${euros(q.subtotal)}. ${reglement}`,
+    `Votre réservation devient ferme à réception du règlement. Pour toute question, il vous suffit de répondre à cet e-mail.`
+  ];
+
+  const html = wrap('Votre facture', paragraphes.map((t, i) =>
+    `<p style="margin:0 0 ${i === paragraphes.length - 1 ? '0' : '14px'};line-height:1.65;${i > 0 ? 'color:#5B5142;' : ''}">${escapeHtml(t).replace(/\n/g, '<br>')}</p>`
+  ).join('') +
+    `<p style="margin:20px 0 0;padding:11px 14px;background:#F5EEE1;border-radius:10px;font-size:13px;color:#5B5142;">
+       📎 Pièce jointe : <b style="color:#221C15;">${escapeHtml(fichier)}</b></p>`);
+
   return sendAndBuild({
     from: fromHeader(settings),
     to: c.email,
     bcc: (opts && opts.bccOwner) ? (ownerAddress() || undefined) : undefined,
     replyTo: (settings && settings.email) || ownerAddress() || undefined,
-    subject: `Votre facture Maison Solstice — ${reply.invoiceNumber || reply.quoteNumber || request.ref || ''}`,
-    html: wrap('Votre facture', body),
-    attachments: [{ filename: `Facture-Maison-Solstice-${reply.invoiceNumber || reply.quoteNumber || request.ref || 'facture'}.pdf`, content: pdfBuffer, contentType: 'application/pdf' }]
+    subject: `Votre facture Maison Solstice — ${numero}`,
+    // Une version texte accompagne toujours le HTML : sans elle, le message
+    // est mal note par les filtres et illisible dans un client sans HTML.
+    text: paragraphes.join('\n\n') + `\n\nPièce jointe : ${fichier}\n\n-- \nMaison Solstice — location de mobilier et décoration, Amiens et alentours.`,
+    html,
+    attachments: [{ filename: fichier, content: pdfBuffer, contentType: 'application/pdf' }]
   });
 }
 

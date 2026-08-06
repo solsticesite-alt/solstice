@@ -7,6 +7,7 @@
 //   GET  ?action=message     &box=inbox&uid=12[&peek=1]
 //   GET  ?action=thread      &box=inbox&uid=12   -> le fil complet
 //   GET  ?action=find        &address=x@y.fr     -> ou reprendre l'echange
+//   GET  ?action=bounces     &limit=15           -> les non-remises recentes
 //   GET  ?action=attachment  &box=inbox&uid=12&index=0     -> fichier brut
 //   GET  ?action=unread
 //   POST {action:'send'|'seen'|'flag'|'trash', ...}
@@ -71,6 +72,11 @@ async function handleGet(req, res, url) {
     return send(res, 200, Object.assign({ ok: true }, out));
   }
 
+  if (action === 'bounces') {
+    const out = await imap.listBounces(parseInt(url.searchParams.get('limit'), 10) || 15);
+    return send(res, 200, Object.assign({ ok: true }, out));
+  }
+
   if (action === 'find') {
     const address = clean(url.searchParams.get('address'), 200).toLowerCase();
     if (!isEmail(address)) return send(res, 400, { ok: false, error: 'bad_address' });
@@ -120,9 +126,37 @@ async function handleGet(req, res, url) {
 
 /* ---------- Ecriture ---------- */
 
+/* Vercel plafonne le corps d'une requete a 4,5 Mo, et le base64 gonfle de
+   33 % : on s'arrete donc a 3 Mo de fichiers, annonces comme tels. */
+const MAX_PIECES = 3 * 1024 * 1024;
+
+function piecesJointes(v) {
+  if (!Array.isArray(v)) return [];
+  let total = 0;
+  const out = [];
+  v.slice(0, 10).forEach((a) => {
+    if (!a || typeof a.content !== 'string') return;
+    let buf;
+    try { buf = Buffer.from(a.content, 'base64'); } catch (e) { return; }
+    if (!buf.length) return;
+    total += buf.length;
+    if (total > MAX_PIECES) throw new Error('attachments_too_large');
+    out.push({
+      filename: clean(a.filename, 150) || 'piece-jointe',
+      contentType: clean(a.contentType, 100) || 'application/octet-stream',
+      content: buf
+    });
+  });
+  return out;
+}
+
 async function handlePost(req, res) {
   let b;
-  try { b = await readJson(req); } catch (e) { return send(res, 400, { ok: false, error: 'invalid_body' }); }
+  // Le plafond par defaut de readJson (512 Ko) ne suffirait pas des qu'un
+  // fichier accompagne la reponse.
+  try { b = await readJson(req, 5 * 1024 * 1024); } catch (e) {
+    return send(res, 413, { ok: false, error: e && e.message === 'payload_too_large' ? 'too_large' : 'invalid_body' });
+  }
   const action = String(b.action || '');
   const box = boxOf(b.box);
   const uid = uidOf(b.uid);
@@ -160,13 +194,18 @@ async function handlePost(req, res) {
     const references = (Array.isArray(b.references) ? b.references : [])
       .map((r) => clean(r, 300)).filter(Boolean).slice(0, 30);
 
+    let pieces;
+    try { pieces = piecesJointes(b.attachments); }
+    catch (e) { return send(res, 413, { ok: false, error: 'too_large' }); }
+
     let raw;
     try {
       raw = await mail.sendReply({
         settings, to, cc, subject, text,
         html: textToHtml(text),
         inReplyTo: clean(b.inReplyTo, 300) || '',
-        references
+        references,
+        attachments: pieces
       });
     } catch (e) {
       return send(res, 502, { ok: false, error: 'mail_error', detail: String((e && e.message) || e).slice(0, 200) });

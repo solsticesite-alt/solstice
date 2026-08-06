@@ -62,7 +62,34 @@ c'est elle qui sert d'**adresse de réponse** sur les factures.
 
 ---
 
-## 3. Activer le back-office (factures par e-mail) — ~15 min
+## 3. Protéger le domaine contre l'usurpation (DMARC) ⬅️ *à faire, 5 min*
+
+Vérifié le 6 août 2026 : **SPF et MX sont bien en place**, mais **DMARC est
+absent**. Sans lui, deux conséquences : les factures partent avec une moins
+bonne réputation auprès de Gmail et Outlook, et surtout **n'importe qui peut
+envoyer des e-mails en se faisant passer pour `@maison-solstice.fr`** sans que
+vous ne le sachiez jamais.
+
+Chez OVH → **Noms de domaine** → `maison-solstice.fr` → **Zone DNS** →
+*Ajouter une entrée* :
+
+| Champ | Valeur |
+|---|---|
+| Type | `TXT` |
+| Sous-domaine | `_dmarc` |
+| Valeur | `v=DMARC1; p=none; rua=mailto:contact@maison-solstice.fr` |
+
+`p=none` n'impose rien : il se contente de faire remonter des rapports. Au bout
+de quelques semaines sans incident, on passera à `p=quarantine`.
+
+**À vérifier aussi au même endroit :** que **DKIM** est activé pour le domaine
+(souvent une case à cocher dans l'onglet e-mail). Je n'ai trouvé aucun
+sélecteur DKIM publié — soit il n'est pas activé, soit il porte un nom généré
+par OVH que je ne peux pas deviner.
+
+---
+
+## 4. Activer le back-office (factures par e-mail) — ~15 min
 
 Suivre **[SETUP-BACKOFFICE.md](./SETUP-BACKOFFICE.md)** : base Supabase, envoi
 Gmail, variables Vercel. Tant que ce n'est pas fait, le formulaire affiche
@@ -73,7 +100,7 @@ Gmail, variables Vercel. Tant que ce n'est pas fait, le formulaire affiche
 
 ---
 
-## 4. Compléter les informations légales
+## 5. Compléter les informations légales
 
 Obligatoire dès l'émission de factures, et à remplir dans deux endroits :
 
@@ -94,7 +121,7 @@ Tant qu'elles manquent, le PDF affiche des `[À COMPLÉTER]`.
 
 ---
 
-## 5. Référencer le site sur Google (Search Console)
+## 6. Référencer le site sur Google (Search Console)
 
 Le blocage `noindex` a été retiré : Google a le **droit** d'indexer le site.
 Pour accélérer (sinon l'indexation naturelle prend plusieurs semaines) :
@@ -113,7 +140,7 @@ Pour accélérer (sinon l'indexation naturelle prend plusieurs semaines) :
 
 ---
 
-## 6. Envoyer le catalogue et les tarifs
+## 7. Envoyer le catalogue et les tarifs
 
 Pour que le panier chiffre tout automatiquement, il me faut, par article :
 **nom · prix · unité (jour ou week-end) · caution · catégorie**.

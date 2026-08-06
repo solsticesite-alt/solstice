@@ -442,6 +442,84 @@ async function getThread(box, uid, limitPerBox) {
   });
 }
 
+/* ---------- Rebonds ---------- */
+
+/* Un e-mail qui n'arrive pas revient sous forme de rapport de non-remise
+   (« bounce »). Sans ce reperage, une facture jamais distribuee ressemble
+   exactement a une facture impayee. */
+const BOUNCE_JOURS = 120;
+
+function adresseEnEchec(parsed) {
+  // Le format normalise : une partie message/delivery-status qui porte
+  // « Final-Recipient: rfc822; adresse ».
+  const morceaux = [parsed.text || ''];
+  (parsed.attachments || []).forEach((a) => {
+    if (/delivery-status|rfc822-headers|message\/rfc822/i.test(a.contentType || '') && a.content) {
+      morceaux.push(a.content.toString('utf8'));
+    }
+  });
+  const tout = morceaux.join('\n');
+  const officiel = /(?:Final|Original)-Recipient:\s*(?:rfc822;)?\s*<?([^\s<>;]+@[^\s<>;]+)>?/i.exec(tout);
+  if (officiel) return officiel[1].toLowerCase().replace(/[.,;]$/, '');
+  // Repli : la premiere adresse citee qui n'est pas la notre.
+  const moi = myAddress();
+  const toutes = tout.match(/[\w.+-]+@[\w-]+\.[\w.-]{2,}/g) || [];
+  const autre = toutes.map((a) => a.toLowerCase()).filter((a) => a !== moi && !/^(mailer-daemon|postmaster)@/.test(a))[0];
+  return autre || '';
+}
+
+function raisonDuRebond(parsed) {
+  const tout = (parsed.text || '') + '\n' +
+    (parsed.attachments || []).filter((a) => /delivery-status/i.test(a.contentType || '') && a.content)
+      .map((a) => a.content.toString('utf8')).join('\n');
+  const diag = /Diagnostic-Code:\s*[^;]*;\s*([^\r\n]+)/i.exec(tout);
+  if (diag) return diag[1].trim().slice(0, 200);
+  const statut = /Status:\s*([45]\.\d+\.\d+)/i.exec(tout);
+  return statut ? 'Code ' + statut[1] : '';
+}
+
+/* Les rapports de non-remise recus recemment, avec l'adresse concernee. */
+async function listBounces(limit) {
+  const max = Math.min(30, Math.max(1, Number(limit) || 15));
+  const since = new Date(Date.now() - BOUNCE_JOURS * 86400000);
+  return withClient(async (client) => {
+    // Un seul verrou pour la recherche et les telechargements : les rapports
+    // sont petits, mais les relire boite deverrouillee serait incorrect.
+    const lock = await client.getMailboxLock('INBOX');
+    try {
+      const uids = await client.search({
+        since,
+        or: [
+          { header: { 'content-type': 'delivery-status' } },
+          { from: 'mailer-daemon' },
+          { from: 'postmaster' }
+        ]
+      }, { uid: true });
+      const candidats = (uids || []).slice(-max);
+      const items = [];
+      for (let i = 0; i < candidats.length; i++) {
+        try {
+          const parsed = await downloadParsed(client, candidats[i]);
+          const address = adresseEnEchec(parsed);
+          if (!address) continue;
+          items.push({
+            uid: candidats[i],
+            box: 'inbox',
+            date: isoDate(parsed.date),
+            subject: parsed.subject || '',
+            address,
+            reason: raisonDuRebond(parsed)
+          });
+        } catch (e) { /* un rapport illisible n'empeche pas de traiter les autres */ }
+      }
+      items.sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
+      return { items };
+    } finally {
+      lock.release();
+    }
+  });
+}
+
 /* Le message le plus recent echange avec une adresse, ou qu'il se trouve.
    Sert au bouton « Écrire un e-mail » depuis une commande. */
 async function findLatestWith(address) {
@@ -647,8 +725,9 @@ async function unreadCount() {
 }
 
 module.exports = {
-  imapReady, listMessages, searchMessages, getThread, findLatestWith, getMessage, getAttachment,
+  imapReady, listMessages, searchMessages, getThread, findLatestWith, listBounces, getMessage, getAttachment,
   setSeen, setFlagged, setAnswered, trashMessage, appendToSent, unreadCount,
   // Fonctions pures, couvertes par test/imap.test.js
-  preview, toText, isoDate, inlineCidImages, summarize, textNodeOf, baseSubject, headerIds
+  preview, toText, isoDate, inlineCidImages, summarize, textNodeOf, baseSubject, headerIds,
+  adresseEnEchec, raisonDuRebond
 };

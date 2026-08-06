@@ -97,3 +97,25 @@ test('un message sans expediteur ni objet reste listable', () => {
   assert.strictEqual(r.date, null);
   assert.strictEqual(r.preview, '');
 });
+
+// Un rapport de non-remise doit livrer l'adresse en echec et la raison.
+test('le rebond livre l adresse concernee', () => {
+  const dsn = {
+    text: 'This is the mail system at host mx.ovh.net.\n\nYour message could not be delivered.',
+    attachments: [{
+      contentType: 'message/delivery-status',
+      content: Buffer.from('Final-Recipient: rfc822; Camille.Durand@Exemple.FR\nAction: failed\nStatus: 5.1.1\nDiagnostic-Code: smtp; 550 5.1.1 <camille.durand@exemple.fr>: User unknown')
+    }]
+  };
+  assert.strictEqual(imap.adresseEnEchec(dsn), 'camille.durand@exemple.fr');
+  assert.match(imap.raisonDuRebond(dsn), /User unknown/);
+});
+
+test('un rebond sans partie normalisee tombe sur l adresse citee', () => {
+  const dsn = { text: 'Delivery to lea@exemple.fr failed permanently.', attachments: [] };
+  assert.strictEqual(imap.adresseEnEchec(dsn), 'lea@exemple.fr');
+});
+
+test('un rebond illisible ne renvoie rien plutot qu une adresse fausse', () => {
+  assert.strictEqual(imap.adresseEnEchec({ text: 'aucune adresse ici', attachments: [] }), '');
+});

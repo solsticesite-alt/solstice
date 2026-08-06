@@ -127,6 +127,8 @@ const DEFAULT_SETTINGS = {
   website: '',
   tvaMention: 'TVA non applicable, art. 293 B du CGI',
   quotePrefix: 'F',
+  // Signature ajoutee aux reponses ecrites depuis la messagerie.
+  signature: 'Maison Solstice\nLocation de mobilier & décoration — Amiens',
   validityDays: 30,
   depositPct: 50,
   // Mentions legales obligatoires sur une facture.
