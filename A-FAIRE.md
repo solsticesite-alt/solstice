@@ -36,7 +36,31 @@ concurrents :
 
 ---
 
-## 2. Activer le back-office (factures par e-mail) — ~15 min
+## 2. Brancher l'envoi des e-mails sur la boîte du domaine ⬅️ *à faire*
+
+La boîte `contact@maison-solstice.fr` existe, mais le site envoie encore les
+factures depuis l'ancienne adresse Gmail. Pour basculer, ajouter quatre
+variables dans Vercel → Settings → Environment Variables (Production), puis
+redéployer :
+
+| Variable | Valeur |
+|---|---|
+| `SMTP_HOST` | `ssl0.ovh.net` |
+| `SMTP_PORT` | `587` |
+| `SMTP_USER` | `contact@maison-solstice.fr` |
+| `SMTP_PASS` | le mot de passe de la boîte |
+
+Tant qu'elles ne sont pas là, l'envoi continue par Gmail : rien ne casse.
+
+À faire aussi : renseigner cette adresse dans le back-office → **Réglages**,
+c'est elle qui sert d'**adresse de réponse** sur les factures.
+
+> Pour lire les messages : webmail sur <https://webmail.mail.ovh.net/>, ou en
+> IMAP sur téléphone — serveur `ssl0.ovh.net`, port `993` en SSL/TLS.
+
+---
+
+## 3. Activer le back-office (factures par e-mail) — ~15 min
 
 Suivre **[SETUP-BACKOFFICE.md](./SETUP-BACKOFFICE.md)** : base Supabase, envoi
 Gmail, variables Vercel. Tant que ce n'est pas fait, le formulaire affiche
@@ -47,7 +71,7 @@ Gmail, variables Vercel. Tant que ce n'est pas fait, le formulaire affiche
 
 ---
 
-## 3. Compléter les informations légales
+## 4. Compléter les informations légales
 
 Obligatoire dès l'émission de factures, et à remplir dans deux endroits :
 
@@ -68,7 +92,7 @@ Tant qu'elles manquent, le PDF affiche des `[À COMPLÉTER]`.
 
 ---
 
-## 4. Référencer le site sur Google (Search Console)
+## 5. Référencer le site sur Google (Search Console)
 
 Le blocage `noindex` a été retiré : Google a le **droit** d'indexer le site.
 Pour accélérer (sinon l'indexation naturelle prend plusieurs semaines) :
@@ -87,7 +111,7 @@ Pour accélérer (sinon l'indexation naturelle prend plusieurs semaines) :
 
 ---
 
-## 5. Envoyer le catalogue et les tarifs
+## 6. Envoyer le catalogue et les tarifs
 
 Pour que le panier chiffre tout automatiquement, il me faut, par article :
 **nom · prix · unité (jour ou week-end) · caution · catégorie**.
@@ -105,5 +129,5 @@ Et si possible :
 - **Nom de domaine** : `maison-solstice.fr` (OVHcloud) connecté à Vercel —
   enregistrement A sur la racine + CNAME `www`. Sitemap et robots.txt à jour.
 - **Site public** : accessible sans mur de connexion, indexable par Google.
-- **Adresse e-mail** `@maison-solstice.fr` : à reprendre plus tard (l'offre
-  Zimbra incluse avec le domaine n'a pas pu être activée pour l'instant).
+- **Adresse e-mail** `contact@maison-solstice.fr` : boîte Zimbra Starter
+  active chez OVH (15 Go). L'adresse est en place sur tout le site.
