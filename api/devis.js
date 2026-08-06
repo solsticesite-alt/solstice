@@ -3,12 +3,27 @@
 const { readJson, send, clean, cleanMultiline, isEmail, toNumber } = require('./_lib/util');
 const store = require('./_lib/store');
 const mail = require('./_lib/mail');
+const frein = require('./_lib/ratelimit');
 
+const DOMAINE = 'maison-solstice.fr';
+
+// L'en-tete Host vient du client : quiconque envoyait une demande avec
+// « X-Forwarded-Host: evil.test » faisait pointer le bouton « Ouvrir le
+// back-office » du mail de notification vers son propre site. On n'accepte
+// donc que des hotes connus, et a defaut on retombe sur le domaine.
 function baseUrl(req) {
-  if (process.env.PUBLIC_BASE_URL) return process.env.PUBLIC_BASE_URL.replace(/\/$/, '');
-  const proto = String(req.headers['x-forwarded-proto'] || 'https').split(',')[0];
-  const host = req.headers['x-forwarded-host'] || req.headers.host;
-  return host ? `${proto}://${host}` : '';
+  const declare = String(process.env.PUBLIC_BASE_URL || '').trim().replace(/\/+$/, '');
+  if (/^https:\/\/[a-z0-9.-]+(:\d+)?$/i.test(declare)) return declare;
+
+  const brut = String((req.headers && (req.headers['x-forwarded-host'] || req.headers.host)) || '')
+    .split(',')[0].trim().toLowerCase();
+  const host = brut.split(':')[0];
+  const connu =
+    host === DOMAINE ||
+    host === 'www.' + DOMAINE ||
+    /^[a-z0-9-]+\.vercel\.app$/.test(host); // deploiements de preversion
+
+  return 'https://' + (connu ? brut : DOMAINE);
 }
 
 function makeRef(settings, id, createdAt) {
@@ -48,6 +63,18 @@ module.exports = async (req, res) => {
   if (!name) return send(res, 400, { ok: false, error: 'name_required' });
   if (!isEmail(email)) return send(res, 400, { ok: false, error: 'email_invalid' });
   if (!message && !items.length) return send(res, 400, { ok: false, error: 'empty_request' });
+
+  // Chaque demande coute une ligne en base et un e-mail : on compte apres avoir
+  // valide le formulaire, pour qu'une faute de frappe corrigee ne consomme rien,
+  // et avant d'ecrire quoi que ce soit.
+  try {
+    const trop = await frein.formulaire(req);
+    if (trop.bloque) {
+      const s = frein.secondes(trop.resteMs);
+      res.setHeader('Retry-After', String(s));
+      return send(res, 429, { ok: false, error: 'too_many_requests', retryAfter: s });
+    }
+  } catch (e) { /* le comptage ne doit jamais empecher une vraie demande */ }
 
   if (!store.storeReady()) return send(res, 503, { ok: false, error: 'store_not_configured' });
 

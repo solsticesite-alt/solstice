@@ -209,6 +209,8 @@
         var code = res.json && res.json.error;
         status.textContent = code === 'store_not_configured'
           ? 'Le service de demande n’est pas encore activé. Écrivez-nous directement en attendant.'
+          : code === 'too_many_requests'
+          ? 'Nous avons déjà bien reçu vos demandes. Laissez-nous un peu de temps pour y répondre — ou écrivez-nous directement si c’est urgent.'
           : 'Une erreur est survenue. Réessayez, ou écrivez-nous directement.';
         status.className = 'p-status err';
         btn.disabled = false; btn.removeAttribute('aria-busy');

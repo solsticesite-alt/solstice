@@ -219,4 +219,55 @@ Un audit automatisé (5 angles : en-têtes/CSP · RGPD · exposition de données
 
 ---
 
+## 10. 🔒 Audit du back-office (août 2026)
+
+Audit mené en attaquant réellement le back-office depuis un navigateur : injection
+de code par le formulaire public, e-mail piégé dans la boîte, appels d'API sans
+cookie, détournement d'en-têtes, inondation du formulaire.
+
+**Ce qui a tenu**
+- **Aucune injection de code (XSS) n'aboutit.** Une demande dont chaque champ —
+  nom, e-mail, téléphone, lieu, message, libellé d'article — contient du code
+  s'affiche partout comme du texte : liste, détail, composeur de facture.
+- **Le lecteur d'e-mails neutralise tout** : scripts, iframes, formulaires,
+  gestionnaires `onclick`/`onload`, liens `javascript:` retirés ; images
+  distantes non chargées (aucun pixel espion ne signale que tu as ouvert le
+  message) ; les liens légitimes, eux, sont conservés. Le message s'affiche dans
+  un cadre isolé, sans autorisation d'exécuter du script.
+- **Toutes les routes d'administration répondent 401 sans cookie valide** :
+  commandes, détail, réglages, messagerie, envoi de facture.
+- **Aucun secret dans le dépôt**, aucune dépendance vulnérable
+  (`npm audit` : 0), `/admin` exclu de `robots.txt` et du sitemap.
+- **Cookie de session** signé, `HttpOnly` + `Secure` + `SameSite=Strict` :
+  inexploitable depuis un autre site.
+
+**Trois défauts trouvés, tous corrigés**
+1. **Détournement de l'en-tête `Host` _(le plus sérieux)_.** En envoyant une
+   demande avec un en-tête `X-Forwarded-Host` falsifié, un attaquant faisait
+   pointer le bouton « Ouvrir le back-office » de ton e-mail de notification
+   vers **son** site. Un clic, un faux écran de connexion, et le mot de passe
+   partait. Seuls les hôtes connus sont désormais acceptés ; à défaut, le lien
+   retombe sur le domaine.
+2. **Formulaire public sans limite.** 25 demandes passaient en 39 ms — autant de
+   lignes en base et d'e-mails dans ta boîte. Plafond : **5 demandes par heure et
+   par adresse**, comptées après validation du formulaire (une faute de frappe
+   corrigée ne consomme rien).
+3. **Fuite de configuration.** `/api/admin/me` indiquait à un inconnu quels
+   services étaient branchés (base, SMTP, IMAP). Réservé aux sessions ouvertes.
+
+Au passage : `GET /api/admin/logout` est refusé — une simple image posée sur un
+autre site suffisait sinon à faire sauter ta session.
+
+**Limites connues, assumées pour l'instant**
+- Le freinage compte **par adresse IP**. Un attaquant disposant de milliers
+  d'adresses contourne la limite. C'est inhérent : la vraie défense reste un mot
+  de passe long et unique.
+- `script-src 'unsafe-inline'` reste nécessaire tant que le JS est écrit
+  directement dans les pages (voir section 9).
+- **Pas de déconnexion à distance** : si `SESSION_SECRET` est défini, changer le
+  mot de passe ne ferme pas les sessions ouvertes (jusqu'à 7 jours). À ajouter
+  si le besoin se présente.
+
+---
+
 _Rappel : ce document couvre les fondamentaux. Pour un enjeu contractuel fort (CGL) ou une configuration particulière, un contrôle par un professionnel du droit reste recommandé._

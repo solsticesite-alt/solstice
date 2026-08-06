@@ -1,4 +1,4 @@
-// Freinage des tentatives de connexion au back-office.
+// Freinage des tentatives de connexion au back-office, et du formulaire public.
 //
 // Le mot de passe admin ouvre les commandes des clients ET la boite mail du
 // domaine : il merite mieux qu'un simple delai. Ici, chaque echec compte, et
@@ -19,6 +19,16 @@ const MAX_MS = 6 * 60 * 60 * 1000; // plafond : six heures
 const OUBLI_MS = 6 * 60 * 60 * 1000; // sans échec pendant ce délai, on repart de zéro
 const LENTEUR_MS = 250; // ralentissement progressif sous le seuil
 const LENTEUR_MAX_MS = 2000;
+
+// Formulaire public : une fenetre glissante toute simple. Un client honnete
+// envoie une demande, deux au pire ; au-dela c'est un robot, et chaque demande
+// coute une ligne en base et un e-mail dans la boite du gerant.
+const FORM_MAX = 5;
+const FORM_FENETRE_MS = 60 * 60 * 1000;
+
+// Les deux compteurs partagent la meme table : un prefixe les separe.
+const CLE_CONNEXION = 'c:';
+const CLE_FORMULAIRE = 'f:';
 
 const memoire = new Map();
 let _sbErreurSignalee = false;
@@ -144,7 +154,7 @@ async function effacer(cle) {
 // Etat courant de l'adresse : bloquee ou non, et combien de temps encore.
 async function etat(req, maintenant) {
   const now = maintenant || Date.now();
-  const cle = empreinte(adresseDe(req));
+  const cle = CLE_CONNEXION + empreinte(adresseDe(req));
   const { fails, lastFail } = await lire(cle);
   if (!fails || now - lastFail > OUBLI_MS) return { cle, fails: 0, bloque: false, resteMs: 0 };
   const reste = lastFail + attentePour(fails) - now;
@@ -155,7 +165,7 @@ async function etat(req, maintenant) {
 // et l'etat qui en decoule.
 async function echec(req, maintenant) {
   const now = maintenant || Date.now();
-  const cle = empreinte(adresseDe(req));
+  const cle = CLE_CONNEXION + empreinte(adresseDe(req));
   const { fails, lastFail } = await lire(cle);
   const precedents = !fails || now - lastFail > OUBLI_MS ? 0 : fails;
   const total = precedents + 1;
@@ -169,8 +179,26 @@ async function echec(req, maintenant) {
   };
 }
 
+// Une demande de plus depuis cette adresse. Renvoie l'etat APRES comptage :
+// au-dela de FORM_MAX dans l'heure, la demande doit etre refusee.
+async function formulaire(req, maintenant) {
+  const now = maintenant || Date.now();
+  const cle = CLE_FORMULAIRE + empreinte(adresseDe(req));
+  const { fails, lastFail } = await lire(cle);
+  // `lastFail` sert ici de debut de fenetre, pas de dernier echec.
+  const dansLaFenetre = fails > 0 && now - lastFail < FORM_FENETRE_MS;
+  const compte = dansLaFenetre ? fails + 1 : 1;
+  const debut = dansLaFenetre ? lastFail : now;
+  await ecrire(cle, compte, debut);
+  return {
+    compte,
+    bloque: compte > FORM_MAX,
+    resteMs: Math.max(1000, debut + FORM_FENETRE_MS - now)
+  };
+}
+
 async function succes(req) {
-  await effacer(empreinte(adresseDe(req)));
+  await effacer(CLE_CONNEXION + empreinte(adresseDe(req)));
 }
 
 // En secondes, pour l'en-tete Retry-After et le message affiche.
@@ -182,10 +210,13 @@ module.exports = {
   etat,
   echec,
   succes,
+  formulaire,
   secondes,
   // exportes pour les tests
   attentePour,
   adresseDe,
   SEUIL,
-  OUBLI_MS
+  OUBLI_MS,
+  FORM_MAX,
+  FORM_FENETRE_MS
 };

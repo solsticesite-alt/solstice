@@ -314,6 +314,7 @@
       case 'name_required': return 'Merci d’indiquer votre nom.';
       case 'empty_request': return 'Ajoutez un message ou quelques pièces à votre sélection.';
       case 'store_not_configured': return 'Le service de demande n’est pas encore activé. Écrivez-nous directement par e-mail en attendant.';
+      case 'too_many_requests': return 'Nous avons déjà bien reçu vos demandes. Laissez-nous un peu de temps pour y répondre — ou écrivez-nous directement par e-mail si c’est urgent.';
       default: return 'Une erreur est survenue. Réessayez, ou écrivez-nous directement par e-mail.';
     }
   }

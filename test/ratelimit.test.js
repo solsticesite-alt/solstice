@@ -179,7 +179,7 @@ test('les compteurs oublies sont balayes quand un nouveau commence', async (t) =
   assert.strictEqual([...db.lignes.keys()].filter((k) => k.startsWith('ancien-')).length, 0);
   // La cle stockee est l'empreinte de l'adresse, jamais l'adresse elle-meme.
   const nouvelle = [...db.lignes.keys()].find((k) => k !== 'recent');
-  assert.match(nouvelle, /^[0-9a-f]{32}$/, 'la nouvelle ligne est indexee par une empreinte');
+  assert.match(nouvelle, /^c:[0-9a-f]{32}$/, 'la nouvelle ligne est indexee par une empreinte prefixee');
   assert.ok(!db.lignes.has('ip-neuve'), 'l adresse en clair n apparait nulle part');
 });
 
@@ -212,4 +212,43 @@ test('une base en panne ne ferme pas le back-office', async (t) => {
   assert.strictEqual(e.fails, 1, 'le comptage continue en memoire');
   assert.strictEqual(e.bloque, false);
   await assert.doesNotReject(() => frein.succes(r));
+});
+
+// ---------------------------------------------------------------------------
+// Formulaire public. Chaque demande ecrit une ligne en base et envoie un
+// e-mail : sans plafond, un robot noie la boite du gerant.
+// ---------------------------------------------------------------------------
+test('le formulaire tolere quelques demandes puis refuse', async () => {
+  const r = req('ip-formulaire');
+  for (let i = 1; i <= frein.FORM_MAX; i++) {
+    const f = await frein.formulaire(r);
+    assert.strictEqual(f.bloque, false, 'la demande ' + i + ' doit passer');
+    assert.strictEqual(f.compte, i);
+  }
+  const trop = await frein.formulaire(r);
+  assert.strictEqual(trop.bloque, true, 'la suivante est refusee');
+  assert.ok(trop.resteMs > 0 && trop.resteMs <= frein.FORM_FENETRE_MS);
+});
+
+test('la fenetre du formulaire se rouvre une heure plus tard', async () => {
+  const r = req('ip-fenetre');
+  const jadis = Date.now() - frein.FORM_FENETRE_MS - 1000;
+  for (let i = 0; i <= frein.FORM_MAX; i++) await frein.formulaire(r, jadis);
+  const apres = await frein.formulaire(r);
+  assert.strictEqual(apres.compte, 1, 'on repart de zero');
+  assert.strictEqual(apres.bloque, false);
+});
+
+// Sans prefixe, les deux compteurs partageraient la meme ligne : cinq essais
+// de connexion rates auraient bloque le formulaire de contact, et l'inverse.
+test('le compteur du formulaire et celui de la connexion sont distincts', async () => {
+  const r = req('ip-partagee');
+  for (let i = 0; i <= frein.FORM_MAX; i++) await frein.formulaire(r);
+  assert.strictEqual((await frein.formulaire(r)).bloque, true, 'le formulaire est bien ferme');
+  assert.strictEqual((await frein.etat(r)).bloque, false, 'la connexion reste ouverte');
+
+  const r2 = req('ip-partagee-2');
+  for (let i = 0; i < frein.SEUIL; i++) await frein.echec(r2);
+  assert.strictEqual((await frein.etat(r2)).bloque, true, 'la connexion est bien fermee');
+  assert.strictEqual((await frein.formulaire(r2)).bloque, false, 'le formulaire reste ouvert');
 });
