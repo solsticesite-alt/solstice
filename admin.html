@@ -123,6 +123,9 @@
 
   /* ----- Messagerie ----- */
   .mail{display:grid;grid-template-columns:minmax(320px,400px) 1fr;gap:22px;padding:22px 0 60px;align-items:start;}
+  /* Sans cela, un élément de grille se dimensionne sur son contenu minimal :
+     une longue ligne de conversation élargirait toute la page. */
+  .mail > .panel{min-width:0;}
   .mlist{list-style:none;margin:0;padding:6px;max-height:72vh;overflow:auto;}
   .mrow{display:block;width:100%;text-align:left;background:transparent;border:1px solid transparent;border-radius:11px;padding:10px 12px;margin:2px 0;transition:.12s;}
   .mrow:hover{background:var(--paper-2);}
@@ -153,6 +156,21 @@
   .att:hover{border-color:var(--gold);}
   .att .sz{color:var(--stone);font-size:.74rem;}
 
+  /* ----- Fil de discussion ----- */
+  .thread{margin-top:20px;border-top:1px solid var(--line);padding-top:16px;}
+  .thread-h{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-deep);font-weight:700;margin-bottom:10px;}
+  .tmsg{border:1px solid var(--line);border-radius:11px;margin-bottom:8px;overflow:hidden;background:var(--paper);}
+  .tmsg.out{background:var(--paper-2);border-color:var(--sand);}
+  .tmsg.cur{border-color:var(--gold-soft);}
+  .tmsg-head{display:flex;align-items:baseline;gap:.6rem;width:100%;min-width:0;text-align:left;background:transparent;border:0;padding:10px 13px;}
+  .tmsg-head:hover{background:rgba(176,138,84,.06);}
+  .tmsg-who{font-weight:600;font-size:.88rem;white-space:nowrap;}
+  .tmsg-prev{color:var(--stone);font-size:.8rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0;}
+  .tmsg-date{color:var(--stone);font-size:.74rem;white-space:nowrap;flex:none;}
+  .tmsg-body{border-top:1px solid var(--line);}
+  .tmsg-body iframe{width:100%;border:0;display:block;min-height:120px;background:#fff;}
+  .tmsg .tag{font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--gold-deep);background:#efe3c8;border-radius:99px;padding:.15em .5em;flex:none;}
+
   .compose{background:var(--paper-2);border:1px solid var(--line);border-radius:14px;padding:16px;margin-top:16px;}
   .compose .to{display:grid;grid-template-columns:auto 1fr;gap:.6rem;align-items:center;margin-bottom:10px;}
   .compose .to label{margin:0;white-space:nowrap;}
@@ -167,6 +185,11 @@
   @media(max-width:820px){
     .dash{grid-template-columns:1fr;} .modal .grid2{grid-template-columns:1fr;} .row2{grid-template-columns:1fr;}
     .mail{grid-template-columns:1fr;}
+    /* L'aperçu passe à la ligne : sur un écran étroit, le nom et l'heure
+       tiennent d'abord, le reste suit. */
+    .tmsg-head{flex-wrap:wrap;}
+    .tmsg-prev{flex:1 1 100%;order:3;}
+    .tmsg-date{margin-left:auto;}
     .mail.reading .panel-list{display:none;}
     .mail:not(.reading) > .panel:last-child{display:none;}
     .mlist{max-height:none;}
@@ -389,12 +412,15 @@
 
     $('#detail').innerHTML=
       '<div class="d-head"><div><h2>'+esc(c.name||'Demande')+'</h2><div class="muted">'+esc(req.ref||'')+' · reçue le '+esc(fdate(req.createdAt))+'</div></div>'+
-        (c.email?'<a class="btn btn-sm" href="mailto:'+esc(c.email)+'">Écrire un e-mail simple</a>':'')+'</div>'+
+        (c.email?'<button class="btn btn-sm" id="d-mail">Écrire un e-mail</button>':'')+'</div>'+
       '<div class="info-grid">'+info+'</div>'+ msg +
       repliedNote +
       (req.payment ? '<div class="sent-note">Règlement choisi par le client : <b>'+(req.payment==='full'?'paiement intégral à la commande':'acompte de 50 %, solde à la livraison')+'</b></div>' : '')+
       '<div class="section-title">Facture à envoyer</div>'+
       '<div class="devis" id="devis"></div>';
+
+    var dm=$('#d-mail');
+    if(dm) dm.addEventListener('click',function(){ mailWith(c.email); });
 
     renderDevis(req);
   }
@@ -710,6 +736,7 @@
       (m.blockedImages?'<div class="mbody"><div class="imgbar"><span>'+m.blockedImages+' image(s) distante(s) bloquée(s) — elles signalent la lecture à l\'expéditeur.</span><button class="btn btn-sm" id="mimg">Afficher les images</button></div><iframe id="mframe" sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe></div>'
         :'<div class="mbody"><iframe id="mframe" sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe></div>')+
       (atts?'<div class="atts">'+atts+'</div>':'')+
+      '<div id="thread-slot"></div>'+
       '<div id="compose-slot"></div>';
 
     var fr=$('#mframe');
@@ -722,8 +749,83 @@
     $('#mstar').addEventListener('click',function(){ toggleStar(m.uid); });
     var tr=$('#mtrash'); if(tr) tr.addEventListener('click',function(){ trash(m.uid); });
     var im=$('#mimg'); if(im) im.addEventListener('click',function(){ M.images=true; fr.srcdoc=viewerDoc(m.body||'',true); im.parentNode.style.display='none'; });
-    if(M.composing&&M.composing.uid===m.uid) openCompose(M.composing.mode);
+    if(M.autoReply){ var dest=M.autoReply; M.autoReply=null; openCompose('reply',dest); }
+    else if(M.composing&&M.composing.uid===m.uid) openCompose(M.composing.mode);
+    loadThread(m);
     var go=$('#mgoreq'); if(go) go.addEventListener('click',function(){ switchTab('orders'); openRequest(linked.id); });
+  }
+
+  /* Le fil complet : les réponses qu'on a envoyées vivent dans « Envoyés »,
+     elles n'apparaîtraient jamais sous le message reçu sans cette requête. */
+  function loadThread(m){
+    var pour=m.box+':'+m.uid;
+    mapi('action=thread&box='+encodeURIComponent(m.box)+'&uid='+m.uid).then(function(r){
+      if(!M.msg||(M.msg.box+':'+M.msg.uid)!==pour) return;   // on a change de message
+      if(!r||!r.ok||!r.items) return;
+      renderThread(r.items,m);
+    }).catch(function(){});
+  }
+
+  function renderThread(items,m){
+    var slot=$('#thread-slot'); if(!slot) return;
+    var autres=items.filter(function(it){ return !(it.box===m.box&&it.uid===m.uid); });
+    if(!autres.length){ slot.innerHTML=''; return; }
+    slot.innerHTML='<div class="thread"><div class="thread-h">Conversation — '+items.length+' message'+(items.length>1?'s':'')+'</div>'+
+      items.map(function(it){
+        var courant=(it.box===m.box&&it.uid===m.uid);
+        var qui=it.outgoing?'Vous':who(it.from);
+        return '<div class="tmsg'+(it.outgoing?' out':'')+(courant?' cur':'')+'" data-box="'+esc(it.box)+'" data-uid="'+it.uid+'">'+
+          '<button class="tmsg-head" type="button"'+(courant?' disabled':'')+'>'+
+            '<span class="tmsg-who">'+esc(qui)+'</span>'+
+            (courant?'<span class="tag">affiché</span>':'')+
+            '<span class="tmsg-prev">'+esc(it.preview||it.subject||'')+'</span>'+
+            '<span class="tmsg-date">'+esc(mdate(it.date))+'</span>'+
+          '</button><div class="tmsg-body hidden"></div></div>';
+      }).join('')+'</div>';
+
+    Array.prototype.forEach.call(slot.querySelectorAll('.tmsg-head'),function(btn){
+      if(btn.disabled) return;
+      btn.addEventListener('click',function(){ toggleThreadMsg(btn.parentNode); });
+    });
+  }
+
+  function toggleThreadMsg(card){
+    var body=card.querySelector('.tmsg-body');
+    if(!body.classList.contains('hidden')){ body.classList.add('hidden'); return; }
+    body.classList.remove('hidden');
+    if(body.getAttribute('data-loaded')) return;
+    body.setAttribute('data-loaded','1');
+    body.innerHTML='<div class="skel-row"><div class="skel" style="width:70%"></div><div class="skel" style="width:90%"></div></div>';
+    var box=card.getAttribute('data-box'), uid=parseInt(card.getAttribute('data-uid'),10);
+    // « peek » : consulter le fil ne doit rien marquer comme lu.
+    mapi('action=message&peek=1&box='+encodeURIComponent(box)+'&uid='+uid).then(function(r){
+      if(!r||!r.ok){ body.innerHTML='<div class="empty">'+esc(mailError(r||{}))+'</div>'; body.removeAttribute('data-loaded'); return; }
+      body.innerHTML='<iframe sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>';
+      var fr=body.querySelector('iframe');
+      fr.addEventListener('load',function(){ fitFrame(fr); setTimeout(function(){fitFrame(fr);},300); });
+      fr.srcdoc=viewerDoc(r.message.body||'',false);
+    }).catch(function(){ body.innerHTML='<div class="empty">Erreur réseau.</div>'; body.removeAttribute('data-loaded'); });
+  }
+
+  /* Depuis une commande : reprendre l'échange s'il existe, l'ouvrir sinon. */
+  function mailWith(address){
+    if(!address) return;
+    if(!(state.me&&state.me.config&&state.me.config.imap)){ location.href='mailto:'+address; return; }
+    switchTab('mail');
+    mapi('action=find&address='+encodeURIComponent(address)).then(function(r){
+      if(r&&r.ok&&r.found){
+        var box=r.box||'inbox';
+        Array.prototype.forEach.call(document.querySelectorAll('#mboxes .chip'),function(x){
+          x.classList.toggle('on',x.getAttribute('data-box')===box);
+        });
+        M.q=''; $('#msearch').value='';
+        M.autoReply=address;
+        loadBox(box);
+        openMessage(r.uid);
+      } else {
+        newMessage(address);
+      }
+    }).catch(function(){ newMessage(address); });
   }
 
   /* Rapproche un e-mail d'une commande, par l'adresse du client. */
@@ -783,7 +885,7 @@
 
   function openCompose(mode,prefillTo){
     var m=M.msg;
-    var to=mode==='reply'?[(m.from&&m.from.address)||''].filter(Boolean).join(', '):(prefillTo||'');
+    var to=prefillTo||(mode==='reply'?((m&&m.from&&m.from.address)||''):'');
     var subject=mode==='reply'?(/^re\s*:/i.test(m.subject||'')?m.subject:'Re : '+(m.subject||'')):'';
     var sig='\n\n—\nMaison Solstice\n'+((state.settings&&state.settings.email)||'')+'\n';
     var text=mode==='reply'?sig+quoted(m):sig;

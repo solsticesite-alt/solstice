@@ -329,6 +329,143 @@ async function searchMessages(opts) {
   });
 }
 
+/* Cherche dans un dossier deja resolu et renvoie les resumes correspondants. */
+async function searchIn(client, path, criteria, limit) {
+  const lock = await client.getMailboxLock(path);
+  try {
+    const uids = await client.search(criteria, { uid: true });
+    if (!uids || !uids.length) return [];
+    const take = uids.slice(-limit);
+    const out = [];
+    for await (const msg of client.fetch(take.join(','), FETCH_FIELDS, { uid: true })) out.push(summarize(msg));
+    return out;
+  } finally {
+    lock.release();
+  }
+}
+
+/* « Re : », « TR : », « Fwd: »... : l'objet nu, pour rapprocher les messages
+   d'un meme echange meme quand les en-tetes de fil sont absents. */
+function baseSubject(s) {
+  return String(s || '')
+    .replace(/^\s*(?:(?:re|ré|rép|rep|fw|fwd|tr|transf)\s*(?:\[\d+\])?\s*:\s*)+/i, '')
+    .trim();
+}
+
+/* Tous les identifiants de message cites dans un bloc d'en-tetes. */
+function headerIds(buf) {
+  const s = buf ? buf.toString('utf8') : '';
+  return (s.match(/<[^<>\s]+>/g) || []).map((x) => x.slice(1, -1));
+}
+
+function myAddress() {
+  return String(conf().user || '').toLowerCase();
+}
+
+/* Le fil complet d'un echange : le message d'origine, les reponses recues et
+   celles qu'on a envoyees — ces dernieres vivent dans « Envoyés », d'ou la
+   recherche dans les deux dossiers. */
+async function getThread(box, uid, limitPerBox) {
+  const limit = Math.min(50, Math.max(1, Number(limitPerBox) || 30));
+  return withClient(async (client) => {
+    const f = await folders(client);
+    const path = await resolveBox(client, box);
+
+    let env = null;
+    let ids = [];
+    const lock = await client.getMailboxLock(path);
+    try {
+      const m = await client.fetchOne(String(uid),
+        { uid: true, envelope: true, headers: ['references', 'in-reply-to', 'message-id'] },
+        { uid: true });
+      if (!m) throw new Error('message_not_found');
+      env = m.envelope || {};
+      ids = headerIds(m.headers);
+      if (env.messageId) ids.push(String(env.messageId).replace(/^<|>$/g, ''));
+    } finally {
+      lock.release();
+    }
+
+    const moi = myAddress();
+    const sujet = baseSubject(env.subject);
+    const expediteur = (addrList(env.from)[0] || {}).address || '';
+    const destinataires = addrList(env.to).map((a) => a.address);
+    const correspondant = (expediteur && expediteur !== moi)
+      ? expediteur
+      : destinataires.filter((a) => a && a !== moi)[0] || '';
+
+    const parIdentifiant = [];
+    Array.from(new Set(ids.filter(Boolean))).slice(0, 8).forEach((id) => {
+      parIdentifiant.push({ header: { 'message-id': id } });
+      parIdentifiant.push({ header: { references: id } });
+      parIdentifiant.push({ header: { 'in-reply-to': id } });
+    });
+
+    const dossiers = [['inbox', 'INBOX']];
+    if (f.sent) dossiers.push(['sent', f.sent]);
+
+    const trouves = [];
+    for (let i = 0; i < dossiers.length; i++) {
+      const nom = dossiers[i][0];
+      const chemin = dossiers[i][1];
+      // Deux recherches simples plutot qu'un critere imbrique : les en-tetes
+      // de fil d'abord, puis l'objet nu pour les messageries qui les omettent.
+      if (parIdentifiant.length) {
+        try {
+          (await searchIn(client, chemin, { or: parIdentifiant }, limit))
+            .forEach((it) => trouves.push(Object.assign(it, { box: nom })));
+        } catch (e) { /* un dossier illisible ne doit pas casser le fil */ }
+      }
+      if (sujet && correspondant) {
+        try {
+          (await searchIn(client, chemin, { subject: sujet }, limit))
+            .filter((it) => {
+              const parties = [(it.from || {}).address].concat((it.to || []).map((a) => a.address));
+              return parties.indexOf(correspondant) >= 0;
+            })
+            .forEach((it) => trouves.push(Object.assign(it, { box: nom })));
+        } catch (e) { /* idem */ }
+      }
+    }
+
+    const vus = new Set();
+    const items = [];
+    trouves.forEach((it) => {
+      const cle = it.messageId || (it.box + ':' + it.uid);
+      if (vus.has(cle)) return;
+      vus.add(cle);
+      it.outgoing = Boolean(it.from && it.from.address === moi);
+      items.push(it);
+    });
+    items.sort((a, b) => String(a.date || '').localeCompare(String(b.date || '')));
+    return { items, correspondant };
+  });
+}
+
+/* Le message le plus recent echange avec une adresse, ou qu'il se trouve.
+   Sert au bouton « Écrire un e-mail » depuis une commande. */
+async function findLatestWith(address) {
+  const a = String(address || '').toLowerCase();
+  if (!a) return null;
+  return withClient(async (client) => {
+    const f = await folders(client);
+    const essais = [['inbox', 'INBOX', { or: [{ from: a }, { to: a }] }]];
+    if (f.sent) essais.push(['sent', f.sent, { to: a }]);
+    let meilleur = null;
+    for (let i = 0; i < essais.length; i++) {
+      try {
+        const trouves = await searchIn(client, essais[i][1], essais[i][2], 5);
+        trouves.forEach((it) => {
+          if (!meilleur || String(it.date || '') > String(meilleur.date || '')) {
+            meilleur = { box: essais[i][0], uid: it.uid, date: it.date };
+          }
+        });
+      } catch (e) { /* dossier absent ou illisible */ }
+    }
+    return meilleur;
+  });
+}
+
 /* Liste des messages, du plus recent au plus ancien.
    `beforeSeq` permet de charger la page suivante (messages plus anciens). */
 async function listMessages(opts) {
@@ -510,8 +647,8 @@ async function unreadCount() {
 }
 
 module.exports = {
-  imapReady, listMessages, searchMessages, getMessage, getAttachment,
+  imapReady, listMessages, searchMessages, getThread, findLatestWith, getMessage, getAttachment,
   setSeen, setFlagged, setAnswered, trashMessage, appendToSent, unreadCount,
   // Fonctions pures, couvertes par test/imap.test.js
-  preview, toText, isoDate, inlineCidImages, summarize, textNodeOf
+  preview, toText, isoDate, inlineCidImages, summarize, textNodeOf, baseSubject, headerIds
 };

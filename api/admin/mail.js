@@ -5,6 +5,8 @@
 //   GET  ?action=list        &box=inbox&limit=40&beforeSeq=0
 //   GET  ?action=search      &box=inbox&q=texte&limit=40   (sans q -> list)
 //   GET  ?action=message     &box=inbox&uid=12[&peek=1]
+//   GET  ?action=thread      &box=inbox&uid=12   -> le fil complet
+//   GET  ?action=find        &address=x@y.fr     -> ou reprendre l'echange
 //   GET  ?action=attachment  &box=inbox&uid=12&index=0     -> fichier brut
 //   GET  ?action=unread
 //   POST {action:'send'|'seen'|'flag'|'trash', ...}
@@ -59,6 +61,21 @@ async function handleGet(req, res, url) {
       ? await imap.searchMessages({ box, q, limit })
       : await imap.listMessages({ box, limit, beforeSeq: parseInt(url.searchParams.get('beforeSeq'), 10) || 0 });
     return send(res, 200, Object.assign({ ok: true }, out));
+  }
+
+  if (action === 'thread') {
+    const box = boxOf(url.searchParams.get('box'));
+    const uid = uidOf(url.searchParams.get('uid'));
+    if (!uid) return send(res, 400, { ok: false, error: 'uid_required' });
+    const out = await imap.getThread(box, uid);
+    return send(res, 200, Object.assign({ ok: true }, out));
+  }
+
+  if (action === 'find') {
+    const address = clean(url.searchParams.get('address'), 200).toLowerCase();
+    if (!isEmail(address)) return send(res, 400, { ok: false, error: 'bad_address' });
+    const hit = await imap.findLatestWith(address);
+    return send(res, 200, { ok: true, found: Boolean(hit), box: hit ? hit.box : null, uid: hit ? hit.uid : 0 });
   }
 
   if (action === 'message') {
