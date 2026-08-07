@@ -105,6 +105,13 @@
   .sent-note{background:#efe3c8;color:var(--gold-deep);border-radius:10px;padding:10px 14px;font-size:.85rem;margin-bottom:12px;}
 
   /* ----- Modal ----- */
+  /* Effacement d'une demande : discret au repos, franc une fois engagé. */
+  .rgpd-zone{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;margin-top:26px;padding-top:16px;border-top:1px solid var(--line);}
+  .rgpd-zone .muted{color:var(--stone);font-size:.78rem;flex:1 1 260px;}
+  .btn.danger{border-color:#C7A6A0;color:#8E4B3C;background:#FDF6F4;}
+  .btn.danger:hover{border-color:#8E4B3C;background:#8E4B3C;color:#fff;}
+  .modal .avert{background:#FDF6F4;border:1px solid #E7CFC9;border-radius:10px;padding:12px 14px;margin:.6rem 0 1rem;font-size:.86rem;line-height:1.55;color:#7A4436;}
+  .modal .avert b{color:#5E3227;}
   .modal-bg{position:fixed;inset:0;background:rgba(34,28,21,.5);z-index:50;display:grid;place-items:center;padding:20px;}
   .modal{background:var(--paper);border-radius:18px;width:100%;max-width:640px;max-height:88vh;overflow:auto;padding:26px 28px;}
   .modal h2{font-size:1.4rem;margin-bottom:.3rem;}
@@ -360,6 +367,8 @@
       if(r.__status===401){ state.me.authed=false; showLogin(); return; }
       if(!r.ok){ $('#reqs').innerHTML='<li class="empty">Erreur : '+esc(r.error||'')+'</li>'; return; }
       state.list=r.items||[]; renderList();
+      // Le ménage des données périmées est automatique, mais jamais silencieux.
+      if(r.purged>0) toast(r.purged+' demande'+(r.purged>1?'s':'')+' au-delà de la durée de conservation, effacée'+(r.purged>1?'s':''));
       loadBounces();
     });
   }
@@ -454,7 +463,14 @@
       repliedNote +
       (req.payment ? '<div class="sent-note">Règlement choisi par le client : <b>'+(req.payment==='full'?'paiement intégral à la commande':'acompte de 50 %, solde à la livraison')+'</b></div>' : '')+
       '<div class="section-title">Facture à envoyer</div>'+
-      '<div class="devis" id="devis"></div>';
+      '<div class="devis" id="devis"></div>'+
+      '<div class="rgpd-zone">'+
+        '<button class="btn btn-sm danger" id="d-del">Supprimer cette demande</button>'+
+        '<span class="muted">Efface définitivement les données de ce client. À utiliser s\'il exerce son droit à l\'effacement.</span>'+
+      '</div>';
+
+    var del=$('#d-del');
+    if(del) del.addEventListener('click',function(){ confirmerSuppression(req); });
 
     var dm=$('#d-mail');
     if(dm) dm.addEventListener('click',function(){ mailWith(c.email); });
@@ -1065,6 +1081,60 @@
       // Jamais pendant une rédaction : le rafraîchissement réécrirait la vue.
       if(r.unread>before && state.tab==='mail' && !M.q && M.box==='inbox' && !M.composing) loadBox('inbox');
     }).catch(function(){});
+  }
+
+  /* ---------- Effacement d'une demande (droit à l'effacement) ----------
+     Irréversible et sans corbeille : on demande donc de recopier la référence,
+     et on dit franchement ce que la suppression NE couvre pas. */
+  function confirmerSuppression(req){
+    var ref=req.ref||String(req.id);
+    var c=req.client||{};
+    var bg=document.createElement('div'); bg.className='modal-bg';
+    bg.innerHTML='<div class="modal"><h2>Supprimer la demande '+esc(ref)+'&nbsp;?</h2>'+
+      '<div class="avert"><b>Cette suppression est définitive.</b> Toutes les données de '+
+        esc(c.name||'ce client')+(c.email?' ('+esc(c.email)+')':'')+
+        ' disparaissent de la base : coordonnées, événement, sélection'+
+        (req.reply?', et la facture déjà envoyée':'')+'. Il n\'y a pas de corbeille.</div>'+
+      (req.reply
+        ? '<div class="avert"><b>Attention : une facture a été émise pour cette demande.</b> '+
+          'Les pièces comptables doivent être conservées 10 ans (obligation légale). '+
+          'Le droit à l\'effacement ne prime pas sur cette obligation : ne supprimez que si vous êtes sûr·e.</div>'
+        : '')+
+      '<p class="muted" style="font-size:.84rem;line-height:1.5;">Les e-mails échangés avec ce client restent dans votre boîte '+
+        '<b>contact@maison-solstice.fr</b>. Pour un effacement complet, supprimez-les aussi depuis l\'onglet Messages ou le webmail.</p>'+
+      '<div class="field"><label>Recopiez <b>'+esc(ref)+'</b> pour confirmer</label>'+
+        '<input id="del-ref" autocomplete="off" placeholder="'+esc(ref)+'"></div>'+
+      '<div class="devis-actions"><button class="btn btn-sm danger" id="del-go" disabled>Supprimer définitivement</button>'+
+        '<button class="btn btn-sm" id="del-no">Annuler</button>'+
+        '<span class="muted" id="del-hint"></span></div></div>';
+    document.body.appendChild(bg);
+
+    var champ=bg.querySelector('#del-ref');
+    var go=bg.querySelector('#del-go');
+    var fermer=function(){ bg.remove(); };
+    champ.addEventListener('input',function(){ go.disabled = champ.value.trim()!==ref; });
+    bg.querySelector('#del-no').addEventListener('click',fermer);
+    bg.addEventListener('click',function(e){ if(e.target===bg) fermer(); });
+    champ.focus();
+
+    go.addEventListener('click',function(){
+      if(go.disabled) return;
+      go.disabled=true; bg.querySelector('#del-hint').textContent='Suppression…';
+      api('/api/admin/request?id='+encodeURIComponent(req.id),{method:'DELETE'}).then(function(r){
+        if(!r||!r.ok){
+          bg.querySelector('#del-hint').textContent='Échec : '+esc((r&&r.error)||'inconnu');
+          go.disabled=false; return;
+        }
+        fermer();
+        state.current=null;
+        $('#detail').innerHTML='<div class="empty">Demande '+esc(ref)+' supprimée.</div>';
+        toast('Demande '+ref+' supprimée ✓');
+        loadList();
+      }).catch(function(){
+        bg.querySelector('#del-hint').textContent='Erreur réseau.';
+        go.disabled=false;
+      });
+    });
   }
 
   // ---------- Réglages (settings) ----------

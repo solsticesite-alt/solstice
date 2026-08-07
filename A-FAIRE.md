@@ -121,6 +121,9 @@ Tant qu'elles manquent, le PDF affiche des `[À COMPLÉTER]`.
 
 **b) Pages du site** :
 - **Mentions légales** : nom / statut juridique, SIRET, adresse de l'éditeur.
+- **Confidentialité** : la même identité (responsable du traitement) — c'est la
+  seule non-conformité RGPD qui reste, et elle attend la création de
+  l'entreprise. Le nom de ton comptable, une fois choisi.
 - **Conditions de location** : les `[…]` restants — délais d'annulation,
   montant/durée de la caution, frais de livraison, moyens de paiement acceptés,
   mention TTC ou HT.
@@ -128,7 +131,18 @@ Tant qu'elles manquent, le PDF affiche des `[À COMPLÉTER]`.
 - **Contact** : liens réels **Instagram** et **TikTok** (aujourd'hui `#`).
 
 > ⚠️ La numérotation des factures doit rester **continue et sans trou** : ne pas
-> supprimer une facture déjà émise.
+> supprimer une facture déjà émise. Le bouton « Supprimer cette demande » du
+> back-office t'avertit quand une facture a été émise — lis l'avertissement
+> avant de confirmer.
+
+**c) Deux réglages à vérifier chez tes hébergeurs** (données personnelles de
+tes clients, donc RGPD) :
+- **Vercel → Settings → Functions → Function Region** : choisis **Paris
+  (cdg1)** ou Francfort. Sans réglage, tes fonctions tournent par défaut aux
+  États-Unis, et les données de tes clients y transitent.
+- **Supabase → Settings → General** : vérifie que la région du projet est bien
+  en Europe. Si ce n'est pas le cas, il faut recréer le projet — mieux vaut le
+  savoir avant d'avoir de vrais clients.
 
 ---
 

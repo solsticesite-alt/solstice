@@ -71,6 +71,43 @@ la boîte mail du domaine. Ce qui le protège aujourd'hui :
 > À faire quand le besoin s'en fera sentir : une 2FA, et un second compte pour
 > séparer la lecture des commandes de l'accès à la boîte mail.
 
+### Conservation et effacement des données
+
+Les durées annoncées dans la politique de confidentialité ne sont plus
+seulement promises : **le code les applique**.
+
+| Situation | Durée | Ce qui se passe |
+|---|---|---|
+| Demande restée sans suite (aucune facture) | **3 ans** | effacée automatiquement |
+| Demande facturée (pièce comptable) | **10 ans** | conservée, puis effacée |
+
+Le balayage a lieu **au plus une fois par jour**, au moment où tu ouvres le
+back-office, et il n'est jamais silencieux : un bandeau annonce le nombre de
+demandes effacées. Trois garde-fous encadrent ce code, parce qu'une donnée
+effacée à tort ne revient pas :
+
+- une date illisible, absente ou située dans le futur **n'efface jamais rien** —
+  dans le doute, on garde ;
+- **200 suppressions au maximum** par passage, pour borner les dégâts d'une
+  erreur ;
+- c'est la date du **dernier événement** qui compte (une demande de 2020
+  facturée en 2025 reste une pièce de 2025).
+
+#### Un client demande l'effacement de ses données (art. 17)
+
+1. **Back-office → onglet Commandes → la demande → « Supprimer cette
+   demande ».** Il faut recopier la référence pour confirmer : il n'y a pas de
+   corbeille.
+2. **Supprime aussi les e-mails échangés** avec lui — onglet Messages, ou
+   directement dans le webmail OVH. La suppression en base ne les touche pas,
+   et la fenêtre de confirmation te le rappelle.
+3. **Si une facture a été émise, refuse l'effacement de la facture** et
+   explique-le au client : l'obligation comptable de 10 ans (art. L123-22 du
+   Code de commerce) prime sur le droit à l'effacement. Tu peux en revanche
+   effacer tout le reste. Le back-office t'avertit dans ce cas.
+4. **Réponds sous un mois** (art. 12.3). Un simple e-mail confirmant ce qui a
+   été effacé suffit.
+
 ---
 
 ## 3. 📋 Registre RGPD des traitements (à tenir à jour)
@@ -96,10 +133,11 @@ Chaque prestataire qui traite des données pour ton compte doit être encadré p
 
 | Sous-traitant | Rôle | Hors UE ? | Action |
 |---|---|---|---|
-| **Vercel Inc.** | Hébergement | Oui (USA) | Vérifier le DPA Vercel (clauses contractuelles types) |
-| [Service e-mail / formulaire] | Réception des demandes | À vérifier | Choisir un prestataire UE si possible ; signer le DPA |
-| [Mesure d'audience] | Statistiques | À vérifier | Privilégier une solution sans cookie / UE |
-| [Comptable / facturation] | Administratif | Non | DPA |
+| **Vercel Inc.** | Hébergement du site + exécution des fonctions serverless | Société américaine. **La région d'exécution n'est pas fixée** → tes fonctions tournent probablement aux États-Unis | Régler la région sur **Paris (cdg1)** ou Francfort : Vercel → Settings → Functions → Function Region. Puis vérifier le DPA (clauses contractuelles types) |
+| **Supabase Inc.** | Base de données : toutes les demandes clients | Société américaine, mais l'instance est dans la région choisie à la création du projet | **Vérifier la région du projet** (Settings → General). Si elle n'est pas en Europe, la migration impose de recréer le projet |
+| **OVH SAS** | Nom de domaine + messagerie `contact@maison-solstice.fr` | Non (France) | Rien à faire, DPA OVH applicable de plein droit |
+| [Comptable / facturation] | Administratif, dès la première facture | À déterminer | Signer un DPA au moment du choix |
+| _Mesure d'audience_ | — | — | **Aucun outil installé.** Si tu en ajoutes un, privilégier une solution sans cookie et hébergée en UE (Plausible, Matomo) |
 
 ---
 

@@ -11,6 +11,21 @@ module.exports = async (req, res) => {
     id = parseInt(u.searchParams.get('id'), 10);
   } catch (e) { id = NaN; }
   if (!id) return send(res, 400, { ok: false, error: 'id_required' });
+
+  // Droit a l'effacement (art. 17 RGPD) : le back-office doit pouvoir honorer
+  // la demande d'un client sans passer par la console de la base.
+  if (req.method === 'DELETE') {
+    try {
+      const r = await store.getRequest(id);
+      if (!r) return send(res, 404, { ok: false, error: 'not_found' });
+      await store.deleteRequest(id);
+      return send(res, 200, { ok: true, ref: r.ref || String(id) });
+    } catch (e) {
+      return send(res, 500, { ok: false, error: 'store_error' });
+    }
+  }
+  if (req.method !== 'GET') return send(res, 405, { ok: false, error: 'method_not_allowed' });
+
   try {
     const r = await store.getRequest(id);
     if (!r) return send(res, 404, { ok: false, error: 'not_found' });

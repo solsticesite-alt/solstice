@@ -14,7 +14,14 @@ module.exports = async (req, res) => {
   if (req.method === 'POST') {
     let b;
     try { b = await readJson(req); } catch (e) { return send(res, 400, { ok: false, error: 'invalid_body' }); }
-    const s = {
+
+    // On repart des reglages existants : enregistrer depuis le formulaire ne
+    // doit pas effacer les champs techniques qui n'y figurent pas (la date du
+    // dernier passage de balai, par exemple).
+    let actuels = {};
+    try { actuels = await store.getSettings(); } catch (e) { actuels = {}; }
+
+    const champs = {
       companyName: clean(b.companyName, 160),
       legalForm: clean(b.legalForm, 120),
       siret: clean(b.siret, 60),
@@ -31,6 +38,7 @@ module.exports = async (req, res) => {
       cautionNote: cleanMultiline(b.cautionNote, 600),
       conditions: cleanMultiline(b.conditions, 2000)
     };
+    const s = Object.assign({}, actuels, champs);
     try { return send(res, 200, { ok: true, settings: await store.saveSettings(s) }); }
     catch (e) { return send(res, 500, { ok: false, error: 'store_error' }); }
   }
