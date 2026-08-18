@@ -9,6 +9,26 @@
       "source": "/nos-univers",
       "destination": "/collections",
       "permanent": true
+    },
+    {
+      "source": "/collection-dolce-vita",
+      "destination": "/collections?u=ete",
+      "permanent": true
+    },
+    {
+      "source": "/collection-garden-party",
+      "destination": "/collections?u=ete",
+      "permanent": true
+    },
+    {
+      "source": "/collection-white-party",
+      "destination": "/collections?u=hiver",
+      "permanent": true
+    },
+    {
+      "source": "/collection-black-gold",
+      "destination": "/collections?u=hiver",
+      "permanent": true
     }
   ],
   "headers": [

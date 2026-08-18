@@ -171,8 +171,12 @@ Pour que le panier chiffre tout automatiquement, il me faut, par article :
 **nom · prix · unité (jour ou week-end) · caution · catégorie**.
 
 Et si possible :
-- le **contenu réel des packs** (pack complet / les tables), pour que les
-  collections se chiffrent au lieu d'afficher « au devis » ;
+- le **contenu réel des trois formules** (Cocktail / Table / Réception) pour
+  chacune des six collections de couleur, afin qu'elles se chiffrent au lieu
+  d'afficher « sur demande » ;
+- les **vraies couleurs** des six collections : aujourd'hui ce sont des teintes
+  d'attente (Terracotta, Vert olivier, Écru côté Été ; Bordeaux, Bleu nuit,
+  Doré côté Hiver). Donne-moi tes nuances et je les remplace partout ;
 - la **grille de livraison** (ex. offert sous X km, puis Y €), pour un total
   complet sans surprise.
 

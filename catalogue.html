@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Catalogue — Maison Solstice</title>
-<meta name="description" content="Catalogue Maison Solstice : mobilier, art de la table, décoration et lumière à louer autour d&#x27;Amiens. Filtrez par ambiance, puis demandez votre réservation.">
+<meta name="description" content="Catalogue Maison Solstice : mobilier, art de la table, décoration et lumière à louer autour d&#x27;Amiens. Filtrez par collection, par couleur ou par budget, puis demandez votre réservation.">
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#FBF8F2">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -273,10 +273,12 @@
         <div class="fb-scroll">
           <div class="fb-chips" role="group" aria-label="Ambiances rapides">
             <button type="button" class="chip on" data-chip="tout" aria-pressed="true">Tout voir</button>
-            <button type="button" class="chip" data-chip="theme:dolce" aria-pressed="false">Dolce Vita</button>
-            <button type="button" class="chip" data-chip="theme:garden" aria-pressed="false">Garden Party</button>
-            <button type="button" class="chip" data-chip="theme:white" aria-pressed="false">White Party</button>
-            <button type="button" class="chip" data-chip="theme:black" aria-pressed="false">Black &amp; Gold</button>
+            <button type="button" class="chip" data-chip="collection:terracotta" aria-pressed="false">Terracotta</button>
+            <button type="button" class="chip" data-chip="collection:olivier" aria-pressed="false">Vert olivier</button>
+            <button type="button" class="chip" data-chip="collection:ecru" aria-pressed="false">Écru</button>
+            <button type="button" class="chip" data-chip="collection:bordeaux" aria-pressed="false">Bordeaux</button>
+            <button type="button" class="chip" data-chip="collection:nuit" aria-pressed="false">Bleu nuit</button>
+            <button type="button" class="chip" data-chip="collection:dore" aria-pressed="false">Doré</button>
             <button type="button" class="chip" data-chip="marque:coeur" aria-pressed="false">Coups de cœur</button>
             <button type="button" class="chip" data-chip="marque:nouveau" aria-pressed="false">Nouveautés</button>
           </div>
@@ -325,13 +327,15 @@
           </select>
         </div>
         <div class="fb-field">
-          <label for="f-theme">Thème</label>
-          <select id="f-theme">
-            <option value="">Tous les thèmes</option>
-            <option value="dolce">Dolce Vita</option>
-            <option value="garden">Garden Party</option>
-            <option value="white">White Party</option>
-            <option value="black">Black &amp; Gold</option>
+          <label for="f-collection">Collection</label>
+          <select id="f-collection">
+            <option value="">Toutes les collections</option>
+            <option value="terracotta">Terracotta</option>
+            <option value="olivier">Vert olivier</option>
+            <option value="ecru">Écru</option>
+            <option value="bordeaux">Bordeaux</option>
+            <option value="nuit">Bleu nuit</option>
+            <option value="dore">Doré</option>
           </select>
         </div>
         <div class="fb-field">
@@ -360,7 +364,7 @@
     </form>
 
     <div class="grid grid-4 cat-grid">
-      <article class="card reveal" data-cat="mobilier" data-style="classique" data-couleur="blanc" data-theme="white black" data-saison="ete hiver" data-prix="4" data-marque="coeur">
+      <article class="card reveal" data-cat="mobilier" data-style="classique" data-couleur="blanc" data-collection="ecru dore nuit bordeaux" data-saison="ete hiver" data-prix="4" data-marque="coeur">
         <div class="card-media"><svg class="art" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-chair"/></svg>
           <span class="card-tag gold">Coup de cœur</span>
           <button class="fav" aria-label="Ajouter la chaise Napoléon aux favoris"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
@@ -371,7 +375,7 @@
         </div>
       </article>
 
-      <article class="card reveal d1" data-cat="mobilier" data-style="champetre" data-couleur="bois" data-theme="garden dolce" data-saison="ete" data-prix="18">
+      <article class="card reveal d1" data-cat="mobilier" data-style="champetre" data-couleur="bois" data-collection="olivier ecru terracotta" data-saison="ete" data-prix="18">
         <div class="card-media"><svg class="art" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-table"/></svg>
           <button class="fav" aria-label="Ajouter la table de banquet aux favoris"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
           <button class="card-add">Ajouter au panier</button>
@@ -381,7 +385,7 @@
         </div>
       </article>
 
-      <article class="card reveal d2" data-cat="ceremonie" data-style="boheme" data-couleur="bois" data-theme="garden dolce" data-saison="ete" data-prix="45" data-marque="nouveau">
+      <article class="card reveal d2" data-cat="ceremonie" data-style="boheme" data-couleur="bois" data-collection="olivier ecru terracotta" data-saison="ete" data-prix="45" data-marque="nouveau">
         <div class="card-media"><svg class="art" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-arch"/></svg>
           <span class="card-tag">Nouveau</span>
           <button class="fav" aria-label="Ajouter l'arche ronde aux favoris"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
@@ -392,7 +396,7 @@
         </div>
       </article>
 
-      <article class="card reveal d3" data-cat="table" data-style="vintage" data-couleur="fume" data-theme="black" data-saison="hiver" data-prix="9">
+      <article class="card reveal d3" data-cat="table" data-style="vintage" data-couleur="fume" data-collection="dore nuit bordeaux" data-saison="hiver" data-prix="9">
         <div class="card-media"><svg class="art" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-glass"/></svg>
           <button class="fav" aria-label="Ajouter la verrerie fumée aux favoris"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
           <button class="card-add">Ajouter au panier</button>
@@ -402,7 +406,7 @@
         </div>
       </article>
 
-      <article class="card reveal" data-cat="table" data-style="baroque" data-couleur="dore" data-theme="black dolce" data-saison="ete hiver" data-prix="12" data-marque="coeur">
+      <article class="card reveal" data-cat="table" data-style="baroque" data-couleur="dore" data-collection="dore nuit bordeaux terracotta olivier" data-saison="ete hiver" data-prix="12" data-marque="coeur">
         <div class="card-media"><svg class="art" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-cutlery"/></svg>
           <span class="card-tag gold">Coup de cœur</span>
           <button class="fav" aria-label="Ajouter la ménagère dorée aux favoris"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
@@ -413,7 +417,7 @@
         </div>
       </article>
 
-      <article class="card reveal d1" data-cat="animations" data-style="vintage" data-couleur="bois" data-theme="garden" data-saison="ete" data-prix="90" data-marque="coeur">
+      <article class="card reveal d1" data-cat="animations" data-style="vintage" data-couleur="bois" data-collection="olivier ecru" data-saison="ete" data-prix="90" data-marque="coeur">
         <div class="card-media"><svg class="art" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-camera"/></svg>
           <span class="card-tag gold">Coup de cœur</span>
           <button class="fav" aria-label="Ajouter le photobooth vintage aux favoris"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
@@ -424,7 +428,7 @@
         </div>
       </article>
 
-      <article class="card reveal d2" data-cat="lumiere" data-style="champetre" data-couleur="dore" data-theme="garden dolce" data-saison="ete" data-prix="15">
+      <article class="card reveal d2" data-cat="lumiere" data-style="champetre" data-couleur="dore" data-collection="olivier ecru terracotta" data-saison="ete" data-prix="15">
         <div class="card-media"><svg class="art" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-lantern"/></svg>
           <span class="card-tag">Nouveau</span>
           <button class="fav" aria-label="Ajouter la guirlande guinguette aux favoris"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
@@ -435,7 +439,7 @@
         </div>
       </article>
 
-      <article class="card reveal d3" data-cat="exterieur" data-style="minimal" data-couleur="fume" data-theme="garden" data-saison="hiver" data-prix="35">
+      <article class="card reveal d3" data-cat="exterieur" data-style="minimal" data-couleur="fume" data-collection="olivier ecru" data-saison="hiver" data-prix="35">
         <div class="card-media"><svg class="art" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-sun"/></svg>
           <button class="fav" aria-label="Ajouter le brasero convivial aux favoris"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
           <button class="card-add">Ajouter au panier</button>
@@ -445,7 +449,7 @@
         </div>
       </article>
 
-      <article class="card reveal" data-cat="decoration" data-style="champetre" data-couleur="vert" data-theme="garden white" data-saison="ete" data-prix="6">
+      <article class="card reveal" data-cat="decoration" data-style="champetre" data-couleur="vert" data-collection="olivier ecru dore" data-saison="ete" data-prix="6">
         <div class="card-media"><svg class="art" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-foliage"/></svg>
           <button class="fav" aria-label="Ajouter le chemin de table eucalyptus aux favoris"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
           <button class="card-add">Ajouter au panier</button>
@@ -455,7 +459,7 @@
         </div>
       </article>
 
-      <article class="card reveal d1" data-cat="decoration" data-style="boheme" data-couleur="terracotta" data-theme="dolce" data-saison="ete" data-prix="14">
+      <article class="card reveal d1" data-cat="decoration" data-style="boheme" data-couleur="terracotta" data-collection="terracotta olivier" data-saison="ete" data-prix="14">
         <div class="card-media"><svg class="art" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-vase"/></svg>
           <span class="card-tag">Nouveau</span>
           <button class="fav" aria-label="Ajouter le centre de table fleuri aux favoris"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
@@ -466,7 +470,7 @@
         </div>
       </article>
 
-      <article class="card reveal d2" data-cat="lumiere" data-style="minimal" data-couleur="blanc" data-theme="white black" data-saison="hiver" data-prix="3">
+      <article class="card reveal d2" data-cat="lumiere" data-style="minimal" data-couleur="blanc" data-collection="ecru dore nuit bordeaux" data-saison="hiver" data-prix="3">
         <div class="card-media"><svg class="art" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-candles"/></svg>
           <button class="fav" aria-label="Ajouter les photophores aux favoris"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
           <button class="card-add">Ajouter au panier</button>
@@ -476,7 +480,7 @@
         </div>
       </article>
 
-      <article class="card reveal d3" data-cat="table" data-style="minimal" data-couleur="blanc" data-theme="white dolce" data-saison="ete hiver" data-prix="8">
+      <article class="card reveal d3" data-cat="table" data-style="minimal" data-couleur="blanc" data-collection="ecru dore terracotta olivier" data-saison="ete hiver" data-prix="8">
         <div class="card-media"><svg class="art" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-doc"/></svg>
           <button class="fav" aria-label="Ajouter la nappe en lin lavé aux favoris"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
           <button class="card-add">Ajouter au panier</button>
@@ -547,7 +551,7 @@
     { cle: 'cat',     id: 'f-categorie' },
     { cle: 'style',   id: 'f-style' },
     { cle: 'couleur', id: 'f-couleur' },
-    { cle: 'theme',   id: 'f-theme' },
+    { cle: 'collection', id: 'f-collection' },
     { cle: 'saison',  id: 'f-saison' },
     { cle: 'prix',    id: 'f-prix' }
   ];
@@ -585,7 +589,7 @@
     return contient(carte, 'cat', valeur('cat'))
         && contient(carte, 'style', valeur('style'))
         && contient(carte, 'couleur', valeur('couleur'))
-        && contient(carte, 'theme', valeur('theme'))
+        && contient(carte, 'collection', valeur('collection'))
         && contient(carte, 'saison', valeur('saison'))
         && contient(carte, 'marque', marque)
         && dansLaTranche(carte, valeur('prix'));
@@ -623,12 +627,12 @@
   }
 
   function synchroniserPastilles() {
-    var theme = valeur('theme');
+    var collection = valeur('collection');
     var rien = !actif();
     pastilles.forEach(function (p) {
       var v = p.getAttribute('data-chip');
       var on = v === 'tout' ? rien
-             : v === 'theme:' + theme ? true
+             : v === 'collection:' + collection ? true
              : v === 'marque:' + marque ? true
              : false;
       p.classList.toggle('on', on);
@@ -660,8 +664,8 @@
       var quoi = v.slice(0, sep), val = v.slice(sep + 1);
       if (quoi === 'marque') {
         marque = (marque === val) ? '' : val;
-      } else if (quoi === 'theme') {
-        var sel = document.getElementById('f-theme');
+      } else if (quoi === 'collection') {
+        var sel = document.getElementById('f-collection');
         if (sel) sel.value = (sel.value === val) ? '' : val;
       }
       appliquer();

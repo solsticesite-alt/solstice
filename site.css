@@ -298,6 +298,8 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opa
   .uni-band{border-radius:clamp(14px,3vw,20px);padding:.7rem .9rem;gap:.35rem .7rem;}
 }
 .col-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(16px,2.2vw,28px);}
+.col-grid-3{grid-template-columns:repeat(3,1fr);}
+@media (max-width:980px){.col-grid-3{grid-template-columns:repeat(2,1fr);}}
 .col-card{position:relative;display:flex;flex-direction:column;border:1px solid var(--line);border-radius:clamp(16px,1.8vw,22px);overflow:hidden;background:var(--paper);box-shadow:0 26px 54px -40px rgba(60,40,18,.45);transition:transform .5s cubic-bezier(.2,.7,.2,1),box-shadow .5s,border-color .5s;}
 .col-card:hover{transform:translateY(-6px);box-shadow:0 46px 80px -44px rgba(60,40,18,.5);border-color:var(--gold-soft);}
 .col-card:focus-visible{outline:2px solid var(--gold-deep);outline-offset:3px;}
@@ -305,10 +307,14 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opa
 .col-top::after{content:"";position:absolute;inset:0;background:radial-gradient(58% 62% at 50% 38%,rgba(255,255,255,.4),transparent 72%);}
 .col-top .glyph{position:relative;z-index:1;width:clamp(78px,10vw,112px);height:auto;filter:drop-shadow(0 16px 24px rgba(40,25,10,.24));transition:transform .5s cubic-bezier(.2,.7,.2,1);}
 .col-card:hover .col-top .glyph{transform:translateY(-4px) scale(1.05);}
-.ct-dolce{background:linear-gradient(158deg,var(--ete-1),var(--ete-2) 60%,var(--ete-3));}
-.ct-garden{background:linear-gradient(158deg,var(--sand),var(--gold-soft) 55%,var(--gold-deep));}
-.ct-black{background:linear-gradient(158deg,var(--hiver-1),var(--hiver-2) 55%,var(--hiver-3));}
-.ct-white{background:linear-gradient(158deg,var(--paper-2),var(--sand) 45%,var(--sand-2));}
+/* Une teinte par collection. Ce sont des couleurs d'attente : elles seront
+   remplacées par les vraies nuances de la maison. */
+.ct-terracotta{background:linear-gradient(158deg,#E8A784,#C97B5A 58%,#9C5539);}
+.ct-olivier{background:linear-gradient(158deg,#A8B583,#7C8B5A 58%,#586640);}
+.ct-ecru{background:linear-gradient(158deg,#FBF8F2,#EDE4D3 46%,#D6C4A4);}
+.ct-bordeaux{background:linear-gradient(158deg,#A34A57,#7A2F3A 58%,#4A1B24);}
+.ct-nuit{background:linear-gradient(158deg,#51648A,#2C3A54 58%,#182031);}
+.ct-dore{background:linear-gradient(158deg,#DCBB80,#B08A54 55%,#7C5F33);}
 .col-tag{position:absolute;z-index:2;top:13px;left:13px;font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:var(--ink-soft);background:rgba(251,248,242,.92);border:1px solid rgba(34,28,21,.07);padding:.5em .85em;border-radius:99px;}
 .col-body{padding:clamp(18px,2.4vw,28px);display:flex;flex-direction:column;gap:.5rem;flex:1;}
 .col-body h3{font-size:clamp(1.3rem,2.2vw,1.8rem);}
@@ -376,30 +382,66 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opa
 .coll-hero-art{position:relative;border-radius:clamp(16px,2vw,24px);min-height:clamp(130px,12vw,165px);display:grid;place-items:center;overflow:hidden;box-shadow:0 30px 60px -40px rgba(60,40,18,.5);}
 .coll-hero-art .glyph{width:clamp(78px,8vw,105px);height:auto;filter:drop-shadow(0 18px 26px rgba(40,25,10,.24));}
 .coll-hero .pal{margin:.8rem 0 0;}
-.formulas{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,2.4vw,28px);}
-.formula{position:relative;border:1px solid var(--line);border-radius:clamp(14px,1.8vw,20px);background:var(--paper);padding:clamp(24px,3vw,38px);display:flex;flex-direction:column;gap:.7rem;box-shadow:0 24px 50px -42px rgba(60,40,18,.5);transition:transform .45s cubic-bezier(.2,.7,.2,1),box-shadow .45s;}
-.formula:hover{transform:translateY(-4px);box-shadow:0 40px 70px -44px rgba(60,40,18,.55);}
-.formula.is-table{background:var(--paper-2);}
+/* ----- Les trois formules -----
+   Trois panneaux côte à côte : celui qu'on survole s'élargit, les autres se
+   rétractent en ne gardant que leur nom. C'est la largeur qui bouge, pas la
+   position, donc rien ne saute autour. Au doigt (mobile), c'est le clic qui
+   déclenche l'ouverture et les panneaux s'empilent. */
+.formulas{display:flex;align-items:stretch;gap:clamp(12px,1.6vw,20px);}
+.formula{position:relative;flex:1 1 0;min-width:0;overflow:hidden;
+  border:1px solid var(--line);border-radius:clamp(14px,1.8vw,20px);background:var(--paper-2);
+  padding:clamp(22px,2.6vw,34px);display:flex;flex-direction:column;gap:.6rem;
+  box-shadow:0 24px 50px -42px rgba(60,40,18,.5);
+  transition:flex-grow .55s cubic-bezier(.2,.7,.2,1),background .45s,border-color .45s,box-shadow .45s;}
+.formula.on{flex-grow:2.6;background:var(--paper);border-color:var(--gold-soft);box-shadow:0 38px 68px -44px rgba(60,40,18,.55);}
+/* Panneau replié : le nom SEUL, centré, et toute la surface est cliquable. */
+.formula:not(.on){justify-content:center;text-align:center;cursor:pointer;}
+.formula:not(.on):hover{border-color:var(--gold-soft);}
+.formula:not(.on) .fk,
+.formula:not(.on) .fav{display:none;}
+.f-hint{font-size:.8rem;color:var(--stone);margin:0 0 clamp(14px,1.8vw,20px);}
 .formula .fk{font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-deep);font-weight:600;}
-.formula h3{font-size:clamp(1.4rem,2.4vw,1.9rem);margin:.15rem 0 .1rem;}
-.formula > p{font-size:.92rem;color:var(--ink-soft);}
+.formula h3{font-size:clamp(1.3rem,2.2vw,1.85rem);margin:.15rem 0 .1rem;}
+.f-head{font:inherit;color:inherit;background:none;border:none;padding:0;text-align:inherit;cursor:pointer;}
+.f-head:focus-visible{outline:2px solid var(--gold-deep);outline-offset:4px;border-radius:6px;}
+.formula:not(.on) .f-head::after{content:"";position:absolute;inset:0;}
+.f-body{display:flex;flex-direction:column;gap:.6rem;flex:1;}
+.formula:not(.on) .f-body{display:none;}
+.formula.on .f-body{animation:fbIn .5s cubic-bezier(.2,.7,.2,1) .1s both;}
+@keyframes fbIn{from{opacity:0;transform:translateY(9px);}to{opacity:1;transform:none;}}
+.f-body > p{font-size:.92rem;color:var(--ink-soft);}
 .formula ul{list-style:none;padding:0;margin:.3rem 0 .2rem;display:flex;flex-direction:column;gap:.4rem;}
 .formula li{font-size:.86rem;color:var(--ink-soft);padding-left:1.3em;position:relative;}
 .formula li::before{content:"";position:absolute;left:0;top:.55em;width:7px;height:7px;border-radius:50%;background:var(--gold-soft);}
 .formula .btn{margin-top:auto;width:100%;}
+/* La formule qui réunit les deux autres mérite d'être signalée. */
+.formula.is-full.on{background:linear-gradient(168deg,var(--paper),var(--sand) 240%);}
+@media (prefers-reduced-motion:reduce){
+  .formula{transition:none;}
+  .formula.on .f-body{animation:none;}
+}
 .coll-nav{display:flex;flex-wrap:wrap;gap:.8rem;justify-content:center;margin-top:clamp(30px,4.4vw,52px);}
 .coll-nav a{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:var(--gold-deep);border:1px solid var(--line);border-radius:99px;padding:.7em 1.3em;transition:background .3s,color .3s,border-color .3s;}
 .coll-nav a:hover{background:var(--gold);color:#fff;border-color:var(--gold);}
 .coll-allback{text-align:center;margin-bottom:clamp(20px,3vw,32px);}
 @media (max-width:860px){
-  /* Sur mobile on garde le visuel, mais reduit a une bande : les deux
+  /* Sur mobile on garde le visuel, mais reduit a une bande : les trois
      formules doivent apparaitre au premier ecran. */
   .coll-hero{grid-template-columns:104px 1fr;gap:14px;align-items:center;}
   .coll-hero-art{order:-1;min-height:104px;}
   .coll-hero-art .glyph{width:58px;}
   .coll-hero .lead{font-size:.92rem;}
   .coll-hero .pal{margin-top:.5rem;}
-  .formulas{grid-template-columns:1fr;}
+  /* Les panneaux s'empilent : ce n'est plus la largeur qui s'ouvre mais la
+     hauteur, et c'est le doigt qui commande. */
+  .formulas{flex-direction:column;}
+  .formula{flex:0 0 auto;padding:clamp(16px,4vw,22px);}
+  .formula.on{flex-grow:0;}
+  .formula:not(.on){text-align:left;padding-block:clamp(14px,3.4vw,18px);}
+  .formula:not(.on) h3{margin:.05rem 0 0;}
+  .formula:not(.on)::after{content:"";position:absolute;right:clamp(16px,4vw,22px);top:50%;
+    width:9px;height:9px;margin-top:-6px;border-right:2px solid var(--gold);border-bottom:2px solid var(--gold);
+    transform:rotate(45deg);opacity:.7;}
 }
 
 /* ---------- Pop-up 2 : options complémentaires (avec vignettes) ---------- */

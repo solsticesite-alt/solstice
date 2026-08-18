@@ -49,6 +49,21 @@ inspiration d'une marque lifestyle, avec un **niveau d'accompagnement au choix**
 
 ## 3. Le système de collections (le cœur)
 
+> **État du site en août 2026.** Les collections sont organisées **par
+> couleur**, pas encore par ambiance nommée : trois côté Solstice d'Été
+> (Terracotta, Vert olivier, Écru), trois côté Solstice d'Hiver (Bordeaux,
+> Bleu nuit, Doré), la répartition se faisant sur la teinte. Chacune se
+> décline en **trois formules** — *Cocktail* (le moment apéritif), *Table*
+> (le moment repas), *Réception* (les deux réunis).
+>
+> Les couleurs actuelles sont des valeurs d'attente, à remplacer par les
+> vraies nuances de la maison.
+>
+> Les collections nommées décrites ci-dessous (Dolce Vita, Velvet, Nocturne…)
+> restent l'horizon : elles demandent une identité visuelle et un contenu que
+> le catalogue réel n'a pas encore. Elles viendront **par-dessus** les
+> couleurs, pas à leur place.
+
 Chaque collection fonctionne comme une collection de mode : **un nom, une
 histoire, une palette, des matières, une ambiance musicale, une inspiration
 culinaire, une scénographie.** On ne dit pas « pack bohème », on raconte une

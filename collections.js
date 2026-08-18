@@ -12,7 +12,21 @@
   /* `per` définit l'ajustement selon le nombre d'invités :
      g = par invité · t = par tablée de 8 · d = par tranche de 12
      v = par tranche de 20 · f = quantité fixe */
-  function tableItems(signature) {
+  /* Trois formules dans chaque collection : le moment apéritif, le moment
+     repas, ou les deux réunis. La pièce signature n'est ajoutée qu'une fois,
+     tout à la fin, pour qu'elle n'apparaisse pas en double dans Réception. */
+  function cocktailItems() {
+    return [
+      { n: 'Mange-debout + housse', per: 'd', q: 1 },
+      { n: 'Verres à cocktail', s: 'coupe + tumbler', per: 'g', q: 2 },
+      { n: 'Bar & desserte', per: 'v', q: 1 },
+      { n: 'Seau à champagne', per: 'd', q: 1 },
+      { n: 'Plateaux de service', per: 'd', q: 1 },
+      { n: 'Serviettes cocktail', per: 'g', q: 2 },
+      { n: 'Guirlande lumineuse', per: 'v', q: 1 }
+    ];
+  }
+  function tableItems() {
     return [
       { n: 'Nappe en lin', per: 't', q: 1 },
       { n: 'Chemin de table', per: 't', q: 1 },
@@ -22,53 +36,87 @@
       { n: 'Serviettes en tissu', per: 'g', q: 1 },
       { n: 'Marque-places', per: 'g', q: 1 },
       { n: 'Centre de table', s: 'vase + fleurs de saison', per: 't', q: 1 },
-      { n: 'Photophores & bougies', per: 't', q: 3 },
-      { n: signature, s: 'touche signature', per: 't', q: 1 }
+      { n: 'Photophores & bougies', per: 't', q: 3 }
     ];
   }
-  function packItems(signature) {
+  function receptionItems() {
     return [{ n: 'Table (8 couverts)', per: 't', q: 1 }, { n: 'Chaises', per: 'g', q: 1 }]
-      .concat(tableItems(signature))
+      .concat(cocktailItems())
+      .concat(tableItems())
       .concat([
-        { n: 'Mange-debout', s: 'espace apéritif', per: 'd', q: 1 },
-        { n: 'Guirlande lumineuse', per: 'v', q: 1 },
         { n: 'Arche décor photo', per: 'f', q: 1 },
         { n: 'Coin lounge', s: 'fauteuils & table basse', per: 'f', q: 1 }
       ]);
   }
 
+  var FORMULES = {
+    cocktail: {
+      titre: 'Cocktail',
+      resume: 'Le moment apéritif : on reçoit debout, un verre à la main.',
+      items: cocktailItems
+    },
+    table: {
+      titre: 'Table',
+      resume: 'Le moment repas : une table dressée du linge aux bougies.',
+      items: tableItems
+    },
+    reception: {
+      titre: 'Réception',
+      resume: 'Les deux réunis, du premier verre au dessert. Rien à compléter.',
+      items: receptionItems
+    }
+  };
+
+  function itemsFor(kind, signature) {
+    var f = FORMULES[kind] || FORMULES.cocktail;
+    return f.items().concat([{ n: signature, s: 'touche signature', per: 't', q: 1 }]);
+  }
+
+  /* Les collections sont désormais organisées par COULEUR, et rattachées à
+     l'un des deux solstices selon la teinte. Couleurs d'attente : elles seront
+     remplacées par les vraies nuances de la maison. */
   var COLS = {
-    dolce: {
-      name: 'Dolce Vita', uni: "Solstice d'Été", univers: 'ete', sig: "Citrons & branches d'olivier",
-      desc: "Un dîner d'été sous les citronniers : lin naturel, citrons et lumière dorée.",
-      page: '/collection-dolce-vita'
+    terracotta: {
+      name: 'Terracotta', uni: "Solstice d'Été", univers: 'ete', sig: "Poteries & branches d'olivier",
+      desc: 'Terre cuite, ocre et lumière rasante. La chaleur du Sud sur une grande tablée.',
+      page: '/collection-terracotta'
     },
-    garden: {
-      name: 'Garden Party', uni: "Solstice d'Été", univers: 'ete', sig: 'Bouquet champêtre',
-      desc: 'Verdure douce, guinguette chic et vaisselle champêtre. Recevoir au jardin.',
-      page: '/collection-garden-party'
+    olivier: {
+      name: 'Vert olivier', uni: "Solstice d'Été", univers: 'ete', sig: "Feuillage d'eucalyptus",
+      desc: 'Vert olivier, feuillages et lin naturel. Recevoir au jardin, simplement.',
+      page: '/collection-olivier'
     },
-    black: {
-      name: 'Black & Gold', uni: "Solstice d'Hiver", univers: 'hiver', sig: 'Chandeliers dorés',
-      desc: "Noir profond, dorures et éclat des grands soirs. L'élégance des fêtes.",
-      page: '/collection-black-gold'
+    ecru: {
+      name: 'Écru', uni: "Solstice d'Été", univers: 'ete', sig: 'Lin lavé & herbes de pampa',
+      desc: "Écru, lin lavé et blanc cassé. La douceur d'une table lumineuse, presque nue.",
+      page: '/collection-ecru'
     },
-    white: {
-      name: 'White Party', uni: "Solstice d'Hiver", univers: 'hiver', sig: 'Photophores givrés',
-      desc: 'Total look immaculé, épuré et givré. La clarté d’un hiver lumineux.',
-      page: '/collection-white-party'
+    bordeaux: {
+      name: 'Bordeaux', uni: "Solstice d'Hiver", univers: 'hiver', sig: 'Velours & fruits rouges',
+      desc: "Bordeaux profond, velours et cuivre. Les grands soirs d'automne et d'hiver.",
+      page: '/collection-bordeaux'
+    },
+    nuit: {
+      name: 'Bleu nuit', uni: "Solstice d'Hiver", univers: 'hiver', sig: 'Photophores givrés',
+      desc: 'Bleu nuit, argent et bougies. Une réception feutrée sous les lumières basses.',
+      page: '/collection-bleu-nuit'
+    },
+    dore: {
+      name: 'Doré', uni: "Solstice d'Hiver", univers: 'hiver', sig: 'Chandeliers dorés',
+      desc: "Or et noir, éclat des fêtes. L'élégance des réveillons et des grandes occasions.",
+      page: '/collection-dore'
     }
   };
 
   /* Options complémentaires — exemples, à remplacer par les vraies pièces.
      `g` = visuel (symbole du sprite), `t` = teinte de la vignette. */
   var SUGGESTIONS = [
-    { n: 'Mange-debout + housse', d: "Pour l'apéritif d'accueil", g: 'g3-table', t: 'ct-garden' },
-    { n: 'Arche fleurie', d: 'Le coin photo des invités', g: 'g3-arch', t: 'ct-dolce' },
-    { n: 'Coin lounge', d: 'Fauteuils, tapis et table basse', g: 'g3-chair', t: 'ct-white' },
-    { n: 'Brasero', d: 'Pour prolonger la soirée dehors', g: 'g3-lantern', t: 'ct-black' },
-    { n: 'Bar à champagne', d: 'Verrerie, seau et desserte', g: 'g3-glass', t: 'ct-dolce' },
-    { n: 'Guirlandes lumineuses', d: 'Pour habiller le ciel', g: 'g3-lights', t: 'ct-garden' }
+    { n: 'Mange-debout + housse', d: "Pour l'apéritif d'accueil", g: 'g3-table', t: 'ct-olivier' },
+    { n: 'Arche fleurie', d: 'Le coin photo des invités', g: 'g3-arch', t: 'ct-terracotta' },
+    { n: 'Coin lounge', d: 'Fauteuils, tapis et table basse', g: 'g3-chair', t: 'ct-ecru' },
+    { n: 'Brasero', d: 'Pour prolonger la soirée dehors', g: 'g3-lantern', t: 'ct-nuit' },
+    { n: 'Bar à champagne', d: 'Verrerie, seau et desserte', g: 'g3-glass', t: 'ct-bordeaux' },
+    { n: 'Guirlandes lumineuses', d: 'Pour habiller le ciel', g: 'g3-lights', t: 'ct-dore' }
   ];
 
   function qtyFor(item, g) {
@@ -143,7 +191,7 @@
         osGrid = optRoot.querySelector('#osGrid'),
         osDone = optRoot.querySelector('#osDone');
 
-    var state = { col: null, kind: 'pack', guests: DEFAULT_GUESTS, added: [] };
+    var state = { col: null, kind: 'cocktail', guests: DEFAULT_GUESTS, added: [] };
     var lastFocus = null;
 
     GUEST_STEPS.forEach(function (n) {
@@ -157,7 +205,7 @@
     function currentItems() {
       var c = COLS[state.col];
       if (!c) return [];
-      return state.kind === 'pack' ? packItems(c.sig) : tableItems(c.sig);
+      return itemsFor(state.kind, c.sig);
     }
     function renderList() {
       var total = 0, html = '';
@@ -176,13 +224,12 @@
     function open(colKey, kind) {
       var c = COLS[colKey];
       if (!c) return;
-      state.col = colKey; state.kind = kind;
+      var f = FORMULES[kind] || FORMULES.cocktail;
+      state.col = colKey; state.kind = FORMULES[kind] ? kind : 'cocktail';
       state.guests = parseInt(elGuests.value, 10) || DEFAULT_GUESTS;
       elKicker.textContent = c.uni + ' · ' + c.name;
-      elTitle.textContent = kind === 'pack' ? 'Le pack complet' : 'Les tables';
-      elDesc.textContent = kind === 'pack'
-        ? c.desc + ' Le décor entier : mobilier, art de la table, décoration et lumière.'
-        : c.desc + ' Ici, uniquement la décoration de table.';
+      elTitle.textContent = f.titre;
+      elDesc.textContent = c.desc + ' ' + f.resume;
       renderList();
       lastFocus = document.activeElement;
       show(root);
@@ -255,7 +302,7 @@
     elAdd.addEventListener('click', function () {
       if (!window.SolCart) return;
       var c = COLS[state.col];
-      var label = (state.kind === 'pack' ? 'Pack complet' : 'Les tables') + ' · ' + c.name;
+      var label = (FORMULES[state.kind] || FORMULES.cocktail).titre + ' · ' + c.name;
       var prefix = state.col + '-' + state.kind + '-';
       currentItems().forEach(function (it) {
         window.SolCart.add({
@@ -265,8 +312,9 @@
         });
       });
       hide(root, false);
-      /* Les options ne sont proposées qu'après coup, et seulement pour une table. */
-      if (state.kind === 'table') openOptions();
+      /* Les options ne sont proposées qu'après coup. Inutile après Réception,
+         qui contient déjà tout ce qu'on proposerait d'ajouter. */
+      if (state.kind !== 'reception') openOptions();
       else if (lastFocus && lastFocus.focus) lastFocus.focus();
     });
 
@@ -289,8 +337,8 @@
     var intro = document.getElementById('collIntro');
     if (intro) {
       intro.textContent = u === 'ete'
-        ? "Deux ambiances d'été, en pack complet ou en décoration de table."
-        : "Deux ambiances d'hiver, en pack complet ou en décoration de table.";
+        ? "Les couleurs d'été, en cocktail, en table ou en réception complète."
+        : "Les couleurs d'hiver, en cocktail, en table ou en réception complète.";
     }
     var h1 = document.getElementById('collTitle');
     if (h1) h1.textContent = u === 'ete' ? "Les collections d'Été" : "Les collections d'Hiver";
@@ -298,9 +346,60 @@
     if (all) all.hidden = false;
   }
 
+  /* ---------- Les trois formules d'une collection ----------
+     Un seul panneau ouvert à la fois. À la souris, le survol suffit ; au doigt
+     et au clavier, c'est le clic (ou le focus) qui commande.
+
+     Le survol est branché SANS condition, volontairement. Interroger
+     `matchMedia('(hover:hover)')` paraissait plus fin, mais il suffit qu'un
+     navigateur réponde mal — c'est le cas de certains environnements sans
+     souris déclarée — pour que la fonction disparaisse entièrement. Et sur
+     un écran tactile, un appui déclenche `mouseenter` juste avant `click` :
+     comme les deux font exactement la même chose ici, ça ne gêne pas. */
+  function initFormules() {
+    var bloc = document.querySelector('.formulas');
+    if (!bloc) return;
+    var panneaux = [].slice.call(bloc.querySelectorAll('.formula'));
+    if (panneaux.length < 2) return;
+
+    function ouvrir(p) {
+      if (p.classList.contains('on')) return;
+      panneaux.forEach(function (autre) {
+        var actif = autre === p;
+        autre.classList.toggle('on', actif);
+        var tete = autre.querySelector('.f-head');
+        if (tete) tete.setAttribute('aria-expanded', actif ? 'true' : 'false');
+      });
+    }
+
+    panneaux.forEach(function (p) {
+      p.addEventListener('mouseenter', function () { ouvrir(p); });
+      // Le clic vaut partout : c'est le seul geste disponible au doigt, et il
+      // reste utile à la souris pour figer un choix.
+      p.addEventListener('click', function (e) {
+        if (e.target.closest('.offer-btn, .fav')) return; // ces boutons ont leur propre rôle
+        ouvrir(p);
+      });
+      var tete = p.querySelector('.f-head');
+      if (tete) tete.addEventListener('focus', function () { ouvrir(p); });
+    });
+
+    // Flèches gauche/droite pour parcourir les formules au clavier.
+    bloc.addEventListener('keydown', function (e) {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      var i = panneaux.indexOf(e.target.closest('.formula'));
+      if (i < 0) return;
+      e.preventDefault();
+      var j = (i + (e.key === 'ArrowRight' ? 1 : panneaux.length - 1)) % panneaux.length;
+      var tete = panneaux[j].querySelector('.f-head');
+      if (tete) tete.focus();
+      ouvrir(panneaux[j]);
+    });
+  }
+
   function onReady(fn) {
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn);
     else fn();
   }
-  onReady(function () { applyUniversFilter(); init(); });
+  onReady(function () { applyUniversFilter(); initFormules(); init(); });
 })();

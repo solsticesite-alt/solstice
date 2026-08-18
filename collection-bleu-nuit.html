@@ -3,54 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Nos collections — Maison Solstice</title>
-<meta name="description" content="Les collections Maison Solstice, organisées par couleur : trois pour le Solstice d&#x27;Été, trois pour le Solstice d&#x27;Hiver. Chacune en cocktail, en table ou en réception complète.">
+<title>Bleu nuit — Maison Solstice</title>
+<meta name="description" content="Collection Bleu nuit (Solstice d&#x27;Hiver) : Bleu nuit, argent et bougies. Une réception feutrée sous les lumières basses. Trois formules — cocktail, table ou réception complète, aux quantités ajustées au nombre d&#x27;invités.">
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#FBF8F2">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/site.css">
-<style>
-/* ===== Les deux univers, sous la grille des collections =====
-   Meme carte encadree des deux cotes : l'ete en dore, l'hiver en sombre
-   (classe .dark deja fournie par site.css). */
-#collections{padding-bottom:clamp(22px,3vw,42px);}
-.uni-ete-sec,.uni-hiver-sec{padding-block:clamp(18px,2.4vw,34px);}
-.uni-ete-sec > .wrap{background:linear-gradient(160deg,var(--ete-1),var(--ete-2) 62%,var(--ete-3));border-radius:clamp(20px,2.6vw,34px);padding-block:clamp(30px,4vw,54px);padding-inline:clamp(26px,4vw,58px);box-shadow:0 44px 84px -58px rgba(60,40,18,.55);}
-.uni-hiver-sec > .wrap{padding-block:clamp(30px,4vw,54px);}
-.uni-ete-sec .eyebrow{color:var(--hiver-1);}
-.uni-ete-sec .eyebrow::before{background:var(--hiver-1);opacity:.6;}
-.uni-ete-sec h2,.uni-ete-sec .lead{color:var(--ink);}
-.uni-hiver-sec .lead{color:var(--paper);}
-
-.uni-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(26px,4vw,56px);align-items:center;}
-.uni-copy{display:flex;flex-direction:column;gap:.95rem;}
-.uni-copy h2{font-size:clamp(1.6rem,3.2vw,2.4rem);}
-.uni-copy .lead{margin:0;max-width:52ch;}
-
-.kw-list{display:flex;flex-wrap:wrap;gap:.45rem;list-style:none;padding:0;margin:.1rem 0 0;}
-.kw-list li{font-size:.64rem;letter-spacing:.15em;text-transform:uppercase;padding:.45em .85em;border-radius:99px;}
-.uni-ete-sec .kw-list li{border:1px solid rgba(34,28,21,.26);background:rgba(255,255,255,.16);color:var(--ink);}
-.uni-hiver-sec .kw-list li{border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.05);color:var(--paper);}
-
-.assoc{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1rem;margin-top:.2rem;}
-.assoc-label{font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;opacity:.7;}
-.assoc-list{display:flex;flex-wrap:wrap;gap:.5rem .8rem;list-style:none;padding:0;margin:0;}
-.assoc-list a{display:inline-flex;align-items:center;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;font-weight:600;border-bottom:1px solid currentColor;padding-bottom:.22em;transition:opacity .3s;}
-.assoc-list a:hover{opacity:.65;}
-
-.uni-visual{position:relative;aspect-ratio:5/4;border-radius:clamp(16px,1.8vw,22px);display:grid;place-items:center;overflow:hidden;box-shadow:0 22px 44px -34px rgba(60,40,18,.4);transition:transform .5s cubic-bezier(.2,.7,.2,1),box-shadow .5s;}
-.uni-visual:hover{transform:translateY(-5px);box-shadow:0 36px 58px -34px rgba(60,40,18,.45);}
-.uni-ete-sec .uni-visual{background:rgba(255,255,255,.2);}
-.uni-hiver-sec .uni-visual{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);}
-.uni-scene{width:100%;height:100%;display:block;transition:transform .6s cubic-bezier(.2,.7,.2,1);}
-.uni-visual:hover .uni-scene{transform:scale(1.04);}
-.uni-visual .cap{position:absolute;left:14px;bottom:14px;font-size:.56rem;letter-spacing:.13em;text-transform:uppercase;background:rgba(251,248,242,.9);color:var(--ink-soft);padding:.4em .7em;border-radius:99px;}
-
-@media (max-width:860px){
-  .uni-grid{grid-template-columns:1fr;gap:22px;}
-  .uni-visual{order:-1;aspect-ratio:16/9;}
-}
-</style>
 </head>
 <body>
 <div class="page-bg" aria-hidden="true">
@@ -75,7 +33,6 @@
   <symbol id="i-sprig" viewBox="0 0 24 24"><path d="M12 22V5"/><path d="M12 13c.3-3 2.4-4.7 5-4.6-.2 3-2.3 4.8-5 4.6z"/><path d="M12 10c-.3-3-2.4-4.7-5-4.6.2 3 2.3 4.8 5 4.6z"/><path d="M12 8c.2-2.2 1.7-3.5 3.8-3.4-.2 2.2-1.7 3.6-3.8 3.4z"/></symbol>
   <symbol id="i-arch" viewBox="0 0 24 24"><path d="M5 22V11a7 7 0 0 1 14 0v11"/><path d="M3 22h18"/></symbol>
   <symbol id="i-coupe" viewBox="0 0 24 24"><path d="M7 3h10v2.5a5 5 0 0 1-10 0z"/><path d="M12 10.5V19"/><path d="M8 20h8"/></symbol>
-  <symbol id="i-snow" viewBox="0 0 24 24"><path d="M12 3v18M4.2 7.5l15.6 9M19.8 7.5l-15.6 9"/><path d="M12 6l1.8-1.4M12 6l-1.8-1.4M12 18l1.8 1.4M12 18l-1.8 1.4M6 9l-2.1.2M6 9l.2-2.1M18 15l2.1-.2M18 15l-.2 2.1M18 9l2.1.2M18 9l-.2-2.1M6 15l-2.1-.2M6 15l.2 2.1"/></symbol>
   <symbol id="i-candle" viewBox="0 0 24 24"><path d="M12 3c1.9 2.3 2.8 3.8 2.8 5.4a2.8 2.8 0 0 1-5.6 0c0-1 .5-1.9 1.4-3"/><rect x="9.2" y="11" width="5.6" height="10" rx="1"/></symbol>
   <symbol id="i-camera" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="12" cy="13.5" r="3.2"/><path d="M8.5 7l1.4-2.2h4.2L15.5 7"/></symbol>
   <symbol id="i-chair" viewBox="0 0 24 24"><path d="M7 4v8M17 4v8M6.5 12h11M8 12l-1 8M16 12l1 8M9 20h6"/></symbol>
@@ -248,225 +205,85 @@
 <main>
 <section class="page-hero">
   <div class="wrap">
-    <nav class="crumbs"><a href="/">Accueil</a><span class="sep">/</span><span>Nos collections</span></nav>
-    <span class="eyebrow">Trois couleurs par solstice</span>
-    <h1 id="collTitle">Nos <em>collections</em></h1>
-    <p class="lede" id="collIntro">Six couleurs, trois par saison. Chacune se décline en cocktail, en table, ou en réception complète.</p>
+    <nav class="crumbs"><a href="/">Accueil</a><span class="sep">/</span><a href="/collections">Nos collections</a><span class="sep">/</span><span>Bleu nuit</span></nav>
+    <span class="eyebrow">Solstice d'Hiver</span>
+    <h1>Bleu nuit</h1>
+    <p class="lede">Bleu nuit, argent et bougies. Une réception feutrée sous les lumières basses.</p>
   </div>
 </section>
 
-<section class="section" id="collections" style="padding-top:0;">
+<section class="section" style="padding-top:0;">
   <div class="wrap">
-    <p class="coll-allback" id="collAll" hidden><a class="link-more" href="/collections">Voir toutes les collections <svg aria-hidden="true"><use href="#i-arrow"/></svg></a></p>
-    <div class="uni-block reveal" data-univers="ete">
-      <div class="uni-band ete">
-        <svg class="ub-ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sun"/></svg>
-        <span class="ub-tag">Solstice d'Été</span>
-        <p>La saison des célébrations en plein air.</p>
+    <div class="coll-hero reveal">
+      <div class="coll-hero-copy">
+        <p class="lead">Un bleu presque noir, des reflets d'argent et des photophores givrés. Bleu nuit, c'est la réception qui commence quand la lumière tombe.</p>
+        <div class="pal" aria-hidden="true"><span style="background:#2C3A54"></span><span style="background:#8FA3B8"></span><span style="background:#C0A062"></span></div>
       </div>
-      <div class="col-grid col-grid-3">
-        <a class="col-card" href="/collection-terracotta">
-          <div class="col-top ct-terracotta">
-            <span class="col-tag">Solstice d'Été</span>
-            <svg class="glyph" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-vase"/></svg>
-          </div>
-          <div class="col-body">
-            <h3>Terracotta</h3>
-            <p>Terre cuite, ocre et lumière rasante. La chaleur du Sud sur une grande tablée.</p>
-            <div class="col-foot">
-              <div class="pal" aria-hidden="true"><span style="background:#C97B5A"></span><span style="background:#E5D8C1"></span><span style="background:#7C8B5A"></span></div>
-              <span class="cc-go">Voir la collection <svg aria-hidden="true"><use href="#i-arrow"/></svg></span>
-            </div>
-          </div>
-        </a>
-        <a class="col-card" href="/collection-olivier">
-          <div class="col-top ct-olivier">
-            <span class="col-tag">Solstice d'Été</span>
-            <svg class="glyph" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-foliage"/></svg>
-          </div>
-          <div class="col-body">
-            <h3>Vert olivier</h3>
-            <p>Vert olivier, feuillages et lin naturel. Recevoir au jardin, simplement.</p>
-            <div class="col-foot">
-              <div class="pal" aria-hidden="true"><span style="background:#7C8B5A"></span><span style="background:#EDE4D3"></span><span style="background:#B08A54"></span></div>
-              <span class="cc-go">Voir la collection <svg aria-hidden="true"><use href="#i-arrow"/></svg></span>
-            </div>
-          </div>
-        </a>
-        <a class="col-card" href="/collection-ecru">
-          <div class="col-top ct-ecru">
-            <span class="col-tag">Solstice d'Été</span>
-            <svg class="glyph" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-table"/></svg>
-          </div>
-          <div class="col-body">
-            <h3>Écru</h3>
-            <p>Écru, lin lavé et blanc cassé. La douceur d'une table lumineuse, presque nue.</p>
-            <div class="col-foot">
-              <div class="pal" aria-hidden="true"><span style="background:#EDE4D3"></span><span style="background:#E5D8C1"></span><span style="background:#C9B79A"></span></div>
-              <span class="cc-go">Voir la collection <svg aria-hidden="true"><use href="#i-arrow"/></svg></span>
-            </div>
-          </div>
-        </a>
+      <div class="coll-hero-art ct-nuit">
+        <svg class="glyph" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-lantern"/></svg>
       </div>
     </div>
-    <div class="uni-block reveal" data-univers="hiver">
-      <div class="uni-band hiver">
-        <svg class="ub-ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-snow"/></svg>
-        <span class="ub-tag">Solstice d'Hiver</span>
-        <p>La saison des réceptions au chaud.</p>
-      </div>
-      <div class="col-grid col-grid-3">
-        <a class="col-card" href="/collection-bordeaux">
-          <div class="col-top ct-bordeaux">
-            <span class="col-tag">Solstice d'Hiver</span>
-            <svg class="glyph" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-glass"/></svg>
-          </div>
-          <div class="col-body">
-            <h3>Bordeaux</h3>
-            <p>Bordeaux profond, velours et cuivre. Les grands soirs d'automne et d'hiver.</p>
-            <div class="col-foot">
-              <div class="pal" aria-hidden="true"><span style="background:#7A2F3A"></span><span style="background:#C0A062"></span><span style="background:#2A1E1B"></span></div>
-              <span class="cc-go">Voir la collection <svg aria-hidden="true"><use href="#i-arrow"/></svg></span>
-            </div>
-          </div>
-        </a>
-        <a class="col-card" href="/collection-bleu-nuit">
-          <div class="col-top ct-nuit">
-            <span class="col-tag">Solstice d'Hiver</span>
-            <svg class="glyph" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-lantern"/></svg>
-          </div>
-          <div class="col-body">
-            <h3>Bleu nuit</h3>
-            <p>Bleu nuit, argent et bougies. Une réception feutrée sous les lumières basses.</p>
-            <div class="col-foot">
-              <div class="pal" aria-hidden="true"><span style="background:#2C3A54"></span><span style="background:#8FA3B8"></span><span style="background:#C0A062"></span></div>
-              <span class="cc-go">Voir la collection <svg aria-hidden="true"><use href="#i-arrow"/></svg></span>
-            </div>
-          </div>
-        </a>
-        <a class="col-card" href="/collection-dore">
-          <div class="col-top ct-dore">
-            <span class="col-tag">Solstice d'Hiver</span>
-            <svg class="glyph" viewBox="0 0 120 120" aria-hidden="true"><use href="#g3-candles"/></svg>
-          </div>
-          <div class="col-body">
-            <h3>Doré</h3>
-            <p>Or et noir, éclat des fêtes. L'élégance des réveillons et des grandes occasions.</p>
-            <div class="col-foot">
-              <div class="pal" aria-hidden="true"><span style="background:#B08A54"></span><span style="background:#1B140D"></span><span style="background:#E9DFCB"></span></div>
-              <span class="cc-go">Voir la collection <svg aria-hidden="true"><use href="#i-arrow"/></svg></span>
-            </div>
-          </div>
-        </a>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- SOLSTICE D'ÉTÉ — l'univers derrière les collections -->
-<section class="section uni-ete-sec" id="ete" data-univers="ete">
-  <div class="wrap">
-    <div class="uni-grid">
-      <div class="uni-copy">
-        <span class="eyebrow reveal">Solstice d'Été</span>
-        <h2 class="reveal d1">Lumière, doré &amp; grands airs</h2>
-        <p class="lead reveal d1">La saison des célébrations à ciel ouvert : lin froissé, pampa et olivier, tables dressées sous la treille et éclats de laiton au soleil couchant.</p>
-        <ul class="kw-list reveal d2">
-          <li>Lin naturel</li>
-          <li>Pampa &amp; olivier</li>
-          <li>Vaisselle claire</li>
-          <li>Guirlandes guinguette</li>
-          <li>Éclats dorés</li>
-        </ul>
-        <div class="assoc reveal d2">
-          <span class="assoc-label">Collections</span>
-          <ul class="assoc-list">
-            <li><a href="/collection-terracotta">Terracotta</a></li>
-            <li><a href="/collection-olivier">Vert olivier</a></li>
-            <li><a href="/collection-ecru">Écru</a></li>
+    <p class="f-hint reveal">Trois formules dans cette collection&nbsp;: le cocktail, la table, ou les deux réunis en réception.</p>
+
+    <div class="formulas reveal">
+      <article class="formula on" data-kind="cocktail">
+        <button class="fav" data-fav-type="formule" data-fav-col="nuit" data-fav-kind="cocktail" data-fav-name="Cocktail &middot; Bleu nuit" data-fav-glyph="g3-lantern" data-fav-hint="Bleu nuit"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
+        <span class="fk">La formule</span>
+        <h3><button type="button" class="f-head" aria-expanded="true">Cocktail</button></h3>
+        <div class="f-body">
+          <p>Le moment apéritif : on reçoit debout, un verre à la main.</p>
+          <ul>
+          <li>Mange-debout habillés</li>
+          <li>Verrerie d'apéritif : coupes et tumblers</li>
+          <li>Bar, desserte et seau à champagne</li>
+          <li>Plateaux et serviettes cocktail</li>
+          <li>Guirlandes lumineuses</li>
+          <li>Photophores givrés</li>
           </ul>
+          <button type="button" class="btn btn-ink offer-btn" data-col="nuit" data-kind="cocktail">Composer mon cocktail</button>
         </div>
-      </div>
-      <div class="uni-visual reveal d1">
-        <!-- Plein été : le soleil haut, la chaleur qui monte du sol, les herbes sèches. -->
-        <svg class="uni-scene" viewBox="0 0 240 192" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-          <defs>
-            <radialGradient id="usGlow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FFF6DE" stop-opacity=".95"/><stop offset=".55" stop-color="#FFEBB8" stop-opacity=".4"/><stop offset="1" stop-color="#FFEBB8" stop-opacity="0"/></radialGradient>
-            <linearGradient id="usField" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF" stop-opacity=".34"/><stop offset="1" stop-color="#FFFFFF" stop-opacity=".08"/></linearGradient>
-          </defs>
-          <circle cx="150" cy="58" r="110" fill="url(#usGlow)"/>
-          <!-- soleil au zénith -->
-          <g stroke="#FFF8E6" stroke-width="4.5" stroke-linecap="round" opacity=".85">
-            <path d="M192 58h16M108 58H92M150 16V0M150 100v16M180 28l11-11M120 88l-11 11M180 88l11 11M120 28l-11-11"/>
-          </g>
-          <circle cx="150" cy="58" r="32" fill="#FFF8E6"/>
-          <!-- champs sous la chaleur -->
-          <path d="M0 138q54-16 116-6t124-12v72H0z" fill="url(#usField)"/>
-          <path d="M0 158q60-14 122-4t118-8v46H0z" fill="#FFFFFF" opacity=".3"/>
-          <!-- pampa -->
-          <g stroke="#8A6A33" stroke-width="2.4" stroke-linecap="round" fill="none" opacity=".42">
-            <path d="M34 192v-56M58 192v-40M82 192v-48"/>
-          </g>
-          <g fill="#FFF8E6" opacity=".85">
-            <ellipse cx="34" cy="128" rx="8" ry="15"/>
-            <ellipse cx="58" cy="146" rx="6" ry="11"/>
-            <ellipse cx="82" cy="138" rx="7" ry="13"/>
-          </g>
-        </svg>
-        <span class="cap">Solstice d'Été · le plein soleil</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- SOLSTICE D'HIVER -->
-<section class="section dark uni-hiver-sec" id="hiver" data-univers="hiver">
-  <div class="wrap">
-    <div class="uni-grid">
-      <div class="uni-visual reveal d1">
-        <!-- Plein hiver : nuit claire, neige qui tombe, congère au sol. -->
-        <svg class="uni-scene" viewBox="0 0 240 192" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-          <defs>
-            <radialGradient id="usMoon" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#E9F2F4" stop-opacity=".5"/><stop offset="1" stop-color="#E9F2F4" stop-opacity="0"/></radialGradient>
-            <linearGradient id="usSnow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF" stop-opacity=".92"/><stop offset="1" stop-color="#DCE9EC" stop-opacity=".6"/></linearGradient>
-            <mask id="usCrescent"><circle cx="176" cy="54" r="26" fill="#fff"/><circle cx="189" cy="43" r="22" fill="#000"/></mask>
-          </defs>
-          <circle cx="176" cy="54" r="72" fill="url(#usMoon)"/>
-          <circle cx="176" cy="54" r="26" fill="#EFF6F6" mask="url(#usCrescent)"/>
-          <!-- étoiles -->
-          <g fill="#E9F2F4" opacity=".7"><circle cx="42" cy="36" r="1.8"/><circle cx="94" cy="22" r="1.5"/><circle cx="66" cy="74" r="1.6"/><circle cx="120" cy="58" r="1.4"/><circle cx="28" cy="92" r="1.5"/></g>
-          <!-- flocons -->
-          <g fill="none" stroke="#FFFFFF" stroke-linecap="round" opacity=".85">
-            <use href="#i-snow" width="30" height="30" transform="translate(46 44)" stroke-width="1.35"/>
-            <use href="#i-snow" width="20" height="20" transform="translate(112 92)" stroke-width="1.6"/>
-            <use href="#i-snow" width="16" height="16" transform="translate(196 108)" stroke-width="1.8"/>
-          </g>
-          <!-- congère -->
-          <path d="M0 152q56-20 116-6 60 14 124-8v54H0z" fill="url(#usSnow)"/>
-          <path d="M0 152q56-20 116-6 60 14 124-8" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round"/>
-        </svg>
-        <span class="cap">Solstice d'Hiver · la nuit claire</span>
-      </div>
-      <div class="uni-copy">
-        <span class="eyebrow reveal">Solstice d'Hiver</span>
-        <h2 class="reveal d1">Velours, bougies &amp; brun chaud</h2>
-        <p class="lead reveal d1">Quand les jours raccourcissent, on resserre les tables et l'on tamise la lumière : velours côtelé, verrerie fumée et forêts de bougies.</p>
-        <ul class="kw-list reveal d2">
-          <li>Velours côtelé</li>
-          <li>Verrerie fumée</li>
-          <li>Bougies &amp; chandeliers</li>
-          <li>Dorures</li>
-          <li>Esprit cocon</li>
-        </ul>
-        <div class="assoc reveal d2">
-          <span class="assoc-label">Collections</span>
-          <ul class="assoc-list">
-            <li><a href="/collection-bordeaux">Bordeaux</a></li>
-            <li><a href="/collection-bleu-nuit">Bleu nuit</a></li>
-            <li><a href="/collection-dore">Doré</a></li>
+      </article>
+      <article class="formula" data-kind="table">
+        <button class="fav" data-fav-type="formule" data-fav-col="nuit" data-fav-kind="table" data-fav-name="Table &middot; Bleu nuit" data-fav-glyph="g3-lantern" data-fav-hint="Bleu nuit"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
+        <span class="fk">La formule</span>
+        <h3><button type="button" class="f-head" aria-expanded="false">Table</button></h3>
+        <div class="f-body">
+          <p>Le moment repas : une table dressée, du linge aux bougies.</p>
+          <ul>
+          <li>Linge : nappe, chemin de table, serviettes</li>
+          <li>Vaisselle, verrerie et couverts</li>
+          <li>Centre de table et fleurs de saison</li>
+          <li>Photophores, bougies et marque-places</li>
+          <li>Photophores givrés</li>
           </ul>
+          <button type="button" class="btn btn-ghost offer-btn" data-col="nuit" data-kind="table">Composer ma table</button>
         </div>
-      </div>
+      </article>
+      <article class="formula is-full" data-kind="reception">
+        <button class="fav" data-fav-type="formule" data-fav-col="nuit" data-fav-kind="reception" data-fav-name="Réception &middot; Bleu nuit" data-fav-glyph="g3-lantern" data-fav-hint="Bleu nuit"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
+        <span class="fk">La formule</span>
+        <h3><button type="button" class="f-head" aria-expanded="false">Réception</button></h3>
+        <div class="f-body">
+          <p>Les deux réunis, du premier verre au dessert. Rien à compléter.</p>
+          <ul>
+          <li>Tout le cocktail et toute la table</li>
+          <li>Mobilier : tables et chaises</li>
+          <li>Arche décor photo</li>
+          <li>Coin lounge : fauteuils et table basse</li>
+          <li>Photophores givrés</li>
+          </ul>
+          <button type="button" class="btn btn-ghost offer-btn" data-col="nuit" data-kind="reception">Composer ma réception</button>
+        </div>
+      </article>
+    </div>
+
+    <div class="coll-nav">
+      <a href="/collections?u=hiver">Les collections d'Hiver</a>
+      <a href="/collection-bordeaux">Bordeaux</a>
+      <a href="/collection-dore">Doré</a>
+      <a href="/collections">Toutes les collections</a>
+      <a href="/catalogue?collection=nuit">Les pièces de la collection</a>
     </div>
   </div>
 </section>
