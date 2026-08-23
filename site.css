@@ -378,47 +378,93 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opa
 /* ---------- Page d'une collection : les deux formules ---------- */
 /* Bandeau d'ambiance compact : les deux formules doivent rester
    visibles sans defiler. */
-.coll-hero{display:grid;grid-template-columns:1.3fr .7fr;gap:clamp(18px,2.4vw,34px);align-items:center;margin-bottom:clamp(18px,2.4vw,30px);}
-.coll-hero-art{position:relative;border-radius:clamp(16px,2vw,24px);min-height:clamp(130px,12vw,165px);display:grid;place-items:center;overflow:hidden;box-shadow:0 30px 60px -40px rgba(60,40,18,.5);}
-.coll-hero-art .glyph{width:clamp(78px,8vw,105px);height:auto;filter:drop-shadow(0 18px 26px rgba(40,25,10,.24));}
-.coll-hero .pal{margin:.8rem 0 0;}
+/* Le titre a rejoint cette bande : une seule rangee, pour que les trois
+   formules tiennent a l'ecran sans avoir a faire defiler. */
+.coll-top{padding-block:clamp(12px,1.8vw,24px) clamp(14px,1.8vw,22px);}
+.coll-hero{display:grid;grid-template-columns:1.35fr .65fr;gap:clamp(16px,2.2vw,30px);align-items:center;margin-bottom:clamp(8px,1.1vw,14px);}
+.coll-hero-copy{display:flex;flex-direction:column;gap:.35rem;}
+.coll-hero-copy h1{font-size:clamp(1.9rem,3.6vw,2.7rem);margin:.1rem 0 .2rem;}
+.coll-hero-copy .lead{font-size:clamp(.95rem,1.25vw,1.05rem);line-height:1.6;max-width:54ch;}
+.coll-hero-art{position:relative;border-radius:clamp(16px,2vw,24px);min-height:clamp(104px,9vw,132px);display:grid;place-items:center;overflow:hidden;box-shadow:0 30px 60px -40px rgba(60,40,18,.5);}
+.coll-hero-art .glyph{width:clamp(62px,6.2vw,84px);height:auto;filter:drop-shadow(0 18px 26px rgba(40,25,10,.24));}
+.coll-hero .pal{margin:.55rem 0 0;}
 /* ----- Les trois formules -----
-   Trois panneaux côte à côte : celui qu'on survole s'élargit, les autres se
-   rétractent en ne gardant que leur nom. C'est la largeur qui bouge, pas la
-   position, donc rien ne saute autour. Au doigt (mobile), c'est le clic qui
-   déclenche l'ouverture et les panneaux s'empilent. */
-.formulas{display:flex;align-items:stretch;gap:clamp(12px,1.6vw,20px);}
+   Trois panneaux cote a cote : celui qu'on survole s'elargit, les autres se
+   retractent en ne gardant que leur nom. Au doigt, c'est le clic.
+
+   Tout ce qui bouge partage la MEME courbe et la MEME duree : c'est ce qui
+   fait qu'on lit un seul geste au lieu de trois animations concurrentes. */
+.formulas{display:flex;align-items:stretch;gap:clamp(12px,1.6vw,20px);
+  --ease-f:cubic-bezier(.33,.8,.22,1);--dur-f:.62s;}
+
 .formula{position:relative;flex:1 1 0;min-width:0;overflow:hidden;
   border:1px solid var(--line);border-radius:clamp(14px,1.8vw,20px);background:var(--paper-2);
-  padding:clamp(22px,2.6vw,34px);display:flex;flex-direction:column;gap:.6rem;
+  padding:clamp(15px,1.9vw,26px);display:flex;flex-direction:column;
   box-shadow:0 24px 50px -42px rgba(60,40,18,.5);
-  transition:flex-grow .55s cubic-bezier(.2,.7,.2,1),background .45s,border-color .45s,box-shadow .45s;}
-.formula.on{flex-grow:2.6;background:var(--paper);border-color:var(--gold-soft);box-shadow:0 38px 68px -44px rgba(60,40,18,.55);}
-/* Panneau replié : le nom SEUL, centré, et toute la surface est cliquable. */
-.formula:not(.on){justify-content:center;text-align:center;cursor:pointer;}
+  transition:flex-grow var(--dur-f) var(--ease-f),
+             background var(--dur-f) var(--ease-f),
+             border-color var(--dur-f) var(--ease-f),
+             box-shadow var(--dur-f) var(--ease-f);}
+.formula.on{flex-grow:2.6;background:var(--paper);border-color:var(--gold-soft);
+  box-shadow:0 38px 68px -44px rgba(60,40,18,.55);}
+.formula:not(.on){cursor:pointer;text-align:center;}
 .formula:not(.on):hover{border-color:var(--gold-soft);}
-.formula:not(.on) .fk,
-.formula:not(.on) .fav{display:none;}
-.f-hint{font-size:.8rem;color:var(--stone);margin:0 0 clamp(14px,1.8vw,20px);}
-.formula .fk{font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-deep);font-weight:600;}
-.formula h3{font-size:clamp(1.3rem,2.2vw,1.85rem);margin:.15rem 0 .1rem;}
+
+/* Deux cales invisibles. Elles gonflent quand le panneau se replie — ce qui
+   centre le titre — et s'effacent quand il s'ouvre. `justify-content` ne
+   s'anime pas : c'etait lui qui faisait sauter le titre du centre vers le
+   haut d'un coup. `flex-grow`, lui, s'interpole. */
+.formula::before,.formula::after{content:"";display:block;flex:0 1 0;
+  transition:flex-grow var(--dur-f) var(--ease-f);}
+.formula:not(.on)::before,.formula:not(.on)::after{flex-grow:1;}
+
+/* Le kicker et le coeur sortent du flux en se repliant : ils s'effacent sur
+   place, au lieu de disparaitre net. */
+.formula .fk{font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--gold-deep);font-weight:600;transition:opacity .3s var(--ease-f);}
+.formula:not(.on) .fk{position:absolute;opacity:0;pointer-events:none;}
+.formula .fav{transition:opacity .3s var(--ease-f);}
+.formula:not(.on) .fav{opacity:0;pointer-events:none;}
+
+.formula h3{font-size:clamp(1.25rem,2vw,1.7rem);margin:.1rem 0 0;}
 .f-head{font:inherit;color:inherit;background:none;border:none;padding:0;text-align:inherit;cursor:pointer;}
 .f-head:focus-visible{outline:2px solid var(--gold-deep);outline-offset:4px;border-radius:6px;}
 .formula:not(.on) .f-head::after{content:"";position:absolute;inset:0;}
-.f-body{display:flex;flex-direction:column;gap:.6rem;flex:1;}
-.formula:not(.on) .f-body{display:none;}
-.formula.on .f-body{animation:fbIn .5s cubic-bezier(.2,.7,.2,1) .1s both;}
-@keyframes fbIn{from{opacity:0;transform:translateY(9px);}to{opacity:1;transform:none;}}
-.f-body > p{font-size:.92rem;color:var(--ink-soft);}
-.formula ul{list-style:none;padding:0;margin:.3rem 0 .2rem;display:flex;flex-direction:column;gap:.4rem;}
-.formula li{font-size:.86rem;color:var(--ink-soft);padding-left:1.3em;position:relative;}
+
+/* La hauteur s'anime pour de vrai : une grille qui passe de 0fr a 1fr est le
+   seul moyen d'interpoler une hauteur « automatique ». Avant, un display:none
+   faisait apparaitre le contenu d'un bloc — et la rangee entiere sautait
+   quand on passait d'une formule a l'autre, leurs listes n'ayant pas la meme
+   longueur. */
+/* Le repli est volontairement PLUS LENT que l'ouverture : sinon le panneau
+   qui se ferme se vide avant que l'autre ne se remplisse, et toute la rangee
+   s'affaisse d'une centaine de pixels avant de remonter. En laissant le
+   sortant trainer, c'est toujours le plus haut des deux qui commande. */
+.f-wrap{display:grid;grid-template-rows:0fr;opacity:0;
+  transition:grid-template-rows calc(var(--dur-f) * 1.25) var(--ease-f),
+             opacity .24s var(--ease-f);}
+.formula.on .f-wrap{grid-template-rows:1fr;opacity:1;flex:1 1 auto;
+  transition:grid-template-rows var(--dur-f) var(--ease-f),
+             opacity .42s var(--ease-f) .14s;}
+/* L'espace sous le titre est porte par le premier enfant, pas par un padding
+   du corps : un padding subsiste meme quand la rangee est a 0fr, et laissait
+   8 px de haut aux panneaux replies. */
+.f-body{overflow:hidden;min-height:0;display:flex;flex-direction:column;gap:.55rem;}
+.f-body > :first-child{margin-top:.5rem;}
+
+.f-body > p{font-size:.9rem;color:var(--ink-soft);}
+.formula ul{list-style:none;padding:0;margin:.2rem 0 .1rem;display:flex;flex-direction:column;gap:.35rem;}
+.formula li{font-size:.85rem;color:var(--ink-soft);padding-left:1.3em;position:relative;}
 .formula li::before{content:"";position:absolute;left:0;top:.55em;width:7px;height:7px;border-radius:50%;background:var(--gold-soft);}
 .formula .btn{margin-top:auto;width:100%;}
-/* La formule qui réunit les deux autres mérite d'être signalée. */
 .formula.is-full.on{background:linear-gradient(168deg,var(--paper),var(--sand) 240%);}
+
+/* Pendant la mesure de hauteur, plus rien ne doit s'animer. */
+.formulas.mesure,.formulas.mesure *{transition:none !important;animation:none !important;}
+
 @media (prefers-reduced-motion:reduce){
-  .formula{transition:none;}
-  .formula.on .f-body{animation:none;}
+  .formula,.formula::before,.formula::after,.f-wrap,.f-body,.formula .fk,.formula .fav{transition:none !important;}
+}
 }
 .coll-nav{display:flex;flex-wrap:wrap;gap:.8rem;justify-content:center;margin-top:clamp(30px,4.4vw,52px);}
 .coll-nav a{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:var(--gold-deep);border:1px solid var(--line);border-radius:99px;padding:.7em 1.3em;transition:background .3s,color .3s,border-color .3s;}

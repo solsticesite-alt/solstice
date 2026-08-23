@@ -362,6 +362,41 @@
     var panneaux = [].slice.call(bloc.querySelectorAll('.formula'));
     if (panneaux.length < 2) return;
 
+    /* La rangee garde une hauteur fixe, calculee sur la formule la plus
+       longue. Sans cela, elle s'affaisse en cours de route : quand les deux
+       corps sont a mi-parcours, le plus haut des deux ne fait que la moitie,
+       et toute la rangee se contracte d'une centaine de pixels avant de
+       remonter. Jouer sur les durees ne peut pas corriger ca — seule une
+       hauteur arretee le peut. C'est aussi ce qui evite un ressaut quand on
+       passe d'une formule a l'autre : leurs listes n'ont pas la meme longueur. */
+    function figerHauteur() {
+      var etat = panneaux.map(function (p) { return p.classList.contains('on'); });
+      bloc.classList.add('mesure');       // coupe toutes les transitions
+      bloc.style.minHeight = '';
+      bloc.style.alignItems = 'flex-start'; // chaque panneau reprend sa hauteur propre
+      var max = 0;
+      panneaux.forEach(function (p) {
+        panneaux.forEach(function (q) { q.classList.remove('on'); });
+        p.classList.add('on');
+        max = Math.max(max, p.offsetHeight);
+      });
+      panneaux.forEach(function (p, i) { p.classList.toggle('on', etat[i]); });
+      bloc.style.alignItems = '';
+      bloc.style.minHeight = max + 'px';
+      void bloc.offsetHeight;             // applique avant de rendre la main
+      bloc.classList.remove('mesure');
+    }
+
+    var minuteur = null;
+    function replanifier() {
+      clearTimeout(minuteur);
+      minuteur = setTimeout(figerHauteur, 160);
+    }
+    // Les images et polices peuvent encore bouger la mise en page au chargement.
+    figerHauteur();
+    window.addEventListener('load', figerHauteur);
+    window.addEventListener('resize', replanifier);
+
     function ouvrir(p) {
       if (p.classList.contains('on')) return;
       panneaux.forEach(function (autre) {
