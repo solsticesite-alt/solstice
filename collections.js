@@ -382,7 +382,15 @@
       });
       panneaux.forEach(function (p, i) { p.classList.toggle('on', etat[i]); });
       bloc.style.alignItems = '';
-      bloc.style.minHeight = max + 'px';
+
+      /* La rangee descend jusqu'au bas de la fenetre : en arrivant sur la page,
+         on doit voir les trois formules et RIEN du pied de page. On ne la
+         raccourcit jamais en dessous de son contenu — sur un ecran tres bas,
+         c'est le contenu qui gagne et la page defile. */
+      var haut = bloc.getBoundingClientRect().top + (window.pageYOffset || 0);
+      var bas = parseFloat(getComputedStyle(bloc.closest('section') || bloc).paddingBottom) || 0;
+      var dispo = window.innerHeight - (haut - (window.pageYOffset || 0)) - bas;
+      bloc.style.minHeight = Math.max(max, Math.round(dispo)) + 'px';
       void bloc.offsetHeight;             // applique avant de rendre la main
       bloc.classList.remove('mesure');
     }

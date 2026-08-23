@@ -395,20 +395,58 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opa
    Tout ce qui bouge partage la MEME courbe et la MEME duree : c'est ce qui
    fait qu'on lit un seul geste au lieu de trois animations concurrentes. */
 .formulas{display:flex;align-items:stretch;gap:clamp(12px,1.6vw,20px);
-  --ease-f:cubic-bezier(.33,.8,.22,1);--dur-f:.62s;}
+  /* Courbe choisie sur mesure, pas au jugé : l'ancienne expediait 57 % du
+     trajet dans le premier quart puis trainait — d'ou la sensation mecanique.
+     Celle-ci repartit le mouvement (22 % / 78 % / 98 % aux quarts) tout en
+     demarrant assez vite pour rester reactive au survol. */
+  --ease-f:cubic-bezier(.42,.06,.2,1);--dur-f:.70s;}
 
-.formula{position:relative;flex:1 1 0;min-width:0;overflow:hidden;
-  border:1px solid var(--line);border-radius:clamp(14px,1.8vw,20px);background:var(--paper-2);
-  padding:clamp(15px,1.9vw,26px);display:flex;flex-direction:column;
-  box-shadow:0 24px 50px -42px rgba(60,40,18,.5);
+.formula{--pad:clamp(15px,1.9vw,26px);
+  position:relative;flex:1 1 0;min-width:0;overflow:hidden;
+  border:1px solid var(--line);border-radius:clamp(14px,1.8vw,20px);
+  /* La carte repliee EST un echantillon de la couleur de la collection : un
+     lavis qui s'approfondit vers le bas. C'est ce qui la sauve du rectangle
+     beige vide — et c'est aussi le sujet de la page, puisque les collections
+     sont des couleurs. Repli en aplat pour les navigateurs sans color-mix.
+     Les deux etats partagent EXACTEMENT la meme structure de degrade (meme
+     nombre d'arrets, memes positions) : c'est la condition pour que le fond
+     s'interpole au lieu de sauter d'un coup au milieu du mouvement. */
+  /* Les trois paliers du lavis sont des variables : sur telephone, la carte
+     repliee n'est plus une colonne mais une barre de 54 px, et le meme
+     degrade s'y ecrase — trop sombre sous le titre (l'ecru y tombait a
+     4,26:1, sous le seuil AA). On l'y adoucit sans toucher au bureau. */
+  --s1:12%; --s2:26%; --s3:48%;
+  background:var(--paper-2);
+  background:linear-gradient(180deg,
+    color-mix(in srgb, var(--coll,#000) var(--s1), var(--paper)) 0%,
+    color-mix(in srgb, var(--coll,#000) var(--s2), var(--paper)) 50%,
+    color-mix(in srgb, var(--coll,#000) var(--s3), var(--paper)) 100%);
+  padding:var(--pad);display:flex;flex-direction:column;
+  /* Meme structure d'ombre que la carte ouverte (un liseré interne + une
+     ombre portee) pour que les deux s'interpolent : le liseré passe de 1 a
+     3 px et se sature, au lieu d'apparaitre d'un coup. */
+  box-shadow:inset 0 1px 0 0 color-mix(in srgb, var(--coll,#000) 45%, transparent),
+             0 24px 50px -42px rgba(60,40,18,.5);
+  border-color:var(--line);
+  border-color:color-mix(in srgb, var(--coll,#000) 20%, var(--line));
   transition:flex-grow var(--dur-f) var(--ease-f),
              background var(--dur-f) var(--ease-f),
              border-color var(--dur-f) var(--ease-f),
              box-shadow var(--dur-f) var(--ease-f);}
+/* La carte ouverte : un lavis de la couleur qui descend du haut et s'eteint,
+   un liset de la meme couleur sur l'arete superieure (par box-shadow interne,
+   les deux pseudo-elements etant pris par les cales de centrage). */
 .formula.on{flex-grow:2.6;background:var(--paper);border-color:var(--gold-soft);
   box-shadow:0 38px 68px -44px rgba(60,40,18,.55);}
+.formula.on{
+  background:linear-gradient(180deg,
+    color-mix(in srgb, var(--coll,#000) 12%, var(--paper)) 0%,
+    var(--paper) 46%,
+    var(--paper) 100%);
+  border-color:color-mix(in srgb, var(--coll,#000) 34%, var(--line));
+  box-shadow:inset 0 3px 0 0 var(--coll,var(--gold)),
+             0 38px 68px -44px rgba(60,40,18,.55);}
 .formula:not(.on){cursor:pointer;text-align:center;}
-.formula:not(.on):hover{border-color:var(--gold-soft);}
 
 /* Deux cales invisibles. Elles gonflent quand le panneau se replie — ce qui
    centre le titre — et s'effacent quand il s'ouvre. `justify-content` ne
@@ -420,13 +458,39 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opa
 
 /* Le kicker et le coeur sortent du flux en se repliant : ils s'effacent sur
    place, au lieu de disparaitre net. */
-.formula .fk{font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;
-  color:var(--gold-deep);font-weight:600;transition:opacity .3s var(--ease-f);}
-.formula:not(.on) .fk{position:absolute;opacity:0;pointer-events:none;}
+/* Le numero est ancre en haut de la carte, dans les deux etats : c'est lui qui
+   donne un point d'appui haut aux cartes repliees, qui n'etaient jusqu'ici que
+   des rectangles avec un titre flottant au milieu. Comme il est hors du flux,
+   il ne bouge pas quand les cales de centrage gonflent. */
+.formula .fk{position:absolute;top:var(--pad);left:var(--pad);right:var(--pad);
+  font-family:var(--sans);font-size:.68rem;letter-spacing:.34em;font-weight:600;
+  color:var(--coll,var(--gold-deep));opacity:.85;text-align:inherit;
+  transition:opacity var(--dur-f) var(--ease-f);}
+.formula:not(.on) .fk{opacity:.62;color:var(--coll-profond,var(--gold-deep));}
 .formula .fav{transition:opacity .3s var(--ease-f);}
 .formula:not(.on) .fav{opacity:0;pointer-events:none;}
 
-.formula h3{font-size:clamp(1.25rem,2vw,1.7rem);margin:.1rem 0 0;}
+/* La marge haute degage le numero, dans les deux etats — donc rien ne saute. */
+.formula h3{position:relative;font-size:clamp(1.3rem,2.1vw,1.8rem);margin:1.7rem 0 0;
+  transition:color var(--dur-f) var(--ease-f);}
+/* Repliee, la carte est une couleur : le titre la prend aussi. Le melange vers
+   l'encre garantit la lisibilite meme pour les teintes les plus claires
+   (l'ecru, sinon, s'effacerait sur son propre lavis). */
+.formula:not(.on) h3{color:color-mix(in srgb, var(--coll-profond,var(--ink)) 66%, var(--ink));}
+/* Un filet vertical descend du numero jusqu'au titre : il donne un axe a la
+   carte repliee, qui n'etait qu'un nom flottant au milieu du vide. Il s'eteint
+   a l'ouverture, ou le titre remonte se loger sous le numero. */
+.formula h3::before{content:"";position:absolute;left:50%;bottom:calc(100% + .55rem);
+  width:1px;height:clamp(24px,4.4vh,54px);
+  background:linear-gradient(180deg,transparent,var(--coll,var(--gold)));
+  opacity:0;transition:opacity var(--dur-f) var(--ease-f);}
+.formula:not(.on) h3::before{opacity:.5;}
+/* Un filet court sous le titre, a la couleur de la collection. Il centre avec
+   le titre quand la carte est repliee, s'aligne a gauche quand elle s'ouvre. */
+.formula h3::after{content:"";display:block;width:34px;height:1px;margin:.6rem 0 0;
+  background:var(--coll,var(--gold));opacity:.55;
+  transition:width var(--dur-f) var(--ease-f),opacity var(--dur-f) var(--ease-f);}
+.formula:not(.on) h3::after{margin-inline:auto;width:24px;opacity:.4;}
 .f-head{font:inherit;color:inherit;background:none;border:none;padding:0;text-align:inherit;cursor:pointer;}
 .f-head:focus-visible{outline:2px solid var(--gold-deep);outline-offset:4px;border-radius:6px;}
 .formula:not(.on) .f-head::after{content:"";position:absolute;inset:0;}
@@ -449,13 +513,28 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opa
 /* L'espace sous le titre est porte par le premier enfant, pas par un padding
    du corps : un padding subsiste meme quand la rangee est a 0fr, et laissait
    8 px de haut aux panneaux replies. */
-.f-body{overflow:hidden;min-height:0;display:flex;flex-direction:column;gap:.55rem;}
+/* La carte remplit la hauteur de la fenetre : sans repartition, tout se tasse
+   en haut et un grand vide reste au-dessus du bouton. On distribue plutot. */
+.f-body{overflow:hidden;min-height:0;display:flex;flex-direction:column;gap:.45rem;}
+/* Le surplus de hauteur se repartit ENTRE les lignes de la liste, pas autour
+   d'elle : centrer le bloc laissait deux trous, un sous l'accroche et un
+   au-dessus du bouton. Reparti, le meme vide devient de l'air entre les
+   lignes et la liste se lit comme le sommaire d'une carte. */
+.f-body > ul{flex:1 1 auto;justify-content:space-between;}
 .f-body > :first-child{margin-top:.5rem;}
 
-.f-body > p{font-size:.9rem;color:var(--ink-soft);}
-.formula ul{list-style:none;padding:0;margin:.2rem 0 .1rem;display:flex;flex-direction:column;gap:.35rem;}
-.formula li{font-size:.85rem;color:var(--ink-soft);padding-left:1.3em;position:relative;}
-.formula li::before{content:"";position:absolute;left:0;top:.55em;width:7px;height:7px;border-radius:50%;background:var(--gold-soft);}
+/* La phrase d'accroche passe au serif italique : c'est une legende de
+   collection, pas un paragraphe de notice. */
+.f-body > p{font-family:var(--serif);font-style:italic;font-size:.98rem;line-height:1.45;
+  color:var(--ink-soft);max-width:42ch;}
+.formula ul{list-style:none;padding:0;margin:.2rem 0 .55rem;display:flex;flex-direction:column;gap:.3rem;}
+/* Chaque ligne posee sur un filet tres pale : la liste se lit comme un
+   sommaire, au lieu de flotter. Le dernier n'en a pas — on ne souligne pas
+   la fin. */
+.formula li{font-size:.86rem;color:var(--ink-soft);padding-left:1.4em;padding-bottom:.3rem;position:relative;
+  border-bottom:1px solid color-mix(in srgb, var(--coll,#000) 12%, transparent);}
+.formula li:last-child{border-bottom:none;padding-bottom:0;}
+.formula li::before{content:"";position:absolute;left:.15em;top:.62em;width:5px;height:5px;border-radius:50%;background:var(--coll,var(--gold-soft));opacity:.8;}
 .formula .btn{margin-top:auto;width:100%;}
 .formula.is-full.on{background:linear-gradient(168deg,var(--paper),var(--sand) 240%);}
 
@@ -465,29 +544,59 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opa
 @media (prefers-reduced-motion:reduce){
   .formula,.formula::before,.formula::after,.f-wrap,.f-body,.formula .fk,.formula .fav{transition:none !important;}
 }
+
+/* Ecrans courts (13 pouces, portables 1366x700...) : tout se resserre, sinon
+   le bouton de la formule ouverte passe sous la ligne de flottaison. On rogne
+   d'abord sur le bandeau d'ambiance, ensuite sur l'interligne des listes —
+   jamais sur la taille du titre des formules, qui porte la page. */
+@media (min-width:861px) and (max-height:800px){
+  .coll-top{padding-block:10px 12px;}
+  .coll-hero{margin-bottom:8px;}
+  .coll-hero-art{min-height:clamp(76px,6.2vw,94px);}
+  .coll-hero-art .glyph{width:clamp(46px,4.2vw,60px);}
+  .coll-hero-copy h1{font-size:clamp(1.6rem,2.8vw,2.1rem);}
+  .coll-hero-copy .lead{font-size:.88rem;line-height:1.5;}
+  .coll-hero .pal{margin-top:.35rem;}
+  .formula h3{margin-top:1.45rem;}
+  .f-body > p{font-size:.9rem;}
+  .f-body > :first-child{margin-top:.3rem;}
+  .formula li{font-size:.81rem;padding-bottom:.2rem;}
+  .formula ul{gap:.2rem;}
 }
-.coll-nav{display:flex;flex-wrap:wrap;gap:.8rem;justify-content:center;margin-top:clamp(30px,4.4vw,52px);}
-.coll-nav a{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:var(--gold-deep);border:1px solid var(--line);border-radius:99px;padding:.7em 1.3em;transition:background .3s,color .3s,border-color .3s;}
-.coll-nav a:hover{background:var(--gold);color:#fff;border-color:var(--gold);}
 .coll-allback{text-align:center;margin-bottom:clamp(20px,3vw,32px);}
 @media (max-width:860px){
   /* Sur mobile on garde le visuel, mais reduit a une bande : les trois
      formules doivent apparaitre au premier ecran. */
-  .coll-hero{grid-template-columns:104px 1fr;gap:14px;align-items:center;}
-  .coll-hero-art{order:-1;min-height:104px;}
-  .coll-hero-art .glyph{width:58px;}
-  .coll-hero .lead{font-size:.92rem;}
-  .coll-hero .pal{margin-top:.5rem;}
+  .coll-hero{grid-template-columns:92px 1fr;gap:13px;align-items:center;}
+  .coll-hero-art{order:-1;min-height:92px;}
+  .coll-hero-art .glyph{width:52px;}
+  .coll-hero .lead{font-size:.89rem;line-height:1.5;}
+  .coll-hero .pal{margin-top:.4rem;}
   /* Les panneaux s'empilent : ce n'est plus la largeur qui s'ouvre mais la
      hauteur, et c'est le doigt qui commande. */
   .formulas{flex-direction:column;}
-  .formula{flex:0 0 auto;padding:clamp(16px,4vw,22px);}
-  .formula.on{flex-grow:0;}
+  .formula{flex:0 0 auto;padding:clamp(16px,4vw,22px);--s1:9%;--s2:15%;--s3:26%;}
+  .formula.on{flex-grow:1;}  /* absorbe la hauteur restante : pas de vide sous la pile */
   .formula:not(.on){text-align:left;padding-block:clamp(14px,3.4vw,18px);}
   .formula:not(.on) h3{margin:.05rem 0 0;}
+  /* Sur une barre de 60 px, ni le filet vertical, ni le numero, ni le filet
+     sous le titre n'ont la place : le numero se retrouvait imprime PAR-DESSUS
+     le nom, et le filet flottait au milieu d'une barre alignee a gauche.
+     On les efface en opacite — donc en douceur, et ils reviennent a
+     l'ouverture, ou la carte a de nouveau la hauteur pour les porter. */
+  .formula h3::before{display:none;}
+  .formula:not(.on) .fk{opacity:0;}
+  .formula:not(.on) h3::after{width:0;opacity:0;margin-top:0;}
+  /* La pile doit tenir dans l'ecran du telephone, bouton compris. */
+  .f-body > p{font-size:.9rem;}
+  .formula li{font-size:.83rem;padding-bottom:.16rem;}
+  .formula ul{gap:.16rem;margin-bottom:.3rem;}
+  .f-body{gap:.3rem;}
   .formula:not(.on)::after{content:"";position:absolute;right:clamp(16px,4vw,22px);top:50%;
-    width:9px;height:9px;margin-top:-6px;border-right:2px solid var(--gold);border-bottom:2px solid var(--gold);
-    transform:rotate(45deg);opacity:.7;}
+    width:9px;height:9px;margin-top:-6px;
+    border-right:2px solid var(--coll-profond,var(--gold));
+    border-bottom:2px solid var(--coll-profond,var(--gold));
+    transform:rotate(45deg);opacity:.6;}
 }
 
 /* ---------- Pop-up 2 : options complémentaires (avec vignettes) ---------- */
