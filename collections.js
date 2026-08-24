@@ -369,19 +369,33 @@
        remonter. Jouer sur les durees ne peut pas corriger ca — seule une
        hauteur arretee le peut. C'est aussi ce qui evite un ressaut quand on
        passe d'une formule a l'autre : leurs listes n'ont pas la meme longueur. */
+    /* Rabiot maximal accorde a une carte au-dela de sa hauteur naturelle.
+       Il se repartit entre les cinq intervalles de la liste : 70 px donnent
+       un pas d'environ 47 px par ligne, mesure. Au-dela de 110 le pas passe
+       55 px et la liste se delite. */
+    var RABIOT = 70;
+
     function figerHauteur() {
       var etat = panneaux.map(function (p) { return p.classList.contains('on'); });
       bloc.classList.add('mesure');       // coupe toutes les transitions
       bloc.style.minHeight = '';
-      bloc.style.alignItems = 'flex-start'; // chaque panneau reprend sa hauteur propre
-      var max = 0;
+      // Sans cela on remesurerait le plafond pose au tour precedent, pas le
+      // contenu : la hauteur se figerait a sa premiere valeur pour de bon.
+      bloc.style.removeProperty('--h-carte');
+      /* On ne force plus `align-items` pendant la mesure. C'etait un reste de
+         l'epoque ou les cartes s'etiraient (`stretch`) : desormais elles sont
+         centrees, donc chacune prend deja sa hauteur propre. Et sur telephone
+         l'axe transversal est la LARGEUR — ce `flex-start` y mesurait des
+         cartes retrecies a leur texte, donc des hauteurs fausses. */
+      var max = 0;        // la plus haute carte, une fois ouverte
+      var naturel = 0;    // la hauteur propre du bloc entier (la pile, sur telephone)
       panneaux.forEach(function (p) {
         panneaux.forEach(function (q) { q.classList.remove('on'); });
         p.classList.add('on');
         max = Math.max(max, p.offsetHeight);
+        naturel = Math.max(naturel, bloc.offsetHeight);
       });
       panneaux.forEach(function (p, i) { p.classList.toggle('on', etat[i]); });
-      bloc.style.alignItems = '';
 
       /* La rangee descend jusqu'au bas de la fenetre : en arrivant sur la page,
          on doit voir les trois formules et RIEN du pied de page. On ne la
@@ -389,8 +403,16 @@
          c'est le contenu qui gagne et la page defile. */
       var haut = bloc.getBoundingClientRect().top + (window.pageYOffset || 0);
       var bas = parseFloat(getComputedStyle(bloc.closest('section') || bloc).paddingBottom) || 0;
-      var dispo = window.innerHeight - (haut - (window.pageYOffset || 0)) - bas;
-      bloc.style.minHeight = Math.max(max, Math.round(dispo)) + 'px';
+      var dispo = Math.round(window.innerHeight - (haut - (window.pageYOffset || 0)) - bas);
+      bloc.style.minHeight = Math.max(naturel, dispo) + 'px';
+
+      /* La rangee occupe la fenetre, mais les CARTES, elles, ne s'etirent pas
+         indefiniment : au-dela d'une centaine de pixels de rabiot, le surplus
+         se repartit entre six lignes de liste qui finissent a 90 px les unes
+         des autres — ce n'est plus de l'air, c'est une liste cassee. On plafonne
+         donc la carte, et le bloc la centre dans ce qui reste. */
+      var carte = Math.max(max, Math.min(dispo, max + RABIOT));
+      bloc.style.setProperty('--h-carte', carte + 'px');
       void bloc.offsetHeight;             // applique avant de rendre la main
       bloc.classList.remove('mesure');
     }

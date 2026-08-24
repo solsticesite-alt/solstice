@@ -380,21 +380,33 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opa
    visibles sans defiler. */
 /* Le titre a rejoint cette bande : une seule rangee, pour que les trois
    formules tiennent a l'ecran sans avoir a faire defiler. */
-.coll-top{padding-block:clamp(12px,1.8vw,24px) clamp(14px,1.8vw,22px);}
-.coll-hero{display:grid;grid-template-columns:1.35fr .65fr;gap:clamp(16px,2.2vw,30px);align-items:center;margin-bottom:clamp(8px,1.1vw,14px);}
-.coll-hero-copy{display:flex;flex-direction:column;gap:.35rem;}
-.coll-hero-copy h1{font-size:clamp(1.9rem,3.6vw,2.7rem);margin:.1rem 0 .2rem;}
-.coll-hero-copy .lead{font-size:clamp(.95rem,1.25vw,1.05rem);line-height:1.6;max-width:54ch;}
-.coll-hero-art{position:relative;border-radius:clamp(16px,2vw,24px);min-height:clamp(104px,9vw,132px);display:grid;place-items:center;overflow:hidden;box-shadow:0 30px 60px -40px rgba(60,40,18,.5);}
-.coll-hero-art .glyph{width:clamp(62px,6.2vw,84px);height:auto;filter:drop-shadow(0 18px 26px rgba(40,25,10,.24));}
-.coll-hero .pal{margin:.55rem 0 0;}
+.coll-top{padding-block:clamp(12px,1.8vw,22px) clamp(14px,1.8vw,22px);}
+/* Le bandeau d'ambiance (visuel, description, pastilles) a ete retire : les
+   trois formules sont le sujet de la page, et il leur prenait 200 px de haut.
+   Reste une ligne de titre — le nom de la collection a gauche, son solstice a
+   droite, un filet a la couleur dessous. On garde ce titre : sans lui, on
+   arrive sur trois cartes « Cocktail / Table / Reception » sans savoir de
+   quelle collection il s'agit, et la page n'a plus de h1. */
+.coll-titre{display:flex;align-items:baseline;justify-content:space-between;
+  gap:clamp(12px,2vw,24px);
+  padding-bottom:clamp(8px,1.1vw,13px);
+  border-bottom:1px solid var(--line);
+  border-bottom-color:color-mix(in srgb, var(--coll,#000) 32%, var(--line));
+  margin-bottom:clamp(12px,1.7vw,22px);}
+.coll-titre h1{font-size:clamp(1.7rem,3vw,2.4rem);margin:0;}
+.coll-univers{font-family:var(--sans);font-size:.66rem;letter-spacing:.3em;
+  text-transform:uppercase;font-weight:600;white-space:nowrap;
+  color:var(--gold-deep);color:var(--coll-profond,var(--gold-deep));}
 /* ----- Les trois formules -----
    Trois panneaux cote a cote : celui qu'on survole s'elargit, les autres se
    retractent en ne gardant que leur nom. Au doigt, c'est le clic.
 
    Tout ce qui bouge partage la MEME courbe et la MEME duree : c'est ce qui
    fait qu'on lit un seul geste au lieu de trois animations concurrentes. */
-.formulas{display:flex;align-items:stretch;gap:clamp(12px,1.6vw,20px);
+/* Les cartes sont centrees, pas etirees : leur hauteur est plafonnee par
+   --h-carte (pose par collections.js), tandis que le bloc, lui, descend
+   jusqu'au bas de la fenetre pour tenir le pied de page hors de vue. */
+.formulas{display:flex;align-items:center;gap:clamp(12px,1.6vw,20px);
   /* Courbe choisie sur mesure, pas au jugé : l'ancienne expediait 57 % du
      trajet dans le premier quart puis trainait — d'ou la sensation mecanique.
      Celle-ci repartit le mouvement (22 % / 78 % / 98 % aux quarts) tout en
@@ -403,6 +415,7 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opa
 
 .formula{--pad:clamp(15px,1.9vw,26px);
   position:relative;flex:1 1 0;min-width:0;overflow:hidden;
+  height:var(--h-carte,auto);
   border:1px solid var(--line);border-radius:clamp(14px,1.8vw,20px);
   /* La carte repliee EST un echantillon de la couleur de la collection : un
      lavis qui s'approfondit vers le bas. C'est ce qui la sauve du rectangle
@@ -551,12 +564,8 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opa
    jamais sur la taille du titre des formules, qui porte la page. */
 @media (min-width:861px) and (max-height:800px){
   .coll-top{padding-block:10px 12px;}
-  .coll-hero{margin-bottom:8px;}
-  .coll-hero-art{min-height:clamp(76px,6.2vw,94px);}
-  .coll-hero-art .glyph{width:clamp(46px,4.2vw,60px);}
-  .coll-hero-copy h1{font-size:clamp(1.6rem,2.8vw,2.1rem);}
-  .coll-hero-copy .lead{font-size:.88rem;line-height:1.5;}
-  .coll-hero .pal{margin-top:.35rem;}
+  .coll-titre{margin-bottom:12px;padding-bottom:8px;}
+  .coll-titre h1{font-size:clamp(1.5rem,2.6vw,1.9rem);}
   .formula h3{margin-top:1.45rem;}
   .f-body > p{font-size:.9rem;}
   .f-body > :first-child{margin-top:.3rem;}
@@ -565,18 +574,25 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opa
 }
 .coll-allback{text-align:center;margin-bottom:clamp(20px,3vw,32px);}
 @media (max-width:860px){
-  /* Sur mobile on garde le visuel, mais reduit a une bande : les trois
-     formules doivent apparaitre au premier ecran. */
-  .coll-hero{grid-template-columns:92px 1fr;gap:13px;align-items:center;}
-  .coll-hero-art{order:-1;min-height:92px;}
-  .coll-hero-art .glyph{width:52px;}
-  .coll-hero .lead{font-size:.89rem;line-height:1.5;}
-  .coll-hero .pal{margin-top:.4rem;}
+  .coll-titre h1{font-size:1.65rem;}
+  .coll-univers{font-size:.58rem;letter-spacing:.24em;}
   /* Les panneaux s'empilent : ce n'est plus la largeur qui s'ouvre mais la
      hauteur, et c'est le doigt qui commande. */
-  .formulas{flex-direction:column;}
-  .formula{flex:0 0 auto;padding:clamp(16px,4vw,22px);--s1:9%;--s2:15%;--s3:26%;}
-  .formula.on{flex-grow:1;}  /* absorbe la hauteur restante : pas de vide sous la pile */
+  /* Empilees, les cartes reprennent toute la largeur et leur hauteur propre :
+     ni le centrage ni le plafond --h-carte n'ont de sens sur une colonne. */
+  .formulas{flex-direction:column;align-items:stretch;}
+  .formula{flex:0 0 auto;height:auto;padding:clamp(16px,4vw,22px);--s1:9%;--s2:15%;--s3:26%;}
+  /* La carte ouverte ne s'etire plus pour combler la pile : elle absorbait
+     jusqu'a 200 px sur un grand telephone, et tout ce rabiot tombait entre
+     les six lignes de la liste — 118 px d'ecart, mesures. Elle garde sa
+     hauteur propre ; le vide restant passe sous la pile, ou il ne derange
+     personne puisque le pied de page reste hors de vue.
+     Il faut bien annuler `flex-grow` : en colonne, le 2.6 qui elargit la carte
+     sur grand ecran l'ETIRE en hauteur, et `flex:0 0 auto` sur `.formula` ne
+     suffit pas a le neutraliser — `.formula.on` est plus specifique. */
+  /* Le meme plafond sert ici de plancher : la carte gagne son rabiot (donc
+     ses lignes respirent) sans avaler toute la pile. */
+  .formula.on{flex-grow:0;min-height:var(--h-carte,auto);}
   .formula:not(.on){text-align:left;padding-block:clamp(14px,3.4vw,18px);}
   .formula:not(.on) h3{margin:.05rem 0 0;}
   /* Sur une barre de 60 px, ni le filet vertical, ni le numero, ni le filet
