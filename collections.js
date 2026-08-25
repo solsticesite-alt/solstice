@@ -15,6 +15,11 @@
   /* Trois formules dans chaque collection : le moment apéritif, le moment
      repas, ou les deux réunis. La pièce signature n'est ajoutée qu'une fois,
      tout à la fin, pour qu'elle n'apparaisse pas en double dans Réception. */
+  /* `p` = la référence de la pièce dans pieces.js. C'est elle qui apporte le
+     prix, l'unité et la caution — sans elle, la ligne repart en « à chiffrer ».
+     Les items sans `p` sont ceux que le catalogue ne contient pas encore : ils
+     s'affichent en clair comme étant à chiffrer, ce qui donne au passage la
+     liste exacte des pièces qui manquent (voir A-FAIRE.md §7). */
   function cocktailItems() {
     return [
       { n: 'Mange-debout + housse', per: 'd', q: 1 },
@@ -23,30 +28,55 @@
       { n: 'Seau à champagne', per: 'd', q: 1 },
       { n: 'Plateaux de service', per: 'd', q: 1 },
       { n: 'Serviettes cocktail', per: 'g', q: 2 },
-      { n: 'Guirlande lumineuse', per: 'v', q: 1 }
+      { n: 'Guirlande lumineuse', per: 'v', q: 1, p: 'guirlande-guinguette-25-m' }
     ];
   }
   function tableItems() {
     return [
-      { n: 'Nappe en lin', per: 't', q: 1 },
-      { n: 'Chemin de table', per: 't', q: 1 },
+      { n: 'Nappe en lin', per: 't', q: 1, p: 'nappe-en-lin-lave-froisse' },
+      { n: 'Chemin de table', per: 't', q: 1, p: 'chemin-de-table-eucalyptus' },
       { n: 'Assiettes', s: 'service 2 pièces', per: 'g', q: 1 },
       { n: 'Verres', s: 'eau + vin', per: 'g', q: 2 },
       { n: 'Couverts', s: 'parure complète', per: 'g', q: 1 },
       { n: 'Serviettes en tissu', per: 'g', q: 1 },
       { n: 'Marque-places', per: 'g', q: 1 },
-      { n: 'Centre de table', s: 'vase + fleurs de saison', per: 't', q: 1 },
-      { n: 'Photophores & bougies', per: 't', q: 3 }
+      { n: 'Centre de table', s: 'vase + fleurs de saison', per: 't', q: 1, p: 'centre-de-table-fleuri' },
+      { n: 'Photophores & bougies', per: 't', q: 3, p: 'photophores-verre-bougies' }
     ];
   }
   function receptionItems() {
-    return [{ n: 'Table (8 couverts)', per: 't', q: 1 }, { n: 'Chaises', per: 'g', q: 1 }]
+    return [
+      { n: 'Table (8 couverts)', per: 't', q: 1, p: 'table-de-banquet-en-bois-brut' },
+      { n: 'Chaises', per: 'g', q: 1, p: 'chaise-napoleon-transparente' }
+    ]
       .concat(cocktailItems())
       .concat(tableItems())
       .concat([
-        { n: 'Arche décor photo', per: 'f', q: 1 },
+        { n: 'Arche décor photo', per: 'f', q: 1, p: 'arche-ronde-en-bois-clair' },
         { n: 'Coin lounge', s: 'fauteuils & table basse', per: 'f', q: 1 }
       ]);
+  }
+
+  /* La pièce derrière un item de formule, ou null si le catalogue ne l'a pas
+     encore. On ne suppose jamais que pieces.js est chargé : sur une page qui
+     ne l'aurait pas, tout doit continuer de fonctionner sans prix. */
+  function pieceDe(item) {
+    if (!item || !item.p || !window.SolPieces) return null;
+    return window.SolPieces.par(item.p);
+  }
+
+  /* Total d'une ligne : une pièce au week-end garde son tarif, une pièce au
+     jour est multipliée par la durée. Même règle que le panier — c'est
+     volontairement le même calcul, pour que l'estimation annoncée ici
+     corresponde à ce que le panier affichera ensuite. */
+  function ligneTotal(item, invites) {
+    var piece = pieceDe(item);
+    if (!piece || typeof piece.prix !== 'number') return null;
+    return piece.prix * qtyFor(item, invites);
+  }
+
+  function euros(n) {
+    return (Math.round(n * 100) / 100).toLocaleString('fr-FR') + ' €';
   }
 
   var FORMULES = {
@@ -65,6 +95,16 @@
       resume: 'Les deux réunis, du premier verre au dessert. Rien à compléter.',
       items: receptionItems
     }
+  };
+
+  /* Ouverture pour les tests : le chiffrage d'une formule est ce qui finit sur
+     la facture d'un client, il doit pouvoir être vérifié hors du navigateur.
+     On n'expose que de la lecture — rien ici ne permet de modifier l'état. */
+  window.SolCollections = {
+    formules: { cocktail: cocktailItems, table: tableItems, reception: receptionItems },
+    qtyFor: qtyFor,
+    ligneTotal: ligneTotal,
+    pieceDe: pieceDe
   };
 
   function itemsFor(kind, signature) {
@@ -208,16 +248,30 @@
       return itemsFor(state.kind, c.sig);
     }
     function renderList() {
-      var total = 0, html = '';
+      var total = 0, sousTotal = 0, aChiffrer = 0, html = '';
       currentItems().forEach(function (it) {
         var q = qtyFor(it, state.guests);
         total += q;
+        var lt = ligneTotal(it, state.guests);
+        if (lt === null) aChiffrer++; else sousTotal += lt;
         html += '<div class="om-row"><span class="rn">' + esc(it.n) +
           (it.s ? '<small>' + esc(it.s) + '</small>' : '') +
-          '</span><span class="rq">' + q + '</span></div>';
+          '</span><span class="rq">' + q + '</span>' +
+          '<span class="rp' + (lt === null ? ' rp-vide' : '') + '">' +
+          (lt === null ? 'à chiffrer' : euros(lt)) + '</span></div>';
       });
       elList.innerHTML = html;
-      elTotal.textContent = total + ' pièces';
+      /* On annonce le nombre de pièces ET l'estimation. Quand une partie n'est
+         pas encore chiffrée, on le dit au lieu de laisser croire que le total
+         est complet — c'est la promesse tenue au client qui compte ici. */
+      var texte = total + ' pièces';
+      if (sousTotal > 0) {
+        texte += ' · ' + euros(sousTotal);
+        if (aChiffrer) texte += ' + ' + aChiffrer + ' à chiffrer';
+      } else if (aChiffrer) {
+        texte += ' · sur demande';
+      }
+      elTotal.textContent = texte;
     }
 
     /* ---------- pop-up 1 : invités + récapitulatif ---------- */
@@ -305,11 +359,22 @@
       var label = (FORMULES[state.kind] || FORMULES.cocktail).titre + ' · ' + c.name;
       var prefix = state.col + '-' + state.kind + '-';
       currentItems().forEach(function (it) {
-        window.SolCart.add({
+        var piece = pieceDe(it);
+        var ligne = {
           name: it.n, ref: slug(prefix + it.n),
           qty: qtyFor(it, state.guests),
           priceHint: label + ' · ' + state.guests + ' invités'
-        });
+        };
+        /* Le panier ne calcule que si `price` est un NOMBRE : c'est tout ce
+           qui séparait une formule chiffrée d'un « Sur demande ». La référence
+           du panier reste préfixée par la collection et la formule, pour que
+           deux formules différentes ne se confondent pas en une seule ligne. */
+        if (piece && typeof piece.prix === 'number') {
+          ligne.price = piece.prix;
+          ligne.unit = piece.unite;
+          if (typeof piece.caution === 'number') ligne.caution = piece.caution;
+        }
+        window.SolCart.add(ligne);
       });
       hide(root, false);
       /* Les options ne sont proposées qu'après coup. Inutile après Réception,

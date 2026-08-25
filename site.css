@@ -361,6 +361,12 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opa
 .om-row .rn{font-size:.9rem;}
 .om-row .rn small{display:block;color:var(--stone);font-size:.72rem;}
 .om-row .rq{font-family:var(--serif);font-size:1.05rem;font-variant-numeric:tabular-nums;min-width:2.6ch;text-align:right;}
+/* Le prix de la ligne. Les chiffres tabulaires alignent la colonne quel que
+   soit le montant — sans eux, la liste danse a chaque changement d'invites. */
+.om-row .rp{font-size:.86rem;font-variant-numeric:tabular-nums;min-width:7ch;text-align:right;color:var(--ink-soft);}
+/* Une piece que le catalogue ne chiffre pas encore : on l'annonce en clair
+   plutot que d'afficher un tiret qu'on prendrait pour zero. */
+.om-row .rp-vide{color:var(--stone);font-style:italic;font-size:.78rem;}
 .om-foot{padding:1rem clamp(20px,2.6vw,28px) clamp(18px,2.4vw,24px);border-top:1px solid var(--line);background:var(--paper-2);}
 .om-foot .btn{width:100%;}
 @media (prefers-reduced-motion:reduce){

@@ -235,10 +235,37 @@ Pour accélérer (sinon l'indexation naturelle prend plusieurs semaines) :
 Pour que le panier chiffre tout automatiquement, il me faut, par article :
 **nom · prix · unité (jour ou week-end) · caution · catégorie**.
 
+> 🔗 **Les formules se chiffrent désormais toutes seules** à partir du
+> catalogue. Chaque pièce d'une formule pointe vers une fiche de `pieces.js` ;
+> le prix, l'unité et la caution en sont tirés automatiquement, jusque dans le
+> panier. Il n'y a plus de code à écrire pour ça — seulement des données.
+
+**Les 12 pièces qui manquent au catalogue.** Ce sont exactement celles que les
+formules réclament sans les trouver : elles s'affichent « à chiffrer » dans le
+pop-up et dans le panier. Donne-moi leur prix et elles se chiffreront comme le
+reste :
+
+| Pièce | Ajustement |
+|---|---|
+| Mange-debout + housse | par tranche de 12 invités |
+| Verres à cocktail (coupe + tumbler) | 2 par invité |
+| Bar & desserte | par tranche de 20 invités |
+| Seau à champagne | par tranche de 12 invités |
+| Plateaux de service | par tranche de 12 invités |
+| Serviettes cocktail | 2 par invité |
+| Assiettes (service 2 pièces) | 1 par invité |
+| Verres (eau + vin) | 2 par invité |
+| Couverts (parure complète) | 1 par invité |
+| Serviettes en tissu | 1 par invité |
+| Marque-places | 1 par invité |
+| Coin lounge (fauteuils & table basse) | 1, quel que soit le nombre |
+
+> Les huit autres pièces des formules sont déjà reliées : chaises, tables,
+> arche, guirlande, nappe, chemin de table, centre de table, photophores.
+
 Et si possible :
 - le **contenu réel des trois formules** (Cocktail / Table / Réception) pour
-  chacune des six collections de couleur, afin qu'elles se chiffrent au lieu
-  d'afficher « sur demande » ;
+  chacune des six collections de couleur — quelles pièces, en quelle quantité ;
 - les **vraies couleurs** des six collections : aujourd'hui ce sont des teintes
   d'attente (Terracotta, Vert olivier, Écru côté Été ; Bordeaux, Bleu nuit,
   Doré côté Hiver). Donne-moi tes nuances et je les remplace partout ;
