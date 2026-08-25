@@ -7,6 +7,21 @@ Les points sont classés du plus structurant au plus secondaire.
 
 ---
 
+## 0. ⚠️ Mettre la branche de travail en production ⬅️ *en attente, décision prise*
+
+Le travail en cours vit sur la branche `claude/solstice-events-site-design-xzmo7r`.
+Vercel déploie `main` : **tant que la fusion n'est pas faite, rien de tout cela
+n'est en ligne.**
+
+> C'est déjà arrivé une fois : `ADMIN_PASSWORD` avait été supprimé alors que le
+> code sachant lire son remplaçant n'était pas déployé — back-office fermé.
+> **Toujours fusionner AVANT de toucher aux variables Vercel.**
+
+Décision du 25 août 2026 : on attend volontairement avant de fusionner. À faire
+dès que le lot en cours est jugé bon — il suffit de me le dire.
+
+---
+
 ## 1. Ouvrir le compte bancaire, puis Stripe ⬅️ *en attente*
 
 Pour encaisser les paiements en ligne, il faut **les deux** — ce ne sont pas des
