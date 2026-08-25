@@ -119,10 +119,31 @@ Le code est en place ; il ne reste que des gestes de ton côté. Dans cet ordre 
 `admin_security`, le back-office refuse d'activer la double authentification
 et te le dit franchement.
 
-**b) Activer la double authentification.** Back-office → **Sécurité** →
-« Activer la double authentification ». Une clé s'affiche : ajoute-la dans ton
-application d'authentification (Google Authenticator, 1Password, Authy…) par
-**saisie manuelle**, puis entre le code affiché pour confirmer.
+**b) Activer la double authentification.** ⏸️ *Reportée volontairement — à faire
+à la passation.*
+
+> ⚠️ **À faire par la personne qui utilisera réellement le back-office, sur SON
+> téléphone.** Si elle est activée depuis un autre téléphone, cette personne ne
+> pourra plus se connecter sans lui. C'est la seule raison pour laquelle ce
+> point attend : le code est en place et fonctionne, il ne manque qu'un geste.
+>
+> **Au moment de la passation, dans cet ordre :**
+> 1. changer le mot de passe du back-office (`npm run motdepasse`, puis
+>    `ADMIN_PASSWORD_HASH` dans Vercel) — l'ancien ne doit plus ouvrir ;
+> 2. la personne se connecte, va dans **Sécurité** → « Activer la double
+>    authentification », ajoute la clé dans SON application (Google
+>    Authenticator, 1Password, Authy…) par **saisie manuelle**, et entre le
+>    code affiché ;
+> 3. elle note les 8 codes de secours **sur papier**.
+>
+> Tant que ce n'est pas fait, un seul mot de passe garde le fichier des clients
+> et la boîte mail. C'est le point qui coûte le plus au score de sécurité.
+
+**La clé ne doit jamais quitter l'écran.** Ni capture d'écran partagée, ni
+message, ni e-mail : c'est la graine dont tous les codes à six chiffres sont
+dérivés, pour toujours. Si elle a été vue par quelqu'un d'autre, il suffit de
+cliquer « Annuler » et de recommencer — une nouvelle clé est générée et
+l'ancienne ne vaut plus rien.
 
 > 📄 **Note les 8 codes de secours** qui apparaissent ensuite, et range-les
 > **ailleurs que dans ton téléphone**. Sans eux, un téléphone perdu = un
