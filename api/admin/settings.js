@@ -3,7 +3,7 @@ const auth = require('../_lib/auth');
 const store = require('../_lib/store');
 
 module.exports = async (req, res) => {
-  if (!auth.requireAdmin(req, res)) return;
+  if (!(await auth.requireAdmin(req, res))) return;
   if (!store.storeReady()) return send(res, 503, { ok: false, error: 'store_not_configured' });
 
   if (req.method === 'GET') {

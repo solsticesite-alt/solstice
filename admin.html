@@ -226,6 +226,7 @@
     </nav>
     <div class="topbar-tools">
       <button class="btn btn-sm" id="btn-settings">Réglages</button>
+      <button class="btn btn-sm" id="btn-securite">Sécurité<span class="pill hidden" id="pastille-2fa">!</span></button>
       <button class="btn btn-sm" id="btn-logout">Déconnexion</button>
     </div>
   </div>
@@ -239,10 +240,24 @@
     <form class="login-card" id="login-form">
       <h1>Back-office</h1>
       <p>Espace réservé. Entrez le mot de passe administrateur.</p>
-      <label for="pw">Mot de passe</label>
-      <input type="password" id="pw" autocomplete="current-password" required>
+      <div id="etape-mdp">
+        <label for="pw">Mot de passe</label>
+        <input type="password" id="pw" autocomplete="current-password">
+      </div>
+      <div id="etape-code" class="hidden">
+        <label for="code2fa">Code de votre application</label>
+        <input type="text" id="code2fa" inputmode="numeric" autocomplete="one-time-code"
+               maxlength="7" placeholder="123456" style="letter-spacing:.3em;text-align:center;font-size:1.2rem;">
+        <p style="margin:.6rem 0 0;"><button type="button" id="lien-secours"
+           style="background:none;border:none;padding:0;color:var(--gold-deep);font-size:.8rem;text-decoration:underline;cursor:pointer;">Je n'ai pas mon téléphone</button></p>
+      </div>
+      <div id="etape-secours" class="hidden">
+        <label for="codesecours">Code de secours</label>
+        <input type="text" id="codesecours" autocomplete="off" maxlength="12" placeholder="ABCDE-FGHIJ"
+               style="letter-spacing:.14em;text-align:center;">
+      </div>
       <div class="err" id="login-err"></div>
-      <button class="btn btn-gold" style="width:100%;margin-top:14px;" type="submit">Entrer</button>
+      <button class="btn btn-gold" style="width:100%;margin-top:14px;" type="submit" id="login-submit">Entrer</button>
     </form>
   </div>
 
@@ -322,8 +337,28 @@
       state.me=me;
       $('#boot').classList.add('hidden');
       if(!me.authed){ showLogin(); return; }
+      majPastilleSecurite();
       showDash();
     }).catch(function(){ $('#boot').textContent='Erreur de connexion au serveur.'; });
+  }
+
+  // Rafraichit l'etat renvoye par /me sans repasser par tout le demarrage :
+  // le panneau Securite en a besoin apres chaque action.
+  function loadMe(){
+    return api('/api/admin/me').then(function(me){
+      state.me=me; majPastilleSecurite(); return me;
+    });
+  }
+
+  // Une pastille sur le bouton Securite tant que le second facteur n'est pas
+  // en place : c'est la seule protection qui manque encore par defaut.
+  function majPastilleSecurite(){
+    var p=$('#pastille-2fa'); if(!p) return;
+    var s=(state.me&&state.me.securite)||{};
+    var c=(state.me&&state.me.config)||{};
+    var aFaire = state.me && state.me.authed && (!s.deuxFacteurs || !c.adminPasswordHache);
+    p.classList.toggle('hidden', !aFaire);
+    p.title = !s.deuxFacteurs ? 'Double authentification non activée' : 'Mot de passe encore en clair';
   }
 
   function showLogin(){
@@ -1184,12 +1219,199 @@
     if(s<3600){ var m=Math.max(1,Math.round(s/60)); return m+' minute'+(m>1?'s':''); }
     var h=Math.max(1,Math.round(s/3600)); return h+' heure'+(h>1?'s':'');
   }
+  // ---------- Sécurité (double authentification, sessions) ----------
+  function ligneInfo(etiquette,valeur,ton){
+    var couleur = ton==='ok' ? '#5C7A5A' : (ton==='alerte' ? '#A2543C' : 'var(--stone)');
+    return '<div style="display:flex;justify-content:space-between;gap:1rem;padding:.55rem 0;border-bottom:1px solid var(--line);">'+
+           '<span style="color:var(--stone);font-size:.85rem;">'+etiquette+'</span>'+
+           '<strong style="font-size:.85rem;color:'+couleur+';">'+valeur+'</strong></div>';
+  }
+
+  function fermer(bg){ if(bg && bg.parentNode) document.body.removeChild(bg); }
+
+  function montrerCodesSecours(codes,bg){
+    var html='<div class="modal"><h2>Vos codes de secours</h2>'+
+      '<p class="muted" style="margin:.2rem 0 1rem;">Notez-les <strong>maintenant</strong> et rangez-les ailleurs que dans votre téléphone. '+
+      'Chacun ne sert qu\'une fois, et ils ne seront plus jamais affichés.</p>'+
+      '<div style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:1rem;letter-spacing:.08em;line-height:2;'+
+      'background:var(--paper-2);border:1px solid var(--line);border-radius:12px;padding:1rem 1.2rem;column-count:2;">'+
+      codes.map(function(c){ return '<div>'+c+'</div>'; }).join('')+'</div>'+
+      '<div style="display:flex;gap:.6rem;margin-top:1.2rem;">'+
+      '<button class="btn btn-sm" id="sec-copier">Copier</button>'+
+      '<button class="btn btn-gold btn-sm" id="sec-fini" style="margin-left:auto;">C\'est noté</button></div></div>';
+    bg.innerHTML=html;
+    bg.querySelector('#sec-copier').addEventListener('click',function(){
+      try{ navigator.clipboard.writeText(codes.join('\n')); toast('Codes copiés ✓'); }catch(e){ toast('Copie impossible'); }
+    });
+    bg.querySelector('#sec-fini').addEventListener('click',function(){ fermer(bg); openSecurite(); });
+  }
+
+  function ecranActivation(bg){
+    api('/api/admin/security',{method:'POST',body:{action:'start'}}).then(function(r){
+      if(!r.ok){
+        if(r.error==='security_table_missing'){
+          bg.innerHTML='<div class="modal"><h2>Table manquante</h2><p class="muted">La table <code>admin_security</code> n\'existe pas encore. '+
+            'Rejouez <code>supabase-schema.sql</code> dans Supabase (SQL Editor → coller → Run), puis revenez ici.</p>'+
+            '<div style="margin-top:1.2rem;text-align:right;"><button class="btn btn-sm" id="sec-fermer">Fermer</button></div></div>';
+          bg.querySelector('#sec-fermer').addEventListener('click',function(){ fermer(bg); });
+          return;
+        }
+        toast('Impossible de démarrer'); fermer(bg); return;
+      }
+      bg.innerHTML='<div class="modal"><h2>Activer la double authentification</h2>'+
+        '<p class="muted" style="margin:.2rem 0 1rem;">Dans votre application d\'authentification (Google Authenticator, 1Password, Authy…), '+
+        'ajoutez un compte <strong>par saisie manuelle</strong> et entrez cette clé :</p>'+
+        '<div style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:1.05rem;letter-spacing:.12em;text-align:center;'+
+        'background:var(--paper-2);border:1px solid var(--line);border-radius:12px;padding:1rem;">'+r.secretLisible+'</div>'+
+        '<p class="muted" style="margin:.8rem 0 0;font-size:.78rem;">Compte : '+r.compte+' — Émetteur : Maison Solstice</p>'+
+        '<p style="margin:.5rem 0 1.1rem;"><a href="'+r.uri+'" style="color:var(--gold-deep);font-size:.8rem;text-decoration:underline;">Ouvrir directement dans l\'application (depuis un téléphone)</a></p>'+
+        '<label for="sec-code">Entrez le code affiché pour confirmer</label>'+
+        '<input type="text" id="sec-code" inputmode="numeric" maxlength="7" placeholder="123456" style="letter-spacing:.3em;text-align:center;font-size:1.2rem;">'+
+        '<div class="err" id="sec-err"></div>'+
+        '<div style="display:flex;gap:.6rem;margin-top:1.2rem;">'+
+        '<button class="btn btn-sm" id="sec-annuler">Annuler</button>'+
+        '<button class="btn btn-gold btn-sm" id="sec-valider" style="margin-left:auto;">Activer</button></div></div>';
+      bg.querySelector('#sec-code').focus();
+      bg.querySelector('#sec-annuler').addEventListener('click',function(){
+        api('/api/admin/security',{method:'POST',body:{action:'cancel'}}); fermer(bg);
+      });
+      bg.querySelector('#sec-valider').addEventListener('click',function(){
+        var err=bg.querySelector('#sec-err'); err.textContent='';
+        api('/api/admin/security',{method:'POST',body:{action:'confirm',code:bg.querySelector('#sec-code').value}}).then(function(c){
+          if(c.ok){ loadMe().then(function(){ montrerCodesSecours(c.recovery,bg); }); }
+          else if(c.error==='too_many_attempts'){ err.textContent='Trop de tentatives. Réessayez dans '+duree(c.retryAfter)+'.'; }
+          else { err.textContent='Code incorrect.'; bg.querySelector('#sec-code').value=''; }
+        }).catch(function(){ err.textContent='Erreur réseau.'; });
+      });
+    });
+  }
+
+  function demanderMotDePasse(bg,titre,texte,champsSup,action,apres){
+    bg.innerHTML='<div class="modal"><h2>'+titre+'</h2><p class="muted" style="margin:.2rem 0 1rem;">'+texte+'</p>'+
+      '<label for="sec-mdp">Mot de passe</label><input type="password" id="sec-mdp" autocomplete="current-password">'+
+      (champsSup||'')+
+      '<div class="err" id="sec-err"></div>'+
+      '<div style="display:flex;gap:.6rem;margin-top:1.2rem;">'+
+      '<button class="btn btn-sm" id="sec-annuler">Annuler</button>'+
+      '<button class="btn btn-gold btn-sm" id="sec-ok" style="margin-left:auto;">Confirmer</button></div></div>';
+    bg.querySelector('#sec-mdp').focus();
+    bg.querySelector('#sec-annuler').addEventListener('click',function(){ fermer(bg); openSecurite(); });
+    bg.querySelector('#sec-ok').addEventListener('click',function(){
+      var err=bg.querySelector('#sec-err'); err.textContent='';
+      var corps={action:action,password:bg.querySelector('#sec-mdp').value};
+      var c=bg.querySelector('#sec-code2'); if(c) corps.code=c.value;
+      var s=bg.querySelector('#sec-secours2'); if(s) corps.recovery=s.value;
+      api('/api/admin/security',{method:'POST',body:corps}).then(function(r){
+        if(r.ok){ apres(r,bg); return; }
+        if(r.error==='bad_password'){ err.textContent='Mot de passe incorrect.'; }
+        else if(r.error==='bad_code'){ err.textContent='Code incorrect ou déjà utilisé.'; }
+        else if(r.error==='security_table_missing'){ err.textContent='La table admin_security manque : rejouez supabase-schema.sql.'; }
+        else { err.textContent='Action impossible.'; }
+      }).catch(function(){ err.textContent='Erreur réseau.'; });
+    });
+  }
+
+  function openSecurite(){
+    var s=(state.me&&state.me.securite)||{};
+    var c=(state.me&&state.me.config)||{};
+    var bg=document.createElement('div'); bg.className='modal-bg';
+    bg.innerHTML='<div class="modal"><h2>Sécurité</h2>'+
+      '<div style="margin:.8rem 0 1.2rem;">'+
+        ligneInfo('Double authentification', s.deuxFacteurs?'Activée':'Désactivée', s.deuxFacteurs?'ok':'alerte')+
+        (s.deuxFacteurs?ligneInfo('Codes de secours restants', String(s.secoursRestants), s.secoursRestants>2?'ok':'alerte'):'')+
+        ligneInfo('Mot de passe', c.adminPasswordHache?'Stocké en empreinte':'En clair dans la configuration', c.adminPasswordHache?'ok':'alerte')+
+        (s.durable===false?ligneInfo('État des sessions','Table admin_security manquante','alerte'):'')+
+      '</div>'+
+      '<div style="display:flex;flex-direction:column;gap:.6rem;">'+
+        (s.deuxFacteurs
+          ? '<button class="btn btn-sm" id="sec-nouveaux">Refaire des codes de secours</button>'+
+            '<button class="btn btn-sm" id="sec-retirer">Retirer la double authentification</button>'
+          : '<button class="btn btn-gold btn-sm" id="sec-activer">Activer la double authentification</button>')+
+        '<button class="btn btn-sm" id="sec-revoquer">Déconnecter partout</button>'+
+      '</div>'+
+      (c.adminPasswordHache?'':'<p class="muted" style="margin:1rem 0 0;font-size:.78rem;">Le mot de passe est encore stocké en clair dans les variables Vercel. '+
+        'Lancez <code>npm run motdepasse</code> pour produire une empreinte, posez-la dans <code>ADMIN_PASSWORD_HASH</code> et supprimez <code>ADMIN_PASSWORD</code>.</p>')+
+      '<div style="margin-top:1.3rem;text-align:right;"><button class="btn btn-sm" id="sec-fermer">Fermer</button></div></div>';
+    document.body.appendChild(bg);
+    bg.addEventListener('click',function(e){ if(e.target===bg) fermer(bg); });
+    bg.querySelector('#sec-fermer').addEventListener('click',function(){ fermer(bg); });
+
+    var bA=bg.querySelector('#sec-activer');
+    if(bA) bA.addEventListener('click',function(){ ecranActivation(bg); });
+
+    var bR=bg.querySelector('#sec-retirer');
+    if(bR) bR.addEventListener('click',function(){
+      demanderMotDePasse(bg,'Retirer la double authentification',
+        'Votre mot de passe et un code valide sont demandés : sans cela, un ordinateur laissé ouvert suffirait à désarmer le compte. Toutes les autres sessions seront fermées.',
+        '<label for="sec-code2" style="margin-top:.8rem;display:block;">Code de l\'application</label>'+
+        '<input type="text" id="sec-code2" inputmode="numeric" maxlength="7" placeholder="123456" style="letter-spacing:.3em;text-align:center;">'+
+        '<label for="sec-secours2" style="margin-top:.8rem;display:block;">…ou un code de secours</label>'+
+        '<input type="text" id="sec-secours2" maxlength="12" placeholder="ABCDE-FGHIJ" style="letter-spacing:.14em;text-align:center;">',
+        'disable', function(r,bgx){ fermer(bgx); loadMe().then(function(){ toast('Double authentification retirée'); }); });
+    });
+
+    var bN=bg.querySelector('#sec-nouveaux');
+    if(bN) bN.addEventListener('click',function(){
+      demanderMotDePasse(bg,'Refaire des codes de secours',
+        'Les anciens codes cesseront immédiatement de fonctionner.','','recovery',
+        function(r,bgx){ loadMe().then(function(){ montrerCodesSecours(r.recovery,bgx); }); });
+    });
+
+    bg.querySelector('#sec-revoquer').addEventListener('click',function(){
+      demanderMotDePasse(bg,'Déconnecter partout',
+        'Toutes les sessions ouvertes seront fermées — téléphone, autre ordinateur, navigateur oublié quelque part. La vôtre reste ouverte.',
+        '','revoke-all', function(r,bgx){ fermer(bgx); toast('Toutes les autres sessions sont fermées ✓'); });
+    });
+  }
+
+  // La connexion se fait en un ou deux temps selon que la double
+  // authentification est active. Le serveur decide : il repond `need2fa`.
+  var etapeConnexion='mdp';
+
+  function montrerEtape(nom){
+    etapeConnexion=nom;
+    $('#etape-mdp').classList.toggle('hidden', nom!=='mdp');
+    $('#etape-code').classList.toggle('hidden', nom!=='code');
+    $('#etape-secours').classList.toggle('hidden', nom!=='secours');
+    $('#login-submit').textContent = nom==='mdp' ? 'Entrer' : 'Valider';
+    var champ = nom==='mdp' ? $('#pw') : (nom==='code' ? $('#code2fa') : $('#codesecours'));
+    if(champ) setTimeout(function(){ champ.focus(); },30);
+  }
+
+  $('#lien-secours').addEventListener('click',function(){
+    $('#login-err').textContent=''; montrerEtape('secours');
+  });
+
   $('#login-form').addEventListener('submit',function(e){
     e.preventDefault(); var err=$('#login-err'); err.textContent='';
-    api('/api/admin/login',{method:'POST',body:{password:$('#pw').value}}).then(function(r){
-      if(r.ok){ boot(); }
-      else if(r.error==='admin_password_not_set'){ err.textContent="Le mot de passe admin n'est pas encore configuré sur le serveur."; }
+    var corps;
+    if(etapeConnexion==='mdp'){ corps={password:$('#pw').value}; }
+    else if(etapeConnexion==='code'){ corps={code:$('#code2fa').value}; }
+    else { corps={recovery:$('#codesecours').value}; }
+
+    api('/api/admin/login',{method:'POST',body:corps}).then(function(r){
+      if(r.ok && r.need2fa){
+        $('#pw').value='';
+        montrerEtape('code');
+        return;
+      }
+      if(r.ok){
+        if(r.usedRecovery){
+          alert('Connexion par code de secours. Il vous en reste '+r.recoveryLeft+
+                '.\n\nSi vous avez perdu votre téléphone, refaites la double authentification depuis Sécurité.');
+        }
+        boot(); return;
+      }
+      if(r.error==='admin_password_not_set'){ err.textContent="Le mot de passe admin n'est pas encore configuré sur le serveur."; }
       else if(r.error==='too_many_attempts'){ err.textContent='Trop de tentatives. Réessayez dans '+duree(r.retryAfter)+'.'; }
+      else if(r.error==='step_expired'){
+        err.textContent='La session de connexion a expiré. Reprenez au mot de passe.';
+        montrerEtape('mdp');
+      }
+      else if(r.error==='bad_code'){
+        err.textContent = etapeConnexion==='secours' ? 'Code de secours invalide ou déjà utilisé.' : 'Code incorrect.';
+        var c=$('#code2fa'); if(c) c.value='';
+      }
       else if(typeof r.remaining==='number' && r.remaining<=2){
         err.textContent='Mot de passe incorrect. '+(r.remaining>0
           ? 'Encore '+r.remaining+' essai'+(r.remaining>1?'s':'')+' avant une mise en attente.'
@@ -1200,6 +1422,7 @@
   });
   $('#btn-logout').addEventListener('click',function(){ api('/api/admin/logout',{method:'POST'}).then(function(){ location.reload(); }); });
   $('#btn-settings').addEventListener('click',openSettings);
+  $('#btn-securite').addEventListener('click',openSecurite);
   $('#search').addEventListener('input',function(e){ state.q=e.target.value; renderList(); });
   Array.prototype.forEach.call(document.querySelectorAll('#filters .chip'),function(ch){
     ch.addEventListener('click',function(){ Array.prototype.forEach.call(document.querySelectorAll('#filters .chip'),function(x){x.classList.remove('on');}); ch.classList.add('on'); state.filter=ch.getAttribute('data-f'); renderList(); });

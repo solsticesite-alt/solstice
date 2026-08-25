@@ -224,7 +224,7 @@ async function handlePost(req, res) {
 }
 
 module.exports = async (req, res) => {
-  if (!auth.requireAdmin(req, res)) return;
+  if (!(await auth.requireAdmin(req, res))) return;
   if (!imap.imapReady()) return send(res, 503, { ok: false, error: 'imap_not_configured' });
 
   const url = new URL(req.url, 'http://localhost');

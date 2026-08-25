@@ -9,7 +9,7 @@ const { computeInvoice } = require('../_lib/invoice');
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') return send(res, 405, { ok: false, error: 'method_not_allowed' });
-  if (!auth.requireAdmin(req, res)) return;
+  if (!(await auth.requireAdmin(req, res))) return;
   if (!store.storeReady()) return send(res, 503, { ok: false, error: 'store_not_configured' });
   if (!mail.mailReady()) return send(res, 503, { ok: false, error: 'mail_not_configured' });
 

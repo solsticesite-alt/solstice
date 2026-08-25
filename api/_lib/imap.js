@@ -453,7 +453,10 @@ function adresseEnEchec(parsed) {
   // Le format normalise : une partie message/delivery-status qui porte
   // « Final-Recipient: rfc822; adresse ».
   const morceaux = [parsed.text || ''];
-  (parsed.attachments || []).forEach((a) => {
+  // `|| []` ne suffit pas : une valeur non-tableau mais vraie (une chaine, un
+  // objet) passe le garde et fait echouer .forEach — et c'est TOUT l'onglet
+  // Messages qui tombe. Ailleurs dans ce fichier on teste deja Array.isArray.
+  (Array.isArray(parsed.attachments) ? parsed.attachments : []).forEach((a) => {
     if (/delivery-status|rfc822-headers|message\/rfc822/i.test(a.contentType || '') && a.content) {
       morceaux.push(a.content.toString('utf8'));
     }
@@ -470,7 +473,8 @@ function adresseEnEchec(parsed) {
 
 function raisonDuRebond(parsed) {
   const tout = (parsed.text || '') + '\n' +
-    (parsed.attachments || []).filter((a) => /delivery-status/i.test(a.contentType || '') && a.content)
+    (Array.isArray(parsed.attachments) ? parsed.attachments : [])
+      .filter((a) => a && /delivery-status/i.test(a.contentType || '') && a.content)
       .map((a) => a.content.toString('utf8')).join('\n');
   const diag = /Diagnostic-Code:\s*[^;]*;\s*([^\r\n]+)/i.exec(tout);
   if (diag) return diag[1].trim().slice(0, 200);

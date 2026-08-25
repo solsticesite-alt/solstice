@@ -47,16 +47,41 @@ En-têtes HTTP de sécurité appliqués à tout le site :
 > ⚠️ Ces pages contiennent des champs `[À COMPLÉTER]` : voir la section 6.
 
 ### Accès au back-office
-Un seul mot de passe (`ADMIN_PASSWORD`) garde les commandes des clients **et**
+Le back-office garde les commandes des clients **et**, par l'onglet Messages,
 la boîte mail du domaine. Ce qui le protège aujourd'hui :
 
-- **Comparaison en temps constant** : la durée de la vérification ne trahit pas
-  le nombre de caractères justes.
+- **Double authentification (TOTP, RFC 6238)** — un code à six chiffres en plus
+  du mot de passe, activable depuis Sécurité. Implémentée sans dépendance
+  externe (`api/_lib/totp.js`) et vérifiée contre les **six vecteurs de test
+  officiels de la RFC 6238**. Trois points qui comptent :
+  - **La connexion se fait en deux temps.** Le mot de passe seul ne pose qu'un
+    jeton d'étape valable 5 minutes, qui n'ouvre rien par lui-même.
+  - **Anti-rejeu** : le compteur du dernier code accepté est conservé. Un code
+    lu par-dessus l'épaule ne resservira pas, même dans sa demi-minute de vie.
+  - **Freinage dédié** : six chiffres se balaient vite, donc les essais de code
+    ont leur propre compteur, séparé de celui du mot de passe.
+- **Huit codes de secours**, à usage unique, stockés hachés (scrypt). Sans eux,
+  un téléphone perdu vaudrait un back-office perdu.
+- **Mot de passe stockable en empreinte** (`ADMIN_PASSWORD_HASH`, scrypt
+  N=16384) plutôt qu'en clair dans les variables Vercel : une capture d'écran
+  du tableau de bord ne donne alors plus rien d'utilisable. `npm run motdepasse`
+  produit l'empreinte sans afficher ni écrire le mot de passe.
+- **Comparaison en temps constant, longueur comprise** : les deux valeurs sont
+  comparées par leur empreinte SHA-256, donc toujours sur 32 octets. Le test de
+  longueur qui précédait `timingSafeEqual` répondait plus vite pour une
+  longueur fausse — de quoi apprendre la taille du mot de passe.
 - **Cookie de session signé** (HMAC-SHA256), `HttpOnly` + `Secure` +
   `SameSite=Strict`, valable 7 jours. Inaccessible au JavaScript de la page,
   jamais envoyé en clair, jamais joint à une requête venue d'un autre site.
-- **Changer le mot de passe ferme les sessions ouvertes** (la clé de signature
-  en dérive), sauf si `SESSION_SECRET` est défini séparément.
+- **Changer le mot de passe ferme les sessions ouvertes, toujours.** L'empreinte
+  du mot de passe entre dans la clé de signature. Auparavant elle n'y entrait
+  que faute de `SESSION_SECRET` : là où celui-ci était défini — c'est-à-dire en
+  production — changer le mot de passe ne déconnectait personne. Constaté, puis
+  corrigé.
+- **« Déconnecter partout »** (Sécurité) ferme toutes les autres sessions sans
+  toucher au mot de passe. Les jetons portent un numéro de génération, comparé
+  à chaque requête à celui conservé en base (table `admin_security`) ;
+  l'incrémenter suffit. Modifier ce numéro dans le jeton casse sa signature.
 - **Aucune session possible sans secret configuré.** Un secret de repli était
   auparavant écrit en clair dans le dépôt : sur un déploiement où
   `ADMIN_PASSWORD` n'était pas encore renseigné, un cookie forgé avec cette
@@ -68,8 +93,9 @@ la boîte mail du domaine. Ce qui le protège aujourd'hui :
 - **L'adresse IP n'est jamais stockée en clair** : seule une empreinte HMAC
   sert de clé de comptage (table `admin_logins`).
 
-> À faire quand le besoin s'en fera sentir : une 2FA, et un second compte pour
-> séparer la lecture des commandes de l'accès à la boîte mail.
+> Ce qui reste, par ordre d'intérêt : un second compte pour séparer la lecture
+> des commandes de l'accès à la boîte mail, et DKIM (indisponible sur l'offre
+> Zimbra actuelle — voir A-FAIRE.md §3).
 
 ### Conservation et effacement des données
 
@@ -334,18 +360,46 @@ traverse intact — c'est vérifié par un test dédié.
   de passe long et unique.
 - `script-src 'unsafe-inline'` reste nécessaire tant que le JS est écrit
   directement dans les pages (voir section 9).
-- **Pas de déconnexion à distance** : si `SESSION_SECRET` est défini, changer le
-  mot de passe ne ferme pas les sessions ouvertes (jusqu'à 7 jours). À ajouter
-  si le besoin se présente.
+- ~~**Pas de déconnexion à distance**~~ — **corrigé (août 2026).** L'empreinte
+  du mot de passe entre désormais dans la clé de signature, et un bouton
+  « Déconnecter partout » ferme les sessions sans toucher au mot de passe.
 - **Rien n'a été vérifié en production.** Tout l'audit a tourné en local, avec
   Supabase, IMAP et SMTP simulés. Restent à confirmer côté Vercel et OVH : que
   la Row Level Security est bien active, que les en-têtes de sécurité sont
   réellement servis, que les déploiements de préversion ne sont pas ouverts,
   et que le compte OVH est protégé par une double authentification.
-- **`api/_lib/imap.js` (733 lignes) n'a que 12 tests, tous sur des fonctions
-  pures.** Le décodage MIME d'un message hostile — pièces jointes, encodages,
-  structures imbriquées — n'est pas couvert. C'est le prochain morceau à
-  éprouver de la même façon que le nettoyeur HTML.
+- ~~**`api/_lib/imap.js` n'a que 12 tests**~~ — **corrigé (août 2026),** voir
+  ci-dessous.
+
+---
+
+### Le lecteur d'e-mails passé au même tamis
+
+`api/_lib/imap.js` digère ce que des inconnus lui envoient : il suffit d'écrire
+à `contact@maison-solstice.fr` pour choisir ce qu'il avale. C'est la seule
+surface du site où un tiers fournit directement la matière première.
+
+Ses dix fonctions d'analyse ont été soumises à **environ 4 000 cas** générés
+(`test/imap-fuzz.test.js`) : chaînes composées de fragments hostiles, tampons
+mal encodés, structures MIME profondes ou incohérentes, faux rapports de
+non-remise, pièces jointes démesurées. Quatre invariants à chaque cas — aucune
+exception, aucun dépassement des plafonds annoncés, aucun temps de calcul
+aberrant, aucune pollution de prototype.
+
+**Un défaut trouvé et corrigé** : `adresseEnEchec` et `raisonDuRebond` se
+gardaient par `parsed.attachments || []`, ce qui laisse passer toute valeur
+non-tableau mais vraie — une chaîne, un objet. `.forEach` échouait alors, et
+c'est **tout l'onglet Messages** qui devenait inutilisable. Le reste du fichier
+testait déjà `Array.isArray` ; ces deux-là avaient été oubliés.
+
+Deux points ont été confirmés au passage plutôt que supposés : l'expression qui
+retire les préfixes « Re: » ne s'emballe pas sur un sujet fait de milliers de
+préfixes empilés, et l'incorporation des images `cid:` n'introduit jamais
+d'URL `data:` autre qu'une image — donc rien d'exécutable.
+
+> Reste hors couverture : les fonctions qui parlent réellement au serveur IMAP
+> (connexion, `fetch`, drapeaux). Les éprouver demande un serveur IMAP simulé,
+> et elles ne décident de rien sur le contenu.
 
 ---
 

@@ -29,6 +29,9 @@ const FORM_FENETRE_MS = 60 * 60 * 1000;
 // Les deux compteurs partagent la meme table : un prefixe les separe.
 const CLE_CONNEXION = 'c:';
 const CLE_FORMULAIRE = 'f:';
+// Le second facteur a son propre compteur : six chiffres se balaient vite,
+// et il ne doit pas partager son quota avec les essais de mot de passe.
+const CLE_CODE = 'k:';
 
 const memoire = new Map();
 let _sbErreurSignalee = false;
@@ -152,9 +155,9 @@ async function effacer(cle) {
 }
 
 // Etat courant de l'adresse : bloquee ou non, et combien de temps encore.
-async function etat(req, maintenant) {
+async function etat(req, maintenant, prefixe) {
   const now = maintenant || Date.now();
-  const cle = CLE_CONNEXION + empreinte(adresseDe(req));
+  const cle = (prefixe || CLE_CONNEXION) + empreinte(adresseDe(req));
   const { fails, lastFail } = await lire(cle);
   if (!fails || now - lastFail > OUBLI_MS) return { cle, fails: 0, bloque: false, resteMs: 0 };
   const reste = lastFail + attentePour(fails) - now;
@@ -163,9 +166,9 @@ async function etat(req, maintenant) {
 
 // Un echec de plus. Renvoie le temps d'attente a respecter avant de repondre,
 // et l'etat qui en decoule.
-async function echec(req, maintenant) {
+async function echec(req, maintenant, prefixe) {
   const now = maintenant || Date.now();
-  const cle = CLE_CONNEXION + empreinte(adresseDe(req));
+  const cle = (prefixe || CLE_CONNEXION) + empreinte(adresseDe(req));
   const { fails, lastFail } = await lire(cle);
   const precedents = !fails || now - lastFail > OUBLI_MS ? 0 : fails;
   const total = precedents + 1;
@@ -197,8 +200,8 @@ async function formulaire(req, maintenant) {
   };
 }
 
-async function succes(req) {
-  await effacer(CLE_CONNEXION + empreinte(adresseDe(req)));
+async function succes(req, prefixe) {
+  await effacer((prefixe || CLE_CONNEXION) + empreinte(adresseDe(req)));
 }
 
 // En secondes, pour l'en-tete Retry-After et le message affiche.
@@ -218,5 +221,8 @@ module.exports = {
   SEUIL,
   OUBLI_MS,
   FORM_MAX,
-  FORM_FENETRE_MS
+  FORM_FENETRE_MS,
+  CLE_CONNEXION,
+  CLE_FORMULAIRE,
+  CLE_CODE
 };

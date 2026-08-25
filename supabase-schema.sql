@@ -65,6 +65,30 @@ alter table devis_settings enable row level security;
 alter table admin_logins   enable row level security;
 
 -- ============================================================================
+-- Ajout (aout 2026) — sécurité du back-office.
+--
+-- Une ligne unique (id = 1) qui retient deux choses :
+--   · le numéro de génération des sessions — l'incrémenter ferme d'un coup
+--     toutes les sessions ouvertes, c'est le bouton « Déconnecter partout » ;
+--   · le secret de la double authentification, le compteur du dernier code
+--     accepté (pour qu'un code ne serve jamais deux fois) et les empreintes
+--     des codes de secours.
+--
+-- Une table à part, et surtout pas la ligne des réglages : celle-ci est
+-- renvoyée telle quelle au navigateur par /api/admin/settings.
+--
+-- Sans cette table, le site continue de fonctionner : la connexion marche,
+-- mais la double authentification ne peut pas être activée et le back-office
+-- vous le dit.
+-- ============================================================================
+create table if not exists admin_security (
+  id   int primary key,
+  data jsonb not null
+);
+
+alter table admin_security enable row level security;
+
+-- ============================================================================
 -- Fin. Vous pouvez ensuite consulter vos demandes dans
 -- Table Editor → devis_requests.
 -- ============================================================================

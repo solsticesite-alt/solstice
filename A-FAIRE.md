@@ -99,15 +99,59 @@ Gmail, variables Vercel. Tant que ce n'est pas fait, le formulaire affiche
 > `https://maison-solstice.fr` (liens dans les e-mails de notification).
 
 > 🔁 **Si Supabase est déjà en place**, relance une fois le script
-> `supabase-schema.sql` (SQL Editor → coller → Run). Il ajoute la table
-> `admin_logins`, qui retient les tentatives de connexion ratées au
-> back-office. Le script ne détruit rien et peut être rejoué autant de fois
-> que nécessaire.
+> `supabase-schema.sql` (SQL Editor → coller → Run). Il ajoute les tables
+> `admin_logins` (tentatives de connexion ratées) et `admin_security`
+> (double authentification, sessions). Le script ne détruit rien et peut être
+> rejoué autant de fois que nécessaire.
 
-> 🔑 **Le mot de passe du back-office** (`ADMIN_PASSWORD` dans Vercel) ouvre
-> désormais aussi ta boîte mail : prends-en un long et unique. Au-delà de
-> 5 essais ratés, l'adresse qui insiste est mise en attente, pour un temps qui
-> double à chaque nouvelle erreur (jusqu'à 6 h).
+> 🔑 **Le mot de passe du back-office** ouvre le fichier de tes clients et,
+> par l'onglet Messages, ta boîte mail : prends-en un long et unique. Au-delà
+> de 5 essais ratés, l'adresse qui insiste est mise en attente, pour un temps
+> qui double à chaque nouvelle erreur (jusqu'à 6 h).
+
+---
+
+### 4 bis. Trois gestes qui verrouillent le back-office ⬅️ *à faire*
+
+Le code est en place ; il ne reste que des gestes de ton côté. Dans cet ordre :
+
+**a) Rejouer `supabase-schema.sql`** (voir ci-dessus). Sans la table
+`admin_security`, le back-office refuse d'activer la double authentification
+et te le dit franchement.
+
+**b) Activer la double authentification.** Back-office → **Sécurité** →
+« Activer la double authentification ». Une clé s'affiche : ajoute-la dans ton
+application d'authentification (Google Authenticator, 1Password, Authy…) par
+**saisie manuelle**, puis entre le code affiché pour confirmer.
+
+> 📄 **Note les 8 codes de secours** qui apparaissent ensuite, et range-les
+> **ailleurs que dans ton téléphone**. Sans eux, un téléphone perdu = un
+> back-office perdu. Chacun ne sert qu'une fois et ils ne sont plus jamais
+> affichés.
+
+**c) Remplacer le mot de passe en clair par son empreinte.** Aujourd'hui
+`ADMIN_PASSWORD` contient ton mot de passe lisible : une capture d'écran du
+tableau de bord Vercel suffit à le donner. À la place :
+
+```
+npm run motdepasse
+```
+
+La commande demande le mot de passe sans l'afficher et produit une empreinte.
+Dans Vercel → Settings → Environment Variables :
+
+| | |
+|---|---|
+| Ajouter | `ADMIN_PASSWORD_HASH` = l'empreinte produite |
+| Supprimer | `ADMIN_PASSWORD` |
+
+Puis redéploie. **Toutes les sessions ouvertes se ferment d'elles-mêmes** —
+c'est voulu, et c'est aussi ce qui manquait avant : changer le mot de passe ne
+déconnectait personne.
+
+> Le bouton **« Déconnecter partout »** (Sécurité) ferme toutes les autres
+> sessions sans toucher au mot de passe — utile si tu as laissé le back-office
+> ouvert quelque part.
 
 ---
 
