@@ -53,7 +53,22 @@
   .panel{background:var(--paper);border:1px solid var(--line);border-radius:16px;box-shadow:0 22px 44px -40px rgba(34,28,21,.4);}
   .list-head{display:flex;gap:.5rem;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap;}
   .list-head input{flex:1;min-width:120px;}
-  .filters{display:flex;gap:.3rem;padding:10px 16px;border-bottom:1px solid var(--line);}
+  .filters{display:flex;gap:.3rem;padding:10px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap;}
+  /* Barre de tri : discrète, mais toujours visible. Le tri par date
+     d'événement est ce qui remonte l'urgent, que la date de demande enterrait. */
+  .listbar{display:flex;align-items:center;gap:.5rem;padding:8px 16px;border-bottom:1px solid var(--line);
+    font-size:.76rem;color:var(--stone);}
+  .listbar select{font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--line);
+    border-radius:8px;padding:.25rem .45rem;cursor:pointer;}
+  /* Le délai avant l'événement. C'est l'information qui manquait le plus :
+     six demandes sur neuf portaient sur une date déjà passée, sans que rien
+     ne les distingue de celles encore à préparer. */
+  .req-when{font-size:.72rem;font-weight:600;letter-spacing:.02em;}
+  .req-when.proche{color:#A2543C;}
+  .req-when.venir{color:#5C7A5A;}
+  .req-when.passe{color:var(--stone);font-weight:400;}
+  .req.est-passe .req-name{color:var(--stone);}
+  .req.est-passe{opacity:.72;}
   .chip{border:1px solid var(--line);background:transparent;border-radius:99px;padding:.3em .8em;font-size:.74rem;color:var(--ink-soft);}
   .chip.on{background:var(--ink);color:var(--paper);border-color:var(--ink);}
   .reqs{list-style:none;margin:0;padding:6px;max-height:72vh;overflow:auto;}
@@ -274,6 +289,14 @@
           <button class="chip" data-f="new">Nouvelles</button>
           <button class="chip" data-f="read">Lues</button>
           <button class="chip" data-f="replied">Facturées</button>
+          <button class="chip" data-f="avenir" title="Événements pas encore passés">À venir</button>
+        </div>
+        <div class="listbar">
+          <label for="tri">Trier par</label>
+          <select id="tri">
+            <option value="recu">demande la plus récente</option>
+            <option value="event">événement le plus proche</option>
+          </select>
         </div>
         <ul class="reqs" id="reqs"><li class="empty">Chargement…</li></ul>
       </div>

@@ -3,6 +3,8 @@
 const { readJson, send, clean, cleanMultiline, isEmail, toNumber } = require('./_lib/util');
 const store = require('./_lib/store');
 const mail = require('./_lib/mail');
+// Le catalogue chiffre, partage avec le site : une seule source de prix.
+const pieces = require('../pieces.js');
 const frein = require('./_lib/ratelimit');
 
 const DOMAINE = 'maison-solstice.fr';
@@ -52,13 +54,37 @@ module.exports = async (req, res) => {
   // Reglement choisi par le client : acompte de 50 % ou paiement integral.
   const payment = body.payment === 'full' ? 'full' : 'deposit';
 
+  /*
+   * Le tarif est retrouve ICI, dans notre propre catalogue, a partir de la
+   * seule reference envoyee par la page. Le navigateur n'a jamais son mot a
+   * dire sur le prix : sans cela, il suffirait de modifier sa page pour
+   * commander a n'importe quel tarif, et la facture partirait avec.
+   *
+   * C'est aussi ce qui permet au back-office de pre-remplir la facture : le
+   * prix affiche au client au moment de sa demande est desormais CONSERVE
+   * avec elle. Avant, il etait perdu — la facture repartait de zero et rien
+   * ne garantissait qu'elle corresponde a ce que le client avait vu.
+   */
   const rawItems = Array.isArray(body.items) ? body.items.slice(0, 80) : [];
-  const items = rawItems.map((it) => ({
-    name: clean(it && it.name, 160),
-    ref: clean(it && it.ref, 80),
-    qty: Math.min(999, Math.max(1, Math.round(toNumber(it && it.qty, 1)))),
-    priceHint: clean(it && it.priceHint, 40)
-  })).filter((it) => it.name);
+  const items = rawItems.map((it) => {
+    const ligne = {
+      name: clean(it && it.name, 160),
+      ref: clean(it && it.ref, 80),
+      piece: clean(it && it.piece, 80),
+      qty: Math.min(999, Math.max(1, Math.round(toNumber(it && it.qty, 1)))),
+      priceHint: clean(it && it.priceHint, 40)
+    };
+    const p = pieces.par(ligne.piece) || pieces.par(ligne.ref);
+    if (p && typeof p.prix === 'number') {
+      ligne.piece = p.ref;
+      ligne.price = p.prix;
+      ligne.unit = p.unite;
+      ligne.caution = typeof p.caution === 'number' ? p.caution : null;
+      // Le nom fait foi cote maison : la page pourrait annoncer autre chose.
+      ligne.name = p.nom;
+    }
+    return ligne;
+  }).filter((it) => it.name);
 
   if (!name) return send(res, 400, { ok: false, error: 'name_required' });
   if (!isEmail(email)) return send(res, 400, { ok: false, error: 'email_invalid' });

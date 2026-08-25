@@ -370,6 +370,7 @@
            du panier reste préfixée par la collection et la formule, pour que
            deux formules différentes ne se confondent pas en une seule ligne. */
         if (piece && typeof piece.prix === 'number') {
+          ligne.piece = piece.ref;   // c'est elle que le serveur reverifiera
           ligne.price = piece.prix;
           ligne.unit = piece.unite;
           if (typeof piece.caution === 'number') ligne.caution = piece.caution;

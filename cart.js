@@ -64,6 +64,12 @@
       if (found) found.qty = clampQty(found.qty + q);
       else items.push({
         name: String(p.name).slice(0, 160), ref: ref, qty: q,
+        /* `piece` = la reference dans pieces.js. Distincte de `ref`, qui
+           identifie la LIGNE du panier : une meme chaise peut y figurer deux
+           fois, une fois seule et une fois via une formule, sans se confondre.
+           C'est `piece` que le serveur utilisera pour retrouver le prix
+           lui-meme, au lieu de croire celui que la page lui annonce. */
+        piece: String(p.piece || ref).slice(0, 80),
         priceHint: String(p.priceHint || '').slice(0, 60),
         price: num(p.price), unit: String(p.unit || '').slice(0, 12), caution: num(p.caution)
       });

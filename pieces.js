@@ -43,7 +43,7 @@
   var index = Object.create(null);
   PIECES.forEach(function (p) { index[p.ref] = p; });
 
-  window.SolPieces = {
+  var api = {
     tout: function () { return PIECES.slice(); },
     /* Renvoie la pièce, ou null. Jamais d'exception : une référence inconnue
        doit dégrader en « à chiffrer », pas casser la page. */
@@ -51,4 +51,11 @@
       return (typeof ref === 'string' && index[ref]) || null;
     }
   };
+
+  /* Le même fichier sert au navigateur ET au serveur. C'est volontaire : le
+     serveur doit pouvoir retrouver le prix d'une pièce sans faire confiance
+     à ce que le navigateur lui annonce — sinon il suffirait de modifier sa
+     page pour choisir son tarif. Un seul fichier, donc un seul prix. */
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  if (typeof window !== 'undefined') window.SolPieces = api;
 })();

@@ -15,7 +15,7 @@
       .then(function(r){return r.json().catch(function(){return {ok:false,error:'bad_response',status:r.status};}).then(function(j){j.__status=r.status;return j;});});
   }
 
-  var state={me:null,settings:null,list:[],filter:'all',q:'',current:null,tab:'orders',
+  var state={me:null,settings:null,list:[],filter:'all',tri:'recu',q:'',current:null,tab:'orders',
              unreadTimer:null,bounces:{}};
 
   // ---------- Boot ----------
@@ -116,23 +116,61 @@
     return email?state.bounces[String(email).toLowerCase()]||null:null;
   }
 
+  /* Où en est l'événement par rapport à aujourd'hui ?
+     On compare des JOURS, pas des instants : sinon un événement du soir même
+     serait annoncé « passé » dès le matin. */
+  function delai(dateStr){
+    if(!dateStr) return null;
+    var d=new Date(dateStr); if(isNaN(d)) return null;
+    var jour=function(x){ return Date.UTC(x.getFullYear(),x.getMonth(),x.getDate()); };
+    var n=Math.round((jour(d)-jour(new Date()))/86400000);
+    if(n<0) return {n:n,classe:'passe',texte:'passé'};
+    if(n===0) return {n:0,classe:'proche',texte:"aujourd'hui"};
+    if(n===1) return {n:1,classe:'proche',texte:'demain'};
+    if(n<=14) return {n:n,classe:'proche',texte:'dans '+n+' jours'};
+    if(n<=60) return {n:n,classe:'venir',texte:'dans '+Math.round(n/7)+' semaines'};
+    return {n:n,classe:'venir',texte:'dans '+Math.round(n/30.5)+' mois'};
+  }
+
   function renderList(){
     var ul=$('#reqs'); var q=state.q.toLowerCase();
     var items=state.list.filter(function(it){
-      if(state.filter!=='all' && it.status!==state.filter) return false;
+      if(state.filter==='avenir'){
+        var d=delai(it.date);
+        if(!d || d.n<0) return false;
+      } else if(state.filter!=='all' && it.status!==state.filter) return false;
       if(!q) return true;
       return ((it.clientName||'')+' '+(it.location||'')+' '+(it.ref||'')+' '+(it.eventType||'')).toLowerCase().indexOf(q)>=0;
     });
+    /* Tri par date d'événement : le plus proche d'abord, et les dates déjà
+       passées rejetées à la fin — leur ordre entre elles reste chronologique
+       inverse, la plus récente en tête. Une date illisible ne remonte jamais
+       en haut de liste par accident. */
+    if(state.tri==='event'){
+      items=items.slice().sort(function(a,b){
+        var da=delai(a.date), db=delai(b.date);
+        if(!da&&!db) return b.id-a.id;
+        if(!da) return 1;
+        if(!db) return -1;
+        var pa=da.n<0, pb=db.n<0;
+        if(pa!==pb) return pa?1:-1;
+        return pa ? db.n-da.n : da.n-db.n;
+      });
+    }
     if(!items.length){ ul.innerHTML='<li class="empty">Aucune demande.</li>'; return; }
     ul.innerHTML=items.map(function(it){
       var b=it.status==='replied'?'<span class="badge b-replied">Facturée</span>':(it.status==='new'?'<span class="badge b-new">Nouvelle</span>':'<span class="badge b-read">Lue</span>');
       if(bounceFor(it.clientEmail)) b+=' <span class="badge b-bounce">Non distribué</span>';
       else if(it.notified===false) b+=' <span class="badge b-bounce">Alerte non partie</span>';
       var sub=[it.eventType,fdate(it.date),it.location].filter(Boolean).join(' · ');
-      return '<li><button class="req'+(state.current&&state.current.id===it.id?' sel':'')+'" data-id="'+it.id+'">'+
+      var d=delai(it.date);
+      var quand=d?'<span class="req-when '+d.classe+'">'+d.texte+'</span>':'';
+      return '<li><button class="req'+(state.current&&state.current.id===it.id?' sel':'')+
+        (d&&d.n<0?' est-passe':'')+'" data-id="'+it.id+'">'+
         '<div class="req-top"><span class="req-name">'+esc(it.clientName||'—')+'</span>'+b+'</div>'+
         '<div class="req-sub">'+esc(sub||'—')+'</div>'+
-        '<div class="req-ref">'+esc(it.ref||'')+' · '+it.itemCount+' pièce(s)</div>'+
+        '<div class="req-ref">'+esc(it.ref||'')+' · '+it.itemCount+' pièce(s)'+
+        (quand?' · ':'')+quand+'</div>'+
       '</button></li>';
     }).join('');
     Array.prototype.forEach.call(ul.querySelectorAll('.req'),function(btn){
@@ -218,12 +256,24 @@
   }
 
   // ------- Composeur de facture -------
+  /* Les lignes de la facture, pre-remplies.
+     Le prix unitaire vient de ce que le CLIENT A VU au moment de sa demande :
+     le serveur l'a retrouve dans le catalogue et conserve avec la commande.
+     Auparavant l'unite repartait vide, il fallait tout retaper — et rien ne
+     garantissait que la facture corresponde a ce qui avait ete affiche. */
   function buildInitialLines(req){
     if(req.reply&&req.reply.lines&&req.reply.lines.length){
       return req.reply.lines.map(function(l){return {label:l.label,qty:l.qty,unit:l.unit};});
     }
     if(req.items&&req.items.length){
-      return req.items.map(function(it){return {label:it.name,qty:it.qty||1,unit:''};});
+      return req.items.map(function(it){
+        return {
+          label:it.name,
+          qty:it.qty||1,
+          // Une piece encore non chiffree au catalogue reste a saisir a la main.
+          unit: typeof it.price==='number' ? it.price : ''
+        };
+      });
     }
     return [{label:'',qty:1,unit:''}];
   }
@@ -1110,6 +1160,7 @@
   $('#btn-logout').addEventListener('click',function(){ api('/api/admin/logout',{method:'POST'}).then(function(){ location.reload(); }); });
   $('#btn-settings').addEventListener('click',openSettings);
   $('#btn-securite').addEventListener('click',openSecurite);
+  $('#tri').addEventListener('change',function(e){ state.tri=e.target.value; renderList(); });
   $('#search').addEventListener('input',function(e){ state.q=e.target.value; renderList(); });
   Array.prototype.forEach.call(document.querySelectorAll('#filters .chip'),function(ch){
     ch.addEventListener('click',function(){ Array.prototype.forEach.call(document.querySelectorAll('#filters .chip'),function(x){x.classList.remove('on');}); ch.classList.add('on'); state.filter=ch.getAttribute('data-f'); renderList(); });

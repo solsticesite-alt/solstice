@@ -184,7 +184,13 @@
       guests: prefs.guests,
       message: ($('f-message').value.trim() + '\n\n' + recap).trim(),
       payment: prefs.payment,
-      items: items.map(function (i) { return { name: i.name, ref: i.ref, qty: i.qty, priceHint: i.priceHint }; }),
+      /* On transmet la REFERENCE de la piece, jamais son prix : c'est le
+         serveur qui ira le chercher dans son propre catalogue. Envoyer le
+         prix reviendrait a laisser le client choisir son tarif en modifiant
+         sa page. */
+      items: items.map(function (i) {
+        return { name: i.name, ref: i.ref, piece: i.piece || i.ref, qty: i.qty, priceHint: i.priceHint };
+      }),
       website: $('f-website').value
     };
 
