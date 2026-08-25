@@ -64,6 +64,41 @@
      six demandes sur neuf portaient sur une date déjà passée, sans que rien
      ne les distingue de celles encore à préparer. */
   .req-when{font-size:.72rem;font-weight:600;letter-spacing:.02em;}
+  /* Le montant, aligne a droite : la colonne se lit verticalement, on compare
+     les demandes sans avoir a les ouvrir. */
+  /* Reference et montant sur la MEME ligne : la colonne des montants se lit
+     alors verticalement, et la fiche ne gagne pas une ligne pour si peu. */
+  .req-bas{display:flex;align-items:baseline;justify-content:space-between;gap:.7rem;}
+  .req-montant{font-size:.8rem;white-space:nowrap;}
+  /* ---- Panneau d'accueil ---- */
+  .accueil{padding:clamp(18px,3vw,34px);}
+  .accueil h2{font-family:var(--serif);font-size:1.5rem;margin:0 0 1.2rem;font-weight:400;}
+  .acc-cartes{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;}
+  .acc-carte{display:flex;flex-direction:column;gap:.15rem;text-align:left;padding:14px 16px;
+    background:var(--paper);border:1px solid var(--line);border-radius:14px;cursor:pointer;
+    transition:border-color .2s,transform .2s;}
+  .acc-carte:hover{border-color:var(--gold-soft);transform:translateY(-1px);}
+  .acc-carte.vide{opacity:.6;cursor:default;}
+  .acc-carte.vide:hover{border-color:var(--line);transform:none;}
+  .acc-n{font-family:var(--serif);font-size:1.9rem;line-height:1;color:var(--ink);}
+  .acc-l{font-size:.82rem;color:var(--ink-soft);}
+  .acc-d{font-size:.72rem;color:var(--stone);}
+  .acc-titre{font-family:var(--serif);font-size:1rem;font-weight:400;margin:1.6rem 0 .5rem;color:var(--ink-soft);}
+  .acc-liste{list-style:none;margin:0;padding:0;}
+  .acc-liste button{display:grid;grid-template-columns:7.5rem 1fr auto auto;gap:.8rem;align-items:baseline;
+    width:100%;text-align:left;padding:.6rem .2rem;border:none;background:none;cursor:pointer;
+    border-bottom:1px solid var(--line);}
+  .acc-liste button:hover{background:var(--paper-2);}
+  .acc-quand{font-size:.72rem;font-weight:600;}
+  .acc-quand.proche{color:#A2543C;} .acc-quand.venir{color:#5C7A5A;}
+  .acc-qui{font-size:.9rem;color:var(--ink);}
+  .acc-quoi{font-size:.76rem;color:var(--stone);}
+  .acc-eur{font-family:var(--serif);font-size:.95rem;color:var(--ink);}
+  .acc-alerte{margin:1.4rem 0 0;font-size:.82rem;color:#A2543C;}
+  @media (max-width:700px){ .acc-liste button{grid-template-columns:1fr auto;} .acc-quoi{display:none;} }
+  .req-montant .m-val{font-family:var(--serif);font-size:1rem;color:var(--ink);}
+  .req-montant .m-note{font-size:.68rem;color:var(--stone);}
+  .req-montant .m-vide{font-size:.72rem;color:var(--stone);font-style:italic;}
   .req-when.proche{color:#A2543C;}
   .req-when.venir{color:#5C7A5A;}
   .req-when.passe{color:var(--stone);font-weight:400;}

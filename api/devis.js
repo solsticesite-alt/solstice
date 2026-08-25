@@ -65,6 +65,12 @@ module.exports = async (req, res) => {
    * avec elle. Avant, il etait perdu — la facture repartait de zero et rien
    * ne garantissait qu'elle corresponde a ce que le client avait vu.
    */
+  /* Duree et mode de remise : on n'accepte que les deux valeurs prevues, et on
+     retombe sur la plus prudente en cas de doute. */
+  const duration = body.duration === 'weekend' ? 'weekend' : 'jour';
+  const delivery = body.delivery === 'livraison' ? 'livraison' : 'retrait';
+  const jours = duration === 'weekend' ? 2 : 1;
+
   const rawItems = Array.isArray(body.items) ? body.items.slice(0, 80) : [];
   const items = rawItems.map((it) => {
     const ligne = {
@@ -115,6 +121,17 @@ module.exports = async (req, res) => {
       id, ref: makeRef(settings, id, createdAt), createdAt, status: 'new',
       client: { name, email, phone },
       event: { type: eventType, date, location, guests },
+      /* Le montant estime est calcule ICI, avec la meme regle que le panier :
+         une piece au week-end garde son tarif, une piece au jour est
+         multipliee par la duree. Il est conserve avec la demande pour que le
+         back-office puisse l'afficher sans recalculer, et surtout pour garder
+         une trace de ce qui a ete annonce au client ce jour-la. */
+      modalites: { duree: duration, remise: delivery, jours },
+      montant: items.reduce(function (n, it) {
+        if (typeof it.price !== 'number') return n;
+        return n + it.price * it.qty * (it.unit === 'week-end' ? 1 : jours);
+      }, 0),
+      aChiffrer: items.filter(function (it) { return typeof it.price !== 'number'; }).length,
       message, items, payment, reply: null
     };
     await store.saveNewRequest(request);

@@ -26,6 +26,16 @@ module.exports = async (req, res) => {
       date: (r.event || {}).date || '',
       location: (r.event || {}).location || '',
       itemCount: (r.items || []).length,
+      /* Le montant, pour que la liste dise en un coup d'oeil ce que pese une
+         demande. Une facture deja emise fait foi sur l'estimation : c'est elle
+         qui a ete envoyee au client. */
+      montant: r.reply && typeof r.reply.total === 'number'
+        ? r.reply.total
+        : (typeof r.montant === 'number' ? r.montant : null),
+      // Nombre de pieces encore sans tarif : le montant n'est alors qu'un minimum.
+      aChiffrer: typeof r.aChiffrer === 'number'
+        ? r.aChiffrer
+        : (r.items || []).filter((it) => typeof it.price !== 'number').length,
       replied: Boolean(r.reply),
       // false uniquement si la notification a echoue ; absent = envoyee.
       notified: r.notified !== false

@@ -182,6 +182,10 @@
       name: name, email: email, phone: $('f-tel').value.trim(),
       eventType: $('f-type').value, date: prefs.date, location: prefs.place,
       guests: prefs.guests,
+      /* La duree et le mode de remise ne partaient que dans le TEXTE du
+         recapitulatif. Le serveur ne pouvait donc pas chiffrer la demande :
+         une piece au tarif journalier coute le double sur un week-end. */
+      duration: prefs.duration, delivery: prefs.delivery,
       message: ($('f-message').value.trim() + '\n\n' + recap).trim(),
       payment: prefs.payment,
       /* On transmet la REFERENCE de la piece, jamais son prix : c'est le

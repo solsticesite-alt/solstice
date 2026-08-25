@@ -89,6 +89,8 @@
       if(r.__status===401){ state.me.authed=false; showLogin(); return; }
       if(!r.ok){ $('#reqs').innerHTML='<li class="empty">Erreur : '+esc(r.error||'')+'</li>'; return; }
       state.list=r.items||[]; renderList();
+      // L'accueil se nourrit de la liste : il ne peut se dessiner qu'ici.
+      if(!state.current) renderDetail();
       // Le ménage des données périmées est automatique, mais jamais silencieux.
       if(r.purged>0) toast(r.purged+' demande'+(r.purged>1?'s':'')+' au-delà de la durée de conservation, effacée'+(r.purged>1?'s':''));
       loadBounces();
@@ -132,6 +134,24 @@
     return {n:n,classe:'venir',texte:'dans '+Math.round(n/30.5)+' mois'};
   }
 
+  function euros(n){
+    return (Math.round(n*100)/100).toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})+' €';
+  }
+
+  /* Ce que pese une demande, en un coup d'oeil.
+     Quand des pieces ne sont pas encore chiffrees, on le dit : le montant
+     n'est alors qu'un minimum, et le laisser passer pour un total ferait
+     sous-estimer la commande. */
+  function montantLigne(it){
+    if(typeof it.montant!=='number' || it.montant<=0){
+      return it.aChiffrer ? '<span class="m-vide">à chiffrer</span>' : '';
+    }
+    var s='<span class="m-val">'+euros(it.montant)+'</span>';
+    if(it.replied) s+=' <span class="m-note">facturé</span>';
+    else if(it.aChiffrer) s+=' <span class="m-note">+ '+it.aChiffrer+' à chiffrer</span>';
+    return s;
+  }
+
   function renderList(){
     var ul=$('#reqs'); var q=state.q.toLowerCase();
     var items=state.list.filter(function(it){
@@ -169,8 +189,9 @@
         (d&&d.n<0?' est-passe':'')+'" data-id="'+it.id+'">'+
         '<div class="req-top"><span class="req-name">'+esc(it.clientName||'—')+'</span>'+b+'</div>'+
         '<div class="req-sub">'+esc(sub||'—')+'</div>'+
-        '<div class="req-ref">'+esc(it.ref||'')+' · '+it.itemCount+' pièce(s)'+
-        (quand?' · ':'')+quand+'</div>'+
+        '<div class="req-bas"><span class="req-ref">'+esc(it.ref||'')+' · '+it.itemCount+' pièce'+(it.itemCount>1?'s':'')+
+        (quand?' · ':'')+quand+'</span>'+
+        '<span class="req-montant">'+montantLigne(it)+'</span></div>'+
       '</button></li>';
     }).join('');
     Array.prototype.forEach.call(ul.querySelectorAll('.req'),function(btn){
@@ -196,8 +217,76 @@
     return 'Bonjour'+(first?' '+first:'')+',\n\nMerci pour votre demande. Ravis de pouvoir vous accompagner pour votre '+ev+d+'. Vous trouverez notre proposition détaillée ci-dessous.\n\nNous restons à votre entière disposition,\nMaison Solstice';
   }
 
+  /* Ce qu'on voit en arrivant, tant qu'aucune demande n'est ouverte.
+     Auparavant : « Sélectionnez une demande à gauche. » sur les deux tiers de
+     l'écran. La question qu'on se pose en ouvrant le back-office est plutôt
+     « qu'est-ce qui m'attend ? » — c'est à elle qu'on répond ici.
+
+     Rien n'est inventé : tout se déduit de la liste déjà chargée. « À traiter »
+     ne dépend d'aucun nouvel état à tenir à jour — c'est simplement ce qui
+     n'est pas encore facturé et dont l'événement n'est pas passé. */
+  function renderAccueil(){
+    var l=state.list||[];
+    var nouvelles=l.filter(function(x){return x.status==='new';});
+    var aVenir=l.filter(function(x){var d=delai(x.date); return d&&d.n>=0;})
+                .sort(function(a,b){return delai(a.date).n-delai(b.date).n;});
+    var aFacturer=aVenir.filter(function(x){return !x.replied;});
+    var somme=function(t){ return t.reduce(function(n,x){return n+(typeof x.montant==='number'?x.montant:0);},0); };
+    var rebonds=l.filter(function(x){return bounceFor(x.clientEmail)||x.notified===false;});
+
+    function carte(n,libelle,detail,filtre){
+      return '<button class="acc-carte'+(n?'':' vide')+'" data-filtre="'+filtre+'">'+
+        '<span class="acc-n">'+n+'</span>'+
+        '<span class="acc-l">'+libelle+'</span>'+
+        (detail?'<span class="acc-d">'+detail+'</span>':'')+'</button>';
+    }
+
+    var html='<div class="accueil"><h2>Où en est-on ?</h2><div class="acc-cartes">'+
+      carte(nouvelles.length,'nouvelle'+(nouvelles.length>1?'s':'')+' demande'+(nouvelles.length>1?'s':''),
+            nouvelles.length?'jamais ouverte'+(nouvelles.length>1?'s':''):'tout est lu','new')+
+      carte(aVenir.length,'événement'+(aVenir.length>1?'s':'')+' à venir',
+            aVenir.length?'le plus proche : '+delai(aVenir[0].date).texte:'rien de prévu','avenir')+
+      carte(aFacturer.length,'en attente de facture',
+            aFacturer.length?euros(somme(aFacturer))+' estimés':'tout est facturé','avenir')+
+      '</div>';
+
+    if(aVenir.length){
+      html+='<h3 class="acc-titre">Les prochains</h3><ul class="acc-liste">'+
+        aVenir.slice(0,5).map(function(x){
+          var d=delai(x.date);
+          return '<li><button data-id="'+x.id+'">'+
+            '<span class="acc-quand '+d.classe+'">'+d.texte+'</span>'+
+            '<span class="acc-qui">'+esc(x.clientName||'—')+'</span>'+
+            '<span class="acc-quoi">'+esc([x.eventType,x.location].filter(Boolean).join(' · '))+'</span>'+
+            '<span class="acc-eur">'+(typeof x.montant==='number'&&x.montant>0?euros(x.montant):'—')+'</span>'+
+            '</button></li>';
+        }).join('')+'</ul>';
+    }
+    if(rebonds.length){
+      html+='<p class="acc-alerte">⚠ '+rebonds.length+' demande'+(rebonds.length>1?'s':'')+
+        ' dont l\'e-mail n\'est pas parti ou a été refusé.</p>';
+    }
+    html+='</div>';
+    $('#detail').innerHTML=html;
+
+    Array.prototype.forEach.call($('#detail').querySelectorAll('.acc-carte'),function(b){
+      b.addEventListener('click',function(){
+        var f=b.getAttribute('data-filtre');
+        Array.prototype.forEach.call(document.querySelectorAll('#filters .chip'),function(c){
+          c.classList.toggle('on',c.getAttribute('data-f')===f);
+        });
+        state.filter=f;
+        if(f==='avenir'){ state.tri='event'; $('#tri').value='event'; }
+        renderList();
+      });
+    });
+    Array.prototype.forEach.call($('#detail').querySelectorAll('.acc-liste button'),function(b){
+      b.addEventListener('click',function(){ openRequest(parseInt(b.getAttribute('data-id'),10)); });
+    });
+  }
+
   function renderDetail(){
-    var req=state.current; if(!req){ $('#detail').innerHTML='<div class="empty">Sélectionnez une demande.</div>'; return; }
+    var req=state.current; if(!req){ renderAccueil(); return; }
     var c=req.client||{}, ev=req.event||{};
     var info=[
       ['Client',esc(c.name||'—')],
