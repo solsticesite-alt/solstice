@@ -358,8 +358,15 @@ traverse intact — c'est vérifié par un test dédié.
 - Le freinage compte **par adresse IP**. Un attaquant disposant de milliers
   d'adresses contourne la limite. C'est inhérent : la vraie défense reste un mot
   de passe long et unique.
-- `script-src 'unsafe-inline'` reste nécessaire tant que le JS est écrit
-  directement dans les pages (voir section 9).
+- ~~`script-src 'unsafe-inline'`~~ — **corrigé (août 2026).** Les trois derniers
+  blocs `<script>` en ligne (accueil, catalogue, back-office) sont sortis dans
+  `accueil.js`, `catalogue.js` et `admin.js`, sans `defer` pour conserver
+  exactement leur ordre d'exécution. Le CSP autorise désormais `script-src
+  'self'` seul : **un script injecté dans une page ne s'exécute plus**, ce qui
+  était la protection manquante contre une XSS. Vérifié sur les 17 pages, avec
+  contre-épreuve — un script inline injecté à la main est bien refusé.
+  `style-src 'unsafe-inline'` reste, lui, nécessaire : les pages de collection
+  portent leur teinte dans un attribut `style`.
 - ~~**Pas de déconnexion à distance**~~ — **corrigé (août 2026).** L'empreinte
   du mot de passe entre désormais dans la clé de signature, et un bouton
   « Déconnecter partout » ferme les sessions sans toucher au mot de passe.
@@ -400,6 +407,24 @@ d'URL `data:` autre qu'une image — donc rien d'exécutable.
 > Reste hors couverture : les fonctions qui parlent réellement au serveur IMAP
 > (connexion, `fetch`, drapeaux). Les éprouver demande un serveur IMAP simulé,
 > et elles ne décident de rien sur le contenu.
+
+---
+
+### Dépendances
+
+`npm audit` signalait **trois vulnérabilités de niveau élevé** dans la chaîne
+`mailparser` → `html-to-text` → `deepmerge-ts` : épuisement de pile sur des
+graphes d'objets récursifs (GHSA-ggr8-5vv4-36mx).
+
+Ce n'était pas théorique : `mailparser` est précisément ce qui analyse les
+e-mails entrants, et **n'importe qui peut en envoyer un**. Un message HTML
+construit pour l'occasion aurait fait tomber la fonction serverless — donc
+l'onglet Messages.
+
+Corrigé (`mailparser` 3.9.14 → 3.9.16), `npm audit` ne signale plus rien.
+
+> À refaire de temps en temps : `npm audit` est la seule protection qui se
+> dégrade toute seule, sans qu'on touche à une ligne de code.
 
 ---
 

@@ -1,6 +1,6 @@
 {
   "framework": null,
-  "buildCommand": "mkdir -p public/.well-known && cp *.html public/ && cp favicon.svg robots.txt sitemap.xml site.css site.js cart.js collections.js panier.js fav.js favoris.js public/ && cp .well-known/security.txt public/.well-known/",
+  "buildCommand": "mkdir -p public/.well-known && cp *.html public/ && cp favicon.svg robots.txt sitemap.xml site.css site.js cart.js collections.js panier.js fav.js favoris.js admin.js catalogue.js accueil.js public/ && cp .well-known/security.txt public/.well-known/",
   "outputDirectory": "public",
   "cleanUrls": true,
   "trailingSlash": false,
@@ -37,7 +37,7 @@
       "headers": [
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests"
+          "value": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests"
         },
         {
           "key": "Strict-Transport-Security",
@@ -90,7 +90,16 @@
         },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'; frame-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests"
+          "value": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'; frame-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests"
+        }
+      ]
+    },
+    {
+      "source": "/admin.js",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
         }
       ]
     },
