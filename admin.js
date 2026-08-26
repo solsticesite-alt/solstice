@@ -15,7 +15,7 @@
       .then(function(r){return r.json().catch(function(){return {ok:false,error:'bad_response',status:r.status};}).then(function(j){j.__status=r.status;return j;});});
   }
 
-  var state={me:null,settings:null,list:[],filter:'all',tri:'recu',q:'',current:null,tab:'orders',
+  var state={me:null,settings:null,list:[],stats:null,filter:'all',tri:'recu',q:'',current:null,tab:'orders',
              unreadTimer:null,bounces:{}};
 
   // ---------- Boot ----------
@@ -88,7 +88,7 @@
     api('/api/admin/requests').then(function(r){
       if(r.__status===401){ state.me.authed=false; showLogin(); return; }
       if(!r.ok){ $('#reqs').innerHTML='<li class="empty">Erreur : '+esc(r.error||'')+'</li>'; return; }
-      state.list=r.items||[]; renderList();
+      state.list=r.items||[]; state.stats=r.stats||null; renderList();
       // L'accueil se nourrit de la liste : il ne peut se dessiner qu'ici.
       if(!state.current) renderDetail();
       // Le ménage des données périmées est automatique, mais jamais silencieux.
@@ -199,7 +199,21 @@
     });
   }
 
+  /* Revenir au tableau de bord. Il n'y avait aucun chemin de retour : une fois
+     une demande ouverte, seul un rechargement de la page ramenait la vue
+     d'ensemble. Trois chemins desormais : le bouton, la touche Echap, et un
+     second clic sur la demande deja selectionnee. */
+  function fermerDemande(){
+    if(!state.current) return;
+    state.current=null;
+    renderList();
+    renderDetail();
+  }
+
   function openRequest(id){
+    // Recliquer la demande ouverte la referme : c'est le geste qu'on tente
+    // naturellement avant de chercher un bouton.
+    if(state.current && state.current.id===id) return fermerDemande();
     api('/api/admin/request?id='+id).then(function(r){
       if(r.__status===401){ showLogin(); return; }
       if(!r.ok){ toast('Erreur : '+(r.error||''),true); return; }
@@ -207,6 +221,9 @@
       // maj du statut dans la liste locale
       var li=state.list.filter(function(x){return x.id===id;})[0]; if(li&&li.status==='new') li.status='read';
       renderList(); renderDetail();
+      /* Sur telephone la demande remplace la liste : sans ce retour en haut,
+         on ouvre la 40e demande et on tombe au milieu de la facture. */
+      if(window.innerWidth<=820) window.scrollTo(0,0);
     });
   }
 
@@ -217,76 +234,183 @@
     return 'Bonjour'+(first?' '+first:'')+',\n\nMerci pour votre demande. Ravis de pouvoir vous accompagner pour votre '+ev+d+'. Vous trouverez notre proposition détaillée ci-dessous.\n\nNous restons à votre entière disposition,\nMaison Solstice';
   }
 
-  /* Ce qu'on voit en arrivant, tant qu'aucune demande n'est ouverte.
-     Auparavant : « Sélectionnez une demande à gauche. » sur les deux tiers de
-     l'écran. La question qu'on se pose en ouvrant le back-office est plutôt
-     « qu'est-ce qui m'attend ? » — c'est à elle qu'on répond ici.
+  /* ------------------------------------------------------------------
+     Le tableau de bord.
 
-     Rien n'est inventé : tout se déduit de la liste déjà chargée. « À traiter »
-     ne dépend d'aucun nouvel état à tenir à jour — c'est simplement ce qui
-     n'est pas encore facturé et dont l'événement n'est pas passé. */
-  function renderAccueil(){
-    var l=state.list||[];
-    var nouvelles=l.filter(function(x){return x.status==='new';});
-    var aVenir=l.filter(function(x){var d=delai(x.date); return d&&d.n>=0;})
-                .sort(function(a,b){return delai(a.date).n-delai(b.date).n;});
-    var aFacturer=aVenir.filter(function(x){return !x.replied;});
-    var somme=function(t){ return t.reduce(function(n,x){return n+(typeof x.montant==='number'?x.montant:0);},0); };
-    var rebonds=l.filter(function(x){return bounceFor(x.clientEmail)||x.notified===false;});
+     Ce qu'on voit en ouvrant le back-office, tant qu'aucune demande n'est
+     ouverte — a la place de « Sélectionnez une demande à gauche. » sur les
+     deux tiers de l'ecran. Il repond a une seule question, « qu'est-ce qui
+     m'attend ? », et il faut pouvoir y repondre sans lire : quatre chiffres,
+     une liste, deux graphiques. Rien d'autre.
 
-    function carte(n,libelle,detail,filtre){
-      return '<button class="acc-carte'+(n?'':' vide')+'" data-filtre="'+filtre+'">'+
-        '<span class="acc-n">'+n+'</span>'+
-        '<span class="acc-l">'+libelle+'</span>'+
-        (detail?'<span class="acc-d">'+detail+'</span>':'')+'</button>';
-    }
+     Les chiffres viennent du serveur (api/admin/requests), qui les calcule
+     sur l'ensemble des demandes lues. Le navigateur ne fait que les mettre
+     en forme : aucun calcul en double, donc aucun risque de deux verites.
+     ------------------------------------------------------------------ */
 
-    var html='<div class="accueil"><h2>Où en est-on ?</h2><div class="acc-cartes">'+
-      carte(nouvelles.length,'nouvelle'+(nouvelles.length>1?'s':'')+' demande'+(nouvelles.length>1?'s':''),
-            nouvelles.length?'jamais ouverte'+(nouvelles.length>1?'s':''):'tout est lu','new')+
-      carte(aVenir.length,'événement'+(aVenir.length>1?'s':'')+' à venir',
-            aVenir.length?'le plus proche : '+delai(aVenir[0].date).texte:'rien de prévu','avenir')+
-      carte(aFacturer.length,'en attente de facture',
-            aFacturer.length?euros(somme(aFacturer))+' estimés':'tout est facturé','avenir')+
+  var MOIS_COURTS = ['janv.','févr.','mars','avr.','mai','juin','juil.','août','sept.','oct.','nov.','déc.'];
+
+  function moisLisible(cle){
+    var p = String(cle||'').split('-');
+    var m = parseInt(p[1],10);
+    return MOIS_COURTS[(m-1)] || '';
+  }
+
+  /* Un nombre lisible d'un coup d'oeil : 1 240 € plutot que 1240. */
+  function eurosCourt(n){
+    if(!Number.isFinite(n)) return '—';
+    if(n >= 10000) return Math.round(n/1000) + ' k€';
+    return Math.round(n).toLocaleString('fr-FR') + ' €';
+  }
+
+  function tuile(valeur, libelle, detail, ton, filtre){
+    var cliquable = filtre ? ' data-filtre="'+filtre+'"' : '';
+    return '<button class="tuile'+(ton?' t-'+ton:'')+(filtre?'':' fixe')+'"'+cliquable+'>'+
+      '<span class="t-val">'+valeur+'</span>'+
+      '<span class="t-lib">'+libelle+'</span>'+
+      (detail?'<span class="t-det">'+detail+'</span>':'')+
+    '</button>';
+  }
+
+  /* Barres horizontales : la longueur dit la proportion, le chiffre dit la
+     valeur. Pas de camembert — on y compare mal deux parts voisines. */
+  function barres(lignes, unite){
+    if(!lignes.length) return '<p class="db-vide">Pas encore de données.</p>';
+    var max = Math.max.apply(null, lignes.map(function(l){ return l.n; })) || 1;
+    return '<ul class="db-barres">'+lignes.map(function(l){
+      /* La largeur reste strictement proportionnelle ; c'est le min-width de
+         .b-jauge (en pixels, feuille de style) qui empeche une petite valeur
+         de se reduire a un trait invisible. Une valeur NULLE, elle, doit
+         rester nulle — d'ou le min-width remis a zero ici. */
+      var w = Math.round(l.n/max*100);
+      return '<li><span class="b-nom">'+esc(l.nom)+
+        (l.sous?'<small>'+esc(l.sous)+'</small>':'')+'</span>'+
+        '<span class="b-piste"><span class="b-jauge" style="width:'+w+'%'+
+          (l.n>0?'':';min-width:0')+'"></span></span>'+
+        '<span class="b-n">'+l.n+(unite||'')+'</span></li>';
+    }).join('')+'</ul>';
+  }
+
+  /* Douze colonnes, une par mois. Les mois vides comptent : un creux dans
+     l'annee est une information, l'effacer ferait mentir la lecture. */
+  function colonnes(mois){
+    var max = Math.max.apply(null, mois.map(function(m){ return m.n; })) || 1;
+    return '<div class="db-mois">'+mois.map(function(m){
+      var h = m.n ? Math.max(6, Math.round(m.n/max*100)) : 0;
+      return '<div class="dm-col" title="'+m.n+' demande'+(m.n>1?'s':'')+'">'+
+        '<span class="dm-n">'+(m.n||'')+'</span>'+
+        '<span class="dm-bar" style="height:'+h+'%"></span>'+
+        '<span class="dm-lib">'+moisLisible(m.cle)+'</span>'+
       '</div>';
+    }).join('')+'</div>';
+  }
 
-    if(aVenir.length){
-      html+='<h3 class="acc-titre">Les prochains</h3><ul class="acc-liste">'+
-        aVenir.slice(0,5).map(function(x){
-          var d=delai(x.date);
-          return '<li><button data-id="'+x.id+'">'+
-            '<span class="acc-quand '+d.classe+'">'+d.texte+'</span>'+
-            '<span class="acc-qui">'+esc(x.clientName||'—')+'</span>'+
-            '<span class="acc-quoi">'+esc([x.eventType,x.location].filter(Boolean).join(' · '))+'</span>'+
-            '<span class="acc-eur">'+(typeof x.montant==='number'&&x.montant>0?euros(x.montant):'—')+'</span>'+
-            '</button></li>';
-        }).join('')+'</ul>';
-    }
+  /* Sur telephone les deux colonnes s'empilent : la classe dit laquelle des
+     deux est a l'ecran. Voir la regle .dash.ouverte dans admin.html. */
+  function marquerOuverte(ouverte){
+    var d = document.querySelector('.dash');
+    if(d) d.classList.toggle('ouverte', !!ouverte);
+  }
+
+  function renderAccueil(){
+    marquerOuverte(false);
+    var l = state.list||[];
+    var s = state.stats||{};
+
+    // Repli si le serveur n'a pas (encore) envoye de statistiques : le tableau
+    // de bord doit s'afficher quand meme, avec ce que la liste sait dire.
+    var aVenir = l.filter(function(x){ var d=delai(x.date); return d && d.n>=0; })
+                  .sort(function(a,b){ return delai(a.date).n - delai(b.date).n; });
+    var nouvelles = (typeof s.nouvelles==='number') ? s.nouvelles : l.filter(function(x){return x.status==='new';}).length;
+    var rebonds = l.filter(function(x){ return bounceFor(x.clientEmail) || x.notified===false; });
+
+    var prochainTxt = '—';
+    if(aVenir.length){ prochainTxt = delai(aVenir[0].date).texte; }
+    else if(typeof s.prochainJours==='number'){ prochainTxt = 'dans '+s.prochainJours+' j'; }
+
+    var html = '<div class="db">';
+
+    html += '<div class="db-tuiles">'+
+      tuile(nouvelles, 'nouvelle'+(nouvelles>1?'s':'')+' demande'+(nouvelles>1?'s':''),
+            nouvelles?'jamais ouverte'+(nouvelles>1?'s':''):'tout est lu',
+            nouvelles?'alerte':'', 'new')+
+      tuile(aVenir.length, 'événement'+(aVenir.length>1?'s':'')+' à venir',
+            aVenir.length?('le plus proche : '+prochainTxt):'rien de prévu', '', 'avenir')+
+      tuile(eurosCourt(s.montantAttente||0), 'en attente de facture',
+            (s.enAttente||0)+' demande'+((s.enAttente||0)>1?'s':''), 'attente', 'avenir')+
+      tuile(eurosCourt(s.factureAnnee||0), 'facturé cette année',
+            (s.nbFactures||0)+' facture'+((s.nbFactures||0)>1?'s':''), 'ok', 'replied')+
+    '</div>';
+
     if(rebonds.length){
-      html+='<p class="acc-alerte">⚠ '+rebonds.length+' demande'+(rebonds.length>1?'s':'')+
+      html += '<p class="db-alerte">⚠ '+rebonds.length+' demande'+(rebonds.length>1?'s':'')+
         ' dont l\'e-mail n\'est pas parti ou a été refusé.</p>';
     }
-    html+='</div>';
-    $('#detail').innerHTML=html;
 
-    Array.prototype.forEach.call($('#detail').querySelectorAll('.acc-carte'),function(b){
+    if(aVenir.length){
+      html += '<section class="db-bloc"><h3>Les prochains rendez-vous</h3><ul class="db-prochains">'+
+        aVenir.slice(0,5).map(function(x){
+          var d = delai(x.date);
+          return '<li><button data-id="'+x.id+'">'+
+            '<span class="p-quand '+d.classe+'">'+d.texte+'</span>'+
+            '<span class="p-qui">'+esc(x.clientName||'—')+'</span>'+
+            '<span class="p-quoi">'+esc([x.eventType,x.location].filter(Boolean).join(' · '))+'</span>'+
+            '<span class="p-eur">'+(typeof x.montant==='number'&&x.montant>0?eurosCourt(x.montant):'—')+'</span>'+
+            (x.replied?'<span class="p-tag">facturée</span>':'<span class="p-tag p-todo">à facturer</span>')+
+          '</button></li>';
+        }).join('')+'</ul></section>';
+    }
+
+    if(s.mois && s.mois.length){
+      var totalAn = s.mois.reduce(function(n,m){ return n+m.n; },0);
+      html += '<section class="db-bloc"><h3>Demandes reçues <span class="db-sous">'+
+        totalAn+' sur douze mois</span></h3>'+colonnes(s.mois)+'</section>';
+    }
+
+    var deux = '';
+    if(s.types && s.types.length){
+      deux += '<section class="db-bloc"><h3>Types d\'événement</h3>'+barres(s.types)+'</section>';
+    }
+    if(s.pieces && s.pieces.length){
+      /* On classe par NOMBRE DE DEMANDES, pas par quantite totale : 290 chaises
+         contre 15 centres de table ecrasent toutes les autres barres, et la
+         comparaison ne dit plus rien. Le nombre de fois ou une piece est
+         reclamee se compare, lui. La quantite reste en second, en texte. */
+      deux += '<section class="db-bloc"><h3>Pièces les plus demandées</h3>'+
+        barres(s.pieces.map(function(p){
+          return { nom:p.nom, n:p.demandes, sous:p.quantite+' au total' };
+        }))+'</section>';
+    }
+    if(deux) html += '<div class="db-deux">'+deux+'</div>';
+
+    if(typeof s.transformation==='number' && s.total){
+      html += '<p class="db-pied">'+s.total+' demandes reçues au total · '+
+        s.transformation+' % ont abouti à une facture'+
+        (s.invitesMoyen?' · '+s.invitesMoyen+' invités en moyenne':'')+'</p>';
+    }
+
+    html += '</div>';
+    $('#detail').innerHTML = html;
+
+    Array.prototype.forEach.call($('#detail').querySelectorAll('.tuile[data-filtre]'),function(b){
       b.addEventListener('click',function(){
-        var f=b.getAttribute('data-filtre');
+        var f = b.getAttribute('data-filtre');
         Array.prototype.forEach.call(document.querySelectorAll('#filters .chip'),function(c){
-          c.classList.toggle('on',c.getAttribute('data-f')===f);
+          c.classList.toggle('on', c.getAttribute('data-f')===f);
         });
-        state.filter=f;
+        state.filter = f;
         if(f==='avenir'){ state.tri='event'; $('#tri').value='event'; }
         renderList();
       });
     });
-    Array.prototype.forEach.call($('#detail').querySelectorAll('.acc-liste button'),function(b){
+    Array.prototype.forEach.call($('#detail').querySelectorAll('.db-prochains button'),function(b){
       b.addEventListener('click',function(){ openRequest(parseInt(b.getAttribute('data-id'),10)); });
     });
   }
 
   function renderDetail(){
     var req=state.current; if(!req){ renderAccueil(); return; }
+    marquerOuverte(true);
     var c=req.client||{}, ev=req.event||{};
     var info=[
       ['Client',esc(c.name||'—')],
@@ -304,6 +428,7 @@
     var repliedNote = req.reply ? '<div class="sent-note">✓ Facture déjà envoyée le '+esc(fdate(req.reply.sentAt))+' — total '+euros(req.reply.subtotal)+'. Vous pouvez la renvoyer / modifier ci-dessous.</div>' : '';
 
     $('#detail').innerHTML=
+      '<button class="btn btn-sm d-retour" id="d-retour">← Tableau de bord</button>'+
       '<div class="d-head"><div><h2>'+esc(c.name||'Demande')+'</h2><div class="muted">'+esc(req.ref||'')+' · reçue le '+esc(fdate(req.createdAt))+'</div></div>'+
         (c.email?'<button class="btn btn-sm" id="d-mail">Écrire un e-mail</button>':'')+'</div>'+
       '<div class="info-grid">'+info+'</div>'+ msg +
@@ -321,6 +446,7 @@
     var del=$('#d-del');
     if(del) del.addEventListener('click',function(){ confirmerSuppression(req); });
 
+    var dr=$('#d-retour'); if(dr) dr.addEventListener('click',fermerDemande);
     var dm=$('#d-mail');
     if(dm) dm.addEventListener('click',function(){ mailWith(c.email); });
     var vb=$('#detail [data-bounce]');
@@ -1250,6 +1376,12 @@
   $('#btn-settings').addEventListener('click',openSettings);
   $('#btn-securite').addEventListener('click',openSecurite);
   $('#tri').addEventListener('change',function(e){ state.tri=e.target.value; renderList(); });
+  document.addEventListener('keydown',function(e){
+    // Echap ferme la demande — sauf si un pop-up est ouvert, qui a priorite.
+    if(e.key!=='Escape') return;
+    if(document.querySelector('.modal-bg')) return;
+    if(state.tab==='orders' && state.current) fermerDemande();
+  });
   $('#search').addEventListener('input',function(e){ state.q=e.target.value; renderList(); });
   Array.prototype.forEach.call(document.querySelectorAll('#filters .chip'),function(ch){
     ch.addEventListener('click',function(){ Array.prototype.forEach.call(document.querySelectorAll('#filters .chip'),function(x){x.classList.remove('on');}); ch.classList.add('on'); state.filter=ch.getAttribute('data-f'); renderList(); });
